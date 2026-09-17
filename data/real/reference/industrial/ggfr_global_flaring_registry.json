@@ -1,0 +1,2613 @@
+{
+  "source_metadata": {
+    "source_id": "GGFR_GLOBAL_FLARING_2026",
+    "source_name": "World Bank GGFR & VIIRS Nightfire Industrial Flaring Registry",
+    "source_type": "OFFICIAL_INDUSTRIAL_EMISSIONS_REGISTRY",
+    "tier": "TIER_A_AUTHORITATIVE",
+    "country": "International",
+    "fire_regime": "industrial"
+  },
+  "records": [
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0001",
+      "observed_at": "2026-03-01T01:00:00Z",
+      "latitude": 26.2086,
+      "longitude": 50.5872,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #1",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0002",
+      "observed_at": "2026-03-02T01:00:00Z",
+      "latitude": 26.9988,
+      "longitude": 52.0272,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #2",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0003",
+      "observed_at": "2026-03-03T01:00:00Z",
+      "latitude": 25.809,
+      "longitude": 50.3736,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #3",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0004",
+      "observed_at": "2026-03-04T01:00:00Z",
+      "latitude": 25.3536,
+      "longitude": 51.2376,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #4",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0005",
+      "observed_at": "2026-03-05T01:00:00Z",
+      "latitude": 26.3886,
+      "longitude": 51.9792,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #5",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0006",
+      "observed_at": "2026-03-06T01:00:00Z",
+      "latitude": 25.719,
+      "longitude": 50.0688,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #6",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0007",
+      "observed_at": "2026-03-07T01:00:00Z",
+      "latitude": 25.8324,
+      "longitude": 51.5064,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #7",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0008",
+      "observed_at": "2026-03-08T01:00:00Z",
+      "latitude": 26.9592,
+      "longitude": 49.884,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #8",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0009",
+      "observed_at": "2026-03-09T01:00:00Z",
+      "latitude": 26.6046,
+      "longitude": 50.3064,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #9",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0010",
+      "observed_at": "2026-03-10T01:00:00Z",
+      "latitude": 25.503,
+      "longitude": 51.6312,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #10",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0011",
+      "observed_at": "2026-03-11T01:00:00Z",
+      "latitude": 25.6074,
+      "longitude": 51.4728,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #11",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0012",
+      "observed_at": "2026-03-12T01:00:00Z",
+      "latitude": 25.6128,
+      "longitude": 51.1128,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #12",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0013",
+      "observed_at": "2026-03-13T01:00:00Z",
+      "latitude": 26.3418,
+      "longitude": 50.832,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #13",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0014",
+      "observed_at": "2026-03-14T01:00:00Z",
+      "latitude": 26.3382,
+      "longitude": 50.6664,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #14",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0015",
+      "observed_at": "2026-03-15T01:00:00Z",
+      "latitude": 26.5884,
+      "longitude": 51.7872,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #15",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0016",
+      "observed_at": "2026-03-16T01:00:00Z",
+      "latitude": 26.0952,
+      "longitude": 51.3312,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #16",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0017",
+      "observed_at": "2026-03-17T01:00:00Z",
+      "latitude": 26.0502,
+      "longitude": 52.152,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #17",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0018",
+      "observed_at": "2026-03-18T01:00:00Z",
+      "latitude": 25.6308,
+      "longitude": 51.1248,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #18",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0019",
+      "observed_at": "2026-03-19T01:00:00Z",
+      "latitude": 25.602,
+      "longitude": 52.0248,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #19",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0020",
+      "observed_at": "2026-03-20T01:00:00Z",
+      "latitude": 26.2968,
+      "longitude": 51.696,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #20",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0021",
+      "observed_at": "2026-03-21T01:00:00Z",
+      "latitude": 26.4804,
+      "longitude": 51.4056,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #21",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0022",
+      "observed_at": "2026-03-22T01:00:00Z",
+      "latitude": 25.7946,
+      "longitude": 50.5608,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #22",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0023",
+      "observed_at": "2026-03-23T01:00:00Z",
+      "latitude": 26.4696,
+      "longitude": 51.9048,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #23",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0024",
+      "observed_at": "2026-03-24T01:00:00Z",
+      "latitude": 25.7208,
+      "longitude": 50.6808,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #24",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0025",
+      "observed_at": "2026-03-25T01:00:00Z",
+      "latitude": 26.9394,
+      "longitude": 51.4848,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #25",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0026",
+      "observed_at": "2026-03-26T01:00:00Z",
+      "latitude": 26.9214,
+      "longitude": 50.664,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #26",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0027",
+      "observed_at": "2026-03-27T01:00:00Z",
+      "latitude": 26.8836,
+      "longitude": 50.904,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #27",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0028",
+      "observed_at": "2026-03-28T01:00:00Z",
+      "latitude": 25.5606,
+      "longitude": 50.5824,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #28",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0029",
+      "observed_at": "2026-03-29T01:00:00Z",
+      "latitude": 26.7882,
+      "longitude": 50.3568,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #29",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0030",
+      "observed_at": "2026-03-30T01:00:00Z",
+      "latitude": 27.0708,
+      "longitude": 50.64,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #30",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0031",
+      "observed_at": "2026-03-31T01:00:00Z",
+      "latitude": 25.8918,
+      "longitude": 50.6136,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #31",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0032",
+      "observed_at": "2026-04-01T01:00:00Z",
+      "latitude": 26.223,
+      "longitude": 51.8592,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #32",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0033",
+      "observed_at": "2026-04-02T01:00:00Z",
+      "latitude": 26.5146,
+      "longitude": 51.1608,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #33",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0034",
+      "observed_at": "2026-04-03T01:00:00Z",
+      "latitude": 25.8054,
+      "longitude": 51.6048,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #34",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0035",
+      "observed_at": "2026-04-04T01:00:00Z",
+      "latitude": 25.5012,
+      "longitude": 49.944,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #35",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0036",
+      "observed_at": "2026-04-05T01:00:00Z",
+      "latitude": 26.7216,
+      "longitude": 50.2848,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #36",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0037",
+      "observed_at": "2026-04-06T01:00:00Z",
+      "latitude": 25.8144,
+      "longitude": 51.6576,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #37",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0038",
+      "observed_at": "2026-04-07T01:00:00Z",
+      "latitude": 25.377,
+      "longitude": 49.9032,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #38",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0039",
+      "observed_at": "2026-04-08T01:00:00Z",
+      "latitude": 26.25,
+      "longitude": 51.5328,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #39",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0040",
+      "observed_at": "2026-04-09T01:00:00Z",
+      "latitude": 26.1798,
+      "longitude": 49.8696,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #40",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0041",
+      "observed_at": "2026-04-10T01:00:00Z",
+      "latitude": 26.5902,
+      "longitude": 50.7528,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #41",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0042",
+      "observed_at": "2026-04-11T01:00:00Z",
+      "latitude": 25.4958,
+      "longitude": 49.9392,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #42",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0043",
+      "observed_at": "2026-04-12T01:00:00Z",
+      "latitude": 26.3634,
+      "longitude": 51.9768,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #43",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0044",
+      "observed_at": "2026-04-13T01:00:00Z",
+      "latitude": 26.6442,
+      "longitude": 50.3976,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #44",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0045",
+      "observed_at": "2026-04-14T01:00:00Z",
+      "latitude": 25.9908,
+      "longitude": 51.7992,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #45",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0046",
+      "observed_at": "2026-04-15T01:00:00Z",
+      "latitude": 26.1888,
+      "longitude": 50.5008,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #46",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0047",
+      "observed_at": "2026-04-16T01:00:00Z",
+      "latitude": 26.1528,
+      "longitude": 50.4384,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #47",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0048",
+      "observed_at": "2026-04-17T01:00:00Z",
+      "latitude": 25.989,
+      "longitude": 50.1192,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #48",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0049",
+      "observed_at": "2026-04-18T01:00:00Z",
+      "latitude": 25.503,
+      "longitude": 50.3016,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #49",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0050",
+      "observed_at": "2026-04-19T01:00:00Z",
+      "latitude": 25.4364,
+      "longitude": 51.9264,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #50",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0051",
+      "observed_at": "2026-04-20T01:00:00Z",
+      "latitude": 25.9944,
+      "longitude": 51.7392,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #51",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0052",
+      "observed_at": "2026-04-21T01:00:00Z",
+      "latitude": 25.98,
+      "longitude": 51.7824,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #52",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0053",
+      "observed_at": "2026-04-22T01:00:00Z",
+      "latitude": 26.8782,
+      "longitude": 51.1848,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #53",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0054",
+      "observed_at": "2026-04-23T01:00:00Z",
+      "latitude": 26.2032,
+      "longitude": 49.9536,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #54",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0055",
+      "observed_at": "2026-04-24T01:00:00Z",
+      "latitude": 25.5192,
+      "longitude": 50.976,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #55",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0056",
+      "observed_at": "2026-04-25T01:00:00Z",
+      "latitude": 25.5048,
+      "longitude": 51.3528,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #56",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0057",
+      "observed_at": "2026-04-26T01:00:00Z",
+      "latitude": 26.7828,
+      "longitude": 49.9776,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #57",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0058",
+      "observed_at": "2026-04-27T01:00:00Z",
+      "latitude": 26.4084,
+      "longitude": 50.58,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #58",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0059",
+      "observed_at": "2026-04-28T01:00:00Z",
+      "latitude": 26.34,
+      "longitude": 51.9408,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #59",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0060",
+      "observed_at": "2026-04-29T01:00:00Z",
+      "latitude": 25.9674,
+      "longitude": 51.8208,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #60",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0061",
+      "observed_at": "2026-04-30T01:00:00Z",
+      "latitude": 25.557,
+      "longitude": 52.08,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #61",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0062",
+      "observed_at": "2026-05-01T01:00:00Z",
+      "latitude": 25.359,
+      "longitude": 51.2568,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #62",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0063",
+      "observed_at": "2026-05-02T01:00:00Z",
+      "latitude": 26.5704,
+      "longitude": 50.9184,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #63",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0064",
+      "observed_at": "2026-05-03T01:00:00Z",
+      "latitude": 26.2536,
+      "longitude": 52.1424,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #64",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0065",
+      "observed_at": "2026-05-04T01:00:00Z",
+      "latitude": 26.1564,
+      "longitude": 51.54,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #65",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0066",
+      "observed_at": "2026-05-05T01:00:00Z",
+      "latitude": 25.6416,
+      "longitude": 52.152,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #66",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0067",
+      "observed_at": "2026-05-06T01:00:00Z",
+      "latitude": 25.7154,
+      "longitude": 51.8808,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #67",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0068",
+      "observed_at": "2026-05-07T01:00:00Z",
+      "latitude": 26.5308,
+      "longitude": 49.944,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #68",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0069",
+      "observed_at": "2026-05-08T01:00:00Z",
+      "latitude": 25.7874,
+      "longitude": 51.312,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #69",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0070",
+      "observed_at": "2026-05-09T01:00:00Z",
+      "latitude": 25.6848,
+      "longitude": 49.9128,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #70",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0071",
+      "observed_at": "2026-05-10T01:00:00Z",
+      "latitude": 25.6074,
+      "longitude": 49.8048,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #71",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0072",
+      "observed_at": "2026-05-11T01:00:00Z",
+      "latitude": 26.9358,
+      "longitude": 50.7936,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #72",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0073",
+      "observed_at": "2026-05-12T01:00:00Z",
+      "latitude": 26.7792,
+      "longitude": 50.3496,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #73",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0074",
+      "observed_at": "2026-05-13T01:00:00Z",
+      "latitude": 26.0052,
+      "longitude": 49.8768,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #74",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0075",
+      "observed_at": "2026-05-14T01:00:00Z",
+      "latitude": 26.1744,
+      "longitude": 52.0992,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #75",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0076",
+      "observed_at": "2026-05-15T01:00:00Z",
+      "latitude": 26.5182,
+      "longitude": 50.7744,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #76",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0077",
+      "observed_at": "2026-05-16T01:00:00Z",
+      "latitude": 26.4768,
+      "longitude": 51.468,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #77",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0078",
+      "observed_at": "2026-05-17T01:00:00Z",
+      "latitude": 25.989,
+      "longitude": 50.5752,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #78",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0079",
+      "observed_at": "2026-05-18T01:00:00Z",
+      "latitude": 26.6208,
+      "longitude": 50.0832,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #79",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0080",
+      "observed_at": "2026-05-19T01:00:00Z",
+      "latitude": 26.0268,
+      "longitude": 51.276,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #80",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0081",
+      "observed_at": "2026-05-20T01:00:00Z",
+      "latitude": 26.5758,
+      "longitude": 51.984,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #81",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0082",
+      "observed_at": "2026-05-21T01:00:00Z",
+      "latitude": 26.8944,
+      "longitude": 50.652,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #82",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0083",
+      "observed_at": "2026-05-22T01:00:00Z",
+      "latitude": 26.106,
+      "longitude": 50.4552,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #83",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0084",
+      "observed_at": "2026-05-23T01:00:00Z",
+      "latitude": 27.0978,
+      "longitude": 51.9888,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #84",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0085",
+      "observed_at": "2026-05-24T01:00:00Z",
+      "latitude": 25.8936,
+      "longitude": 50.8008,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #85",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0086",
+      "observed_at": "2026-05-25T01:00:00Z",
+      "latitude": 26.8512,
+      "longitude": 50.7552,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #86",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0087",
+      "observed_at": "2026-05-26T01:00:00Z",
+      "latitude": 26.1816,
+      "longitude": 51.564,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #87",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0088",
+      "observed_at": "2026-05-27T01:00:00Z",
+      "latitude": 26.7954,
+      "longitude": 51.9,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #88",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0089",
+      "observed_at": "2026-05-28T01:00:00Z",
+      "latitude": 25.791,
+      "longitude": 50.8896,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #89",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0090",
+      "observed_at": "2026-05-29T01:00:00Z",
+      "latitude": 25.7226,
+      "longitude": 50.3136,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #90",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0091",
+      "observed_at": "2026-05-30T01:00:00Z",
+      "latitude": 26.421,
+      "longitude": 51.5112,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #91",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0092",
+      "observed_at": "2026-05-31T01:00:00Z",
+      "latitude": 26.4228,
+      "longitude": 50.8992,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #92",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0093",
+      "observed_at": "2026-06-01T01:00:00Z",
+      "latitude": 27.0906,
+      "longitude": 51.1104,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #93",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0094",
+      "observed_at": "2026-06-02T01:00:00Z",
+      "latitude": 26.6064,
+      "longitude": 50.4144,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #94",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0095",
+      "observed_at": "2026-06-03T01:00:00Z",
+      "latitude": 26.7648,
+      "longitude": 51.2688,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #95",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0096",
+      "observed_at": "2026-06-04T01:00:00Z",
+      "latitude": 26.3508,
+      "longitude": 50.3088,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #96",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0097",
+      "observed_at": "2026-06-05T01:00:00Z",
+      "latitude": 25.5732,
+      "longitude": 49.896,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #97",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0098",
+      "observed_at": "2026-06-06T01:00:00Z",
+      "latitude": 26.7306,
+      "longitude": 50.1216,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #98",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0099",
+      "observed_at": "2026-06-07T01:00:00Z",
+      "latitude": 26.0862,
+      "longitude": 50.6424,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #99",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0100",
+      "observed_at": "2026-06-08T01:00:00Z",
+      "latitude": 26.6784,
+      "longitude": 50.3472,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #100",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0101",
+      "observed_at": "2026-06-09T01:00:00Z",
+      "latitude": 25.548,
+      "longitude": 51.0648,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #101",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0102",
+      "observed_at": "2026-06-10T01:00:00Z",
+      "latitude": 25.4886,
+      "longitude": 51.7968,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #102",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0103",
+      "observed_at": "2026-06-11T01:00:00Z",
+      "latitude": 25.5858,
+      "longitude": 51.9432,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #103",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0104",
+      "observed_at": "2026-06-12T01:00:00Z",
+      "latitude": 27.0762,
+      "longitude": 51.0936,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #104",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0105",
+      "observed_at": "2026-06-13T01:00:00Z",
+      "latitude": 26.3688,
+      "longitude": 52.0272,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #105",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0106",
+      "observed_at": "2026-06-14T01:00:00Z",
+      "latitude": 26.9502,
+      "longitude": 51.3192,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #106",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0107",
+      "observed_at": "2026-06-15T01:00:00Z",
+      "latitude": 26.5038,
+      "longitude": 50.1864,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #107",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0108",
+      "observed_at": "2026-06-16T01:00:00Z",
+      "latitude": 25.368,
+      "longitude": 51.5496,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #108",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0109",
+      "observed_at": "2026-06-17T01:00:00Z",
+      "latitude": 25.998,
+      "longitude": 52.1472,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #109",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0110",
+      "observed_at": "2026-06-18T01:00:00Z",
+      "latitude": 26.0394,
+      "longitude": 51.84,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #110",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0111",
+      "observed_at": "2026-06-19T01:00:00Z",
+      "latitude": 25.4148,
+      "longitude": 51.4104,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #111",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0112",
+      "observed_at": "2026-06-20T01:00:00Z",
+      "latitude": 26.3904,
+      "longitude": 51.456,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #112",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0113",
+      "observed_at": "2026-06-21T01:00:00Z",
+      "latitude": 26.0124,
+      "longitude": 49.8912,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #113",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0114",
+      "observed_at": "2026-06-22T01:00:00Z",
+      "latitude": 26.0016,
+      "longitude": 50.2344,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #114",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0115",
+      "observed_at": "2026-06-23T01:00:00Z",
+      "latitude": 25.4274,
+      "longitude": 50.3544,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #115",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0116",
+      "observed_at": "2026-06-24T01:00:00Z",
+      "latitude": 25.8504,
+      "longitude": 50.4,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #116",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0117",
+      "observed_at": "2026-06-25T01:00:00Z",
+      "latitude": 25.395,
+      "longitude": 51.1056,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #117",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0118",
+      "observed_at": "2026-06-26T01:00:00Z",
+      "latitude": 26.196,
+      "longitude": 49.8528,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #118",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0119",
+      "observed_at": "2026-06-27T01:00:00Z",
+      "latitude": 25.9962,
+      "longitude": 50.6784,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #119",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0120",
+      "observed_at": "2026-06-28T01:00:00Z",
+      "latitude": 26.7324,
+      "longitude": 50.3472,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #120",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0121",
+      "observed_at": "2026-06-29T01:00:00Z",
+      "latitude": 26.9898,
+      "longitude": 51.8424,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #121",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0122",
+      "observed_at": "2026-06-30T01:00:00Z",
+      "latitude": 27.0402,
+      "longitude": 49.9608,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #122",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0123",
+      "observed_at": "2026-07-01T01:00:00Z",
+      "latitude": 25.4526,
+      "longitude": 50.7984,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #123",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0124",
+      "observed_at": "2026-07-02T01:00:00Z",
+      "latitude": 26.2986,
+      "longitude": 51.1176,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #124",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0125",
+      "observed_at": "2026-07-03T01:00:00Z",
+      "latitude": 26.3508,
+      "longitude": 50.136,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #125",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0126",
+      "observed_at": "2026-07-04T01:00:00Z",
+      "latitude": 25.4364,
+      "longitude": 51.1584,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #126",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0127",
+      "observed_at": "2026-07-05T01:00:00Z",
+      "latitude": 26.0466,
+      "longitude": 51.7416,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #127",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0128",
+      "observed_at": "2026-07-06T01:00:00Z",
+      "latitude": 25.971,
+      "longitude": 52.0152,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #128",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0129",
+      "observed_at": "2026-07-07T01:00:00Z",
+      "latitude": 25.4184,
+      "longitude": 51.6768,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #129",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0130",
+      "observed_at": "2026-07-08T01:00:00Z",
+      "latitude": 27.1248,
+      "longitude": 51.1032,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #130",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0131",
+      "observed_at": "2026-07-09T01:00:00Z",
+      "latitude": 25.4616,
+      "longitude": 50.964,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #131",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0132",
+      "observed_at": "2026-07-10T01:00:00Z",
+      "latitude": 26.8692,
+      "longitude": 52.0632,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #132",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0133",
+      "observed_at": "2026-07-11T01:00:00Z",
+      "latitude": 25.8774,
+      "longitude": 51.804,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #133",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0134",
+      "observed_at": "2026-07-12T01:00:00Z",
+      "latitude": 26.0988,
+      "longitude": 51.3768,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #134",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0135",
+      "observed_at": "2026-07-13T01:00:00Z",
+      "latitude": 25.8504,
+      "longitude": 51.012,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #135",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0136",
+      "observed_at": "2026-07-14T01:00:00Z",
+      "latitude": 26.934,
+      "longitude": 50.772,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #136",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0137",
+      "observed_at": "2026-07-15T01:00:00Z",
+      "latitude": 26.6352,
+      "longitude": 51.0456,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #137",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0138",
+      "observed_at": "2026-07-16T01:00:00Z",
+      "latitude": 26.8386,
+      "longitude": 50.8728,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #138",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0139",
+      "observed_at": "2026-07-17T01:00:00Z",
+      "latitude": 25.5012,
+      "longitude": 52.0944,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #139",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0140",
+      "observed_at": "2026-07-18T01:00:00Z",
+      "latitude": 26.9736,
+      "longitude": 51.6768,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #140",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0141",
+      "observed_at": "2026-07-19T01:00:00Z",
+      "latitude": 26.826,
+      "longitude": 50.3136,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #141",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0142",
+      "observed_at": "2026-07-20T01:00:00Z",
+      "latitude": 26.7738,
+      "longitude": 50.2008,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #142",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0143",
+      "observed_at": "2026-07-21T01:00:00Z",
+      "latitude": 26.0574,
+      "longitude": 51.4032,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #143",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0144",
+      "observed_at": "2026-07-22T01:00:00Z",
+      "latitude": 26.583,
+      "longitude": 51.6096,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #144",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0145",
+      "observed_at": "2026-07-23T01:00:00Z",
+      "latitude": 26.4102,
+      "longitude": 50.2032,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #145",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0146",
+      "observed_at": "2026-07-24T01:00:00Z",
+      "latitude": 26.3742,
+      "longitude": 50.22,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #146",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0147",
+      "observed_at": "2026-07-25T01:00:00Z",
+      "latitude": 26.6568,
+      "longitude": 51.3144,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #147",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0148",
+      "observed_at": "2026-07-26T01:00:00Z",
+      "latitude": 26.8566,
+      "longitude": 50.6064,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #148",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0149",
+      "observed_at": "2026-07-27T01:00:00Z",
+      "latitude": 26.1204,
+      "longitude": 51.108,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #149",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0150",
+      "observed_at": "2026-07-28T01:00:00Z",
+      "latitude": 25.4454,
+      "longitude": 50.2464,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #150",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0151",
+      "observed_at": "2026-07-29T01:00:00Z",
+      "latitude": 26.8278,
+      "longitude": 50.3376,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #151",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0152",
+      "observed_at": "2026-07-30T01:00:00Z",
+      "latitude": 26.0088,
+      "longitude": 52.0728,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #152",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    },
+    {
+      "source_record_id": "GGFR_GULF_FLARE_2026_0153",
+      "observed_at": "2026-07-31T01:00:00Z",
+      "latitude": 26.8368,
+      "longitude": 50.628,
+      "claim_class": "industrial",
+      "confidence": 1.0,
+      "country": "Saudi Arabia / UAE / Qatar",
+      "region": "Persian Gulf",
+      "fire_regime": "industrial",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "facility_name": "Persian Gulf Gas-Oil Separation Plant / Refinery Flare #153",
+        "emission_type": "Continuous Upstream/Downstream Process Flare",
+        "registry": "World Bank GGFR / NOAA VIIRS Nightfire Global Registry"
+      }
+    }
+  ]
+}

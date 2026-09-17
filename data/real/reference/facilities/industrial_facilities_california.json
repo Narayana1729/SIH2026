@@ -1,0 +1,90 @@
+{
+  "source_metadata": {
+    "source_id": "FAC_CALIFORNIA_REF_2026",
+    "source_name": "California Petroleum Refining & Energy Complex Registry",
+    "source_type": "OFFICIAL_FACILITY_REGISTRY",
+    "provider": "wri_osm_facility_db",
+    "dataset_name": "california_energy_facilities",
+    "dataset_version": "v2026.1",
+    "tier": "TIER_A_AUTHORITATIVE",
+    "country": "USA",
+    "region": "California"
+  },
+  "features": [
+    {
+      "feature_id": "FAC-CAL-001",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "california_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "oil_gas",
+      "latitude": 37.9358,
+      "longitude": -122.395,
+      "facility_name": "Chevron Richmond Refinery",
+      "metadata": {
+        "operator": "Chevron USA",
+        "capacity_bpd": 245000,
+        "state": "California"
+      }
+    },
+    {
+      "feature_id": "FAC-CAL-002",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "california_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "oil_gas",
+      "latitude": 38.05,
+      "longitude": -122.13,
+      "facility_name": "Valero Benicia Refinery",
+      "metadata": {
+        "operator": "Valero Energy",
+        "capacity_bpd": 145000,
+        "state": "California"
+      }
+    },
+    {
+      "feature_id": "FAC-CAL-003",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "california_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "oil_gas",
+      "latitude": 38.02,
+      "longitude": -122.09,
+      "facility_name": "Martinez Refining Complex",
+      "metadata": {
+        "operator": "PBF Energy",
+        "capacity_bpd": 157000,
+        "state": "California"
+      }
+    },
+    {
+      "feature_id": "FAC-CAL-004",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "california_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "power",
+      "latitude": 38.018,
+      "longitude": -121.898,
+      "facility_name": "Delta Energy Center Power Station",
+      "metadata": {
+        "operator": "Calpine Corporation",
+        "capacity_mw": 880,
+        "state": "California"
+      }
+    },
+    {
+      "feature_id": "FAC-CAL-005",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "california_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "power",
+      "latitude": 38.025,
+      "longitude": -121.885,
+      "facility_name": "Los Medanos Energy Center",
+      "metadata": {
+        "operator": "Calpine Corporation",
+        "capacity_mw": 550,
+        "state": "California"
+      }
+    }
+  ]
+}

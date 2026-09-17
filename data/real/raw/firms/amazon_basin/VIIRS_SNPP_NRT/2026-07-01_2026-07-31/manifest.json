@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_amazon_basin_VIIRS_SNPP_NRT_2026-07-01_2026-07-31",
+  "source_name": "NASA_FIRMS",
+  "source_product": "VIIRS_SNPP_NRT",
+  "sensor": "VIIRS",
+  "study_area_id": "amazon_basin",
+  "study_area_name": "Amazon Basin Deforestation and Agricultural Burning Corridor",
+  "requested_start_date": "2026-07-01",
+  "requested_end_date": "2026-07-31",
+  "bounding_box": {
+    "min_latitude": -14.0,
+    "min_longitude": -62.0,
+    "max_latitude": -8.0,
+    "max_longitude": -52.0
+  },
+  "raw_record_count": 124,
+  "valid_record_count": 124,
+  "canonical_record_count": 124,
+  "raw_file_sha256": "e277d1e879ea848c106b7a437520b151ebe41adb40ae8cff99b34d16410b5888",
+  "created_at": "2026-09-06T07:47:37.497845+00:00"
+}

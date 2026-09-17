@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_singrauli_sonbhadra_VIIRS_NOAA20_NRT_2026-04-01_2026-04-30",
+  "source_name": "NASA_FIRMS",
+  "source_product": "VIIRS_NOAA20_NRT",
+  "sensor": "VIIRS",
+  "study_area_id": "singrauli_sonbhadra",
+  "study_area_name": "Singrauli & Sonbhadra Energy & Heavy Metallurgy Hub",
+  "requested_start_date": "2026-04-01",
+  "requested_end_date": "2026-04-30",
+  "bounding_box": {
+    "min_latitude": 23.8,
+    "min_longitude": 82.3,
+    "max_latitude": 24.5,
+    "max_longitude": 83.2
+  },
+  "raw_record_count": 120,
+  "valid_record_count": 120,
+  "canonical_record_count": 120,
+  "raw_file_sha256": "b9a1d61ba9639c0dc45bac7384a99658b07f1e5b9f92461ac12763066db645d9",
+  "created_at": "2026-09-06T07:47:37.417604+00:00"
+}

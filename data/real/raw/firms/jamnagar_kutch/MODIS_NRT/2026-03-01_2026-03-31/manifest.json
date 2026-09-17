@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_jamnagar_kutch_MODIS_NRT_2026-03-01_2026-03-31",
+  "source_name": "NASA_FIRMS",
+  "source_product": "MODIS_NRT",
+  "sensor": "MODIS",
+  "study_area_id": "jamnagar_kutch",
+  "study_area_name": "Jamnagar & Gulf of Kutch Refining and Petrochemical Corridor",
+  "requested_start_date": "2026-03-01",
+  "requested_end_date": "2026-03-31",
+  "bounding_box": {
+    "min_latitude": 22.0,
+    "min_longitude": 69.5,
+    "max_latitude": 23.0,
+    "max_longitude": 70.8
+  },
+  "raw_record_count": 62,
+  "valid_record_count": 62,
+  "canonical_record_count": 62,
+  "raw_file_sha256": "5aca2de07ba2c9a96ce563ca7a9822e74f535ee0eb4db58210506d1e7b6b3f6e",
+  "created_at": "2026-09-06T07:47:37.405048+00:00"
+}

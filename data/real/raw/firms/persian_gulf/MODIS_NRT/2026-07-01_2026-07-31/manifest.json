@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_persian_gulf_MODIS_NRT_2026-07-01_2026-07-31",
+  "source_name": "NASA_FIRMS",
+  "source_product": "MODIS_NRT",
+  "sensor": "MODIS",
+  "study_area_id": "persian_gulf",
+  "study_area_name": "Persian Gulf Upstream/Downstream Petroleum Flaring Corridor",
+  "requested_start_date": "2026-07-01",
+  "requested_end_date": "2026-07-31",
+  "bounding_box": {
+    "min_latitude": 24.0,
+    "min_longitude": 48.0,
+    "max_latitude": 28.5,
+    "max_longitude": 54.0
+  },
+  "raw_record_count": 62,
+  "valid_record_count": 62,
+  "canonical_record_count": 62,
+  "raw_file_sha256": "a21cd2d0bff5edb83ce1ad6bd483847eae69f6fd1f7bc1a4de292fac550fd13a",
+  "created_at": "2026-09-06T07:47:37.475727+00:00"
+}

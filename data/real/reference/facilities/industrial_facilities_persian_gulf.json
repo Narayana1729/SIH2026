@@ -1,0 +1,89 @@
+{
+  "source_metadata": {
+    "source_id": "FAC_PERSIAN_GULF_REF_2026",
+    "source_name": "Persian Gulf Major Petroleum & Gas Processing Registry",
+    "source_type": "OFFICIAL_FACILITY_REGISTRY",
+    "provider": "wri_osm_facility_db",
+    "dataset_name": "persian_gulf_energy_facilities",
+    "dataset_version": "v2026.1",
+    "tier": "TIER_A_AUTHORITATIVE",
+    "country": "Saudi Arabia / UAE / Qatar",
+    "region": "Persian Gulf"
+  },
+  "features": [
+    {
+      "feature_id": "FAC-GULF-001",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "persian_gulf_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "oil_gas",
+      "latitude": 26.6433,
+      "longitude": 50.1589,
+      "facility_name": "Ras Tanura Refinery & Crude Terminal",
+      "metadata": {
+        "operator": "Saudi Aramco",
+        "capacity_bpd": 550000,
+        "state": "Eastern Province"
+      }
+    },
+    {
+      "feature_id": "FAC-GULF-002",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "persian_gulf_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "industrial",
+      "latitude": 27.011,
+      "longitude": 49.66,
+      "facility_name": "Jubail Petrochemical Industrial Complex",
+      "metadata": {
+        "operator": "SABIC",
+        "capacity_mtpa": 12.5,
+        "state": "Eastern Province"
+      }
+    },
+    {
+      "feature_id": "FAC-GULF-003",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "persian_gulf_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "oil_gas",
+      "latitude": 25.903,
+      "longitude": 51.528,
+      "facility_name": "Ras Laffan LNG Industrial Terminal",
+      "metadata": {
+        "operator": "QatarEnergy LNG",
+        "capacity_mtpa": 77.0,
+        "state": "Al Khor"
+      }
+    },
+    {
+      "feature_id": "FAC-GULF-004",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "persian_gulf_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "oil_gas",
+      "latitude": 25.15,
+      "longitude": 52.88,
+      "facility_name": "Das Island Offshore Hydrocarbon Processing Terminal",
+      "metadata": {
+        "operator": "ADNOC Gas",
+        "state": "Abu Dhabi"
+      }
+    },
+    {
+      "feature_id": "FAC-GULF-005",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "persian_gulf_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "oil_gas",
+      "latitude": 29.076,
+      "longitude": 48.13,
+      "facility_name": "Mina Al-Ahmadi Petroleum Refinery",
+      "metadata": {
+        "operator": "KNPC",
+        "capacity_bpd": 466000,
+        "state": "Ahmadi"
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_persian_gulf_VIIRS_NOAA20_NRT_2026-07-01_2026-07-31",
+  "source_name": "NASA_FIRMS",
+  "source_product": "VIIRS_NOAA20_NRT",
+  "sensor": "VIIRS",
+  "study_area_id": "persian_gulf",
+  "study_area_name": "Persian Gulf Upstream/Downstream Petroleum Flaring Corridor",
+  "requested_start_date": "2026-07-01",
+  "requested_end_date": "2026-07-31",
+  "bounding_box": {
+    "min_latitude": 24.0,
+    "min_longitude": 48.0,
+    "max_latitude": 28.5,
+    "max_longitude": 54.0
+  },
+  "raw_record_count": 124,
+  "valid_record_count": 124,
+  "canonical_record_count": 124,
+  "raw_file_sha256": "a5a174835fa733bbbc514bcda369ea75078afbb696dbf6e8751c40c78ffd57a2",
+  "created_at": "2026-09-06T07:47:37.471602+00:00"
+}

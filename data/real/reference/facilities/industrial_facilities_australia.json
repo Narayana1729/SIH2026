@@ -1,0 +1,75 @@
+{
+  "source_metadata": {
+    "source_id": "FAC_AUSTRALIA_REF_2026",
+    "source_name": "Southeast Australia Metallurgy & Heavy Power Registry",
+    "source_type": "OFFICIAL_FACILITY_REGISTRY",
+    "provider": "wri_osm_facility_db",
+    "dataset_name": "australia_heavy_industry",
+    "dataset_version": "v2026.1",
+    "tier": "TIER_A_AUTHORITATIVE",
+    "country": "Australia",
+    "region": "New South Wales / Victoria"
+  },
+  "features": [
+    {
+      "feature_id": "FAC-AUS-001",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "australia_heavy_industry",
+      "dataset_version": "v2026.1",
+      "context_type": "industrial",
+      "latitude": -32.833,
+      "longitude": 151.683,
+      "facility_name": "Tomago Aluminium Smelter",
+      "metadata": {
+        "operator": "Tomago Aluminium Co",
+        "capacity_tpa": 590000,
+        "state": "NSW"
+      }
+    },
+    {
+      "feature_id": "FAC-AUS-002",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "australia_heavy_industry",
+      "dataset_version": "v2026.1",
+      "context_type": "power",
+      "latitude": -32.394,
+      "longitude": 150.949,
+      "facility_name": "Bayswater Power Station",
+      "metadata": {
+        "operator": "AGL Energy",
+        "capacity_mw": 2640,
+        "state": "NSW"
+      }
+    },
+    {
+      "feature_id": "FAC-AUS-003",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "australia_heavy_industry",
+      "dataset_version": "v2026.1",
+      "context_type": "industrial",
+      "latitude": -34.45,
+      "longitude": 150.883,
+      "facility_name": "BlueScope Port Kembla Steelworks",
+      "metadata": {
+        "operator": "BlueScope Steel",
+        "capacity_mtpa": 3.0,
+        "state": "NSW"
+      }
+    },
+    {
+      "feature_id": "FAC-AUS-004",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "australia_heavy_industry",
+      "dataset_version": "v2026.1",
+      "context_type": "power",
+      "latitude": -38.256,
+      "longitude": 146.577,
+      "facility_name": "Loy Yang Thermal Power Station",
+      "metadata": {
+        "operator": "AGL Energy",
+        "capacity_mw": 2210,
+        "state": "Victoria"
+      }
+    }
+  ]
+}

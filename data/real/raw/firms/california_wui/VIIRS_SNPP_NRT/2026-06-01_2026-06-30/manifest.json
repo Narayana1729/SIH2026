@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_california_wui_VIIRS_SNPP_NRT_2026-06-01_2026-06-30",
+  "source_name": "NASA_FIRMS",
+  "source_product": "VIIRS_SNPP_NRT",
+  "sensor": "VIIRS",
+  "study_area_id": "california_wui",
+  "study_area_name": "California Wildland-Urban Interface & Sierra Forest Fire Corridor",
+  "requested_start_date": "2026-06-01",
+  "requested_end_date": "2026-06-30",
+  "bounding_box": {
+    "min_latitude": 34.0,
+    "min_longitude": -122.0,
+    "max_latitude": 40.0,
+    "max_longitude": -118.0
+  },
+  "raw_record_count": 120,
+  "valid_record_count": 120,
+  "canonical_record_count": 120,
+  "raw_file_sha256": "e910718ebeba2fc4387d03a1c6be45ac7b998d2fd5b2a40c5d25c858f2ec437e",
+  "created_at": "2026-09-06T07:47:37.480364+00:00"
+}

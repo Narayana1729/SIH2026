@@ -1,0 +1,69 @@
+"""Smoke test for BE-001 repository skeleton importability."""
+
+import importlib
+import unittest
+
+
+class TestRepositorySkeletonSmoke(unittest.TestCase):
+    """Verify that all foundational packages and modules are importable."""
+
+    def test_import_services(self) -> None:
+        """Test that all service packages and subpackages can be imported."""
+        modules = [
+            "services",
+            "services.api",
+            "services.api.routes",
+            "services.api.schemas",
+            "services.api.services",
+            "services.api.repositories",
+            "services.worker",
+            "services.worker.jobs",
+            "services.worker.ingestion",
+            "services.worker.enrichment",
+            "services.worker.persistence",
+            "services.ml",
+            "services.ml.features",
+            "services.ml.training",
+            "services.ml.evaluation",
+            "services.ml.inference",
+            "services.ml.calibration",
+        ]
+        for mod_name in modules:
+            with self.subTest(module=mod_name):
+                mod = importlib.import_module(mod_name)
+                self.assertIsNotNone(mod)
+
+    def test_import_packages(self) -> None:
+        """Test that all shared packages can be imported."""
+        modules = [
+            "packages",
+            "packages.schemas",
+            "packages.schemas.common",
+            "packages.schemas.enums",
+            "packages.schemas.detection",
+            "packages.schemas.event",
+            "packages.schemas.source",
+            "packages.schemas.context",
+            "packages.schemas.intelligence",
+            "packages.geospatial",
+            "packages.evidence",
+            "packages.config",
+            "packages.config.settings",
+            "packages.config.scientific",
+            "packages.errors",
+            "packages.errors.codes",
+            "packages.errors.base",
+            "packages.errors.exceptions",
+            "packages.logging",
+            "packages.logging.config",
+            "packages.logging.formatters",
+            "packages.logging.sanitizer",
+        ]
+        for mod_name in modules:
+            with self.subTest(module=mod_name):
+                mod = importlib.import_module(mod_name)
+                self.assertIsNotNone(mod)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_angul_talcher_MODIS_NRT_2026-04-01_2026-04-30",
+  "source_name": "NASA_FIRMS",
+  "source_product": "MODIS_NRT",
+  "sensor": "MODIS",
+  "study_area_id": "angul_talcher",
+  "study_area_name": "Angul - Talcher Mining & Industrial Metallurgy Corridor",
+  "requested_start_date": "2026-04-01",
+  "requested_end_date": "2026-04-30",
+  "bounding_box": {
+    "min_latitude": 20.7,
+    "min_longitude": 84.8,
+    "max_latitude": 21.8,
+    "max_longitude": 85.6
+  },
+  "raw_record_count": 60,
+  "valid_record_count": 60,
+  "canonical_record_count": 60,
+  "raw_file_sha256": "ad92acea964b2f649e9eeb4d7c3eed243a61b4a569c3a9f9b5fadc77bf073820",
+  "created_at": "2026-09-06T07:47:37.440361+00:00"
+}

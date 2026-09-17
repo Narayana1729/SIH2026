@@ -1,0 +1,2226 @@
+{
+  "source_metadata": {
+    "source_id": "INPE_QUEIMADAS_REGISTRY_2026",
+    "source_name": "INPE Queimadas Official Agricultural & Deforestation Fire Registry",
+    "source_type": "GOVERNMENT_ENVIRONMENTAL_MONITORING",
+    "tier": "TIER_A_AUTHORITATIVE",
+    "country": "Brazil",
+    "fire_regime": "agricultural"
+  },
+  "records": [
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0001",
+      "observed_at": "2026-03-01T01:00:00Z",
+      "latitude": -11.048,
+      "longitude": -58.752,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0002",
+      "observed_at": "2026-03-02T07:17:00Z",
+      "latitude": -10.0088,
+      "longitude": -58.128,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0003",
+      "observed_at": "2026-03-03T13:34:00Z",
+      "latitude": -11.5448,
+      "longitude": -57.668,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0004",
+      "observed_at": "2026-03-04T19:51:00Z",
+      "latitude": -10.5752,
+      "longitude": -56.752,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0005",
+      "observed_at": "2026-03-06T01:00:00Z",
+      "latitude": -10.976,
+      "longitude": -57.884,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0006",
+      "observed_at": "2026-03-07T07:17:00Z",
+      "latitude": -10.0736,
+      "longitude": -56.732,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0007",
+      "observed_at": "2026-03-08T13:34:00Z",
+      "latitude": -10.8152,
+      "longitude": -56.584,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0008",
+      "observed_at": "2026-03-09T19:51:00Z",
+      "latitude": -10.3928,
+      "longitude": -58.66,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0009",
+      "observed_at": "2026-03-11T01:00:00Z",
+      "latitude": -10.0856,
+      "longitude": -56.148,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0010",
+      "observed_at": "2026-03-12T07:17:00Z",
+      "latitude": -11.3384,
+      "longitude": -58.18,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0011",
+      "observed_at": "2026-03-13T13:34:00Z",
+      "latitude": -10.6304,
+      "longitude": -57.92,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0012",
+      "observed_at": "2026-03-14T19:51:00Z",
+      "latitude": -10.28,
+      "longitude": -58.612,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0013",
+      "observed_at": "2026-03-16T01:00:00Z",
+      "latitude": -10.1864,
+      "longitude": -57.42,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0014",
+      "observed_at": "2026-03-17T07:17:00Z",
+      "latitude": -10.9784,
+      "longitude": -56.352,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0015",
+      "observed_at": "2026-03-18T13:34:00Z",
+      "latitude": -11.9312,
+      "longitude": -56.212,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0016",
+      "observed_at": "2026-03-19T19:51:00Z",
+      "latitude": -10.64,
+      "longitude": -58.056,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0017",
+      "observed_at": "2026-03-21T01:00:00Z",
+      "latitude": -11.6792,
+      "longitude": -57.348,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0018",
+      "observed_at": "2026-03-22T07:17:00Z",
+      "latitude": -9.884,
+      "longitude": -56.8,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0019",
+      "observed_at": "2026-03-23T13:34:00Z",
+      "latitude": -11.8592,
+      "longitude": -55.88,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0020",
+      "observed_at": "2026-03-24T19:51:00Z",
+      "latitude": -10.5032,
+      "longitude": -55.224,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0021",
+      "observed_at": "2026-03-26T01:00:00Z",
+      "latitude": -10.1576,
+      "longitude": -56.024,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0022",
+      "observed_at": "2026-03-27T07:17:00Z",
+      "latitude": -10.6496,
+      "longitude": -56.576,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0023",
+      "observed_at": "2026-03-28T13:34:00Z",
+      "latitude": -11.036,
+      "longitude": -56.632,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0024",
+      "observed_at": "2026-03-29T19:51:00Z",
+      "latitude": -9.9896,
+      "longitude": -55.932,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0025",
+      "observed_at": "2026-03-31T01:00:00Z",
+      "latitude": -11.9312,
+      "longitude": -57.668,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0026",
+      "observed_at": "2026-04-01T07:17:00Z",
+      "latitude": -11.384,
+      "longitude": -55.844,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0027",
+      "observed_at": "2026-04-02T13:34:00Z",
+      "latitude": -11.1368,
+      "longitude": -55.464,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0028",
+      "observed_at": "2026-04-03T19:51:00Z",
+      "latitude": -11.6816,
+      "longitude": -57.82,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0029",
+      "observed_at": "2026-04-05T01:00:00Z",
+      "latitude": -10.1744,
+      "longitude": -57.948,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0030",
+      "observed_at": "2026-04-06T07:17:00Z",
+      "latitude": -10.2704,
+      "longitude": -58.94,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0031",
+      "observed_at": "2026-04-07T13:34:00Z",
+      "latitude": -10.004,
+      "longitude": -55.692,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0032",
+      "observed_at": "2026-04-08T19:51:00Z",
+      "latitude": -11.7104,
+      "longitude": -57.388,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0033",
+      "observed_at": "2026-04-10T01:00:00Z",
+      "latitude": -11.9072,
+      "longitude": -56.376,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0034",
+      "observed_at": "2026-04-11T07:17:00Z",
+      "latitude": -11.0168,
+      "longitude": -58.148,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0035",
+      "observed_at": "2026-04-12T13:34:00Z",
+      "latitude": -10.1744,
+      "longitude": -56.296,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0036",
+      "observed_at": "2026-04-13T19:51:00Z",
+      "latitude": -10.4168,
+      "longitude": -55.208,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0037",
+      "observed_at": "2026-04-15T01:00:00Z",
+      "latitude": -11.576,
+      "longitude": -57.468,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0038",
+      "observed_at": "2026-04-16T07:17:00Z",
+      "latitude": -10.376,
+      "longitude": -55.9,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0039",
+      "observed_at": "2026-04-17T13:34:00Z",
+      "latitude": -9.8552,
+      "longitude": -57.872,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0040",
+      "observed_at": "2026-04-18T19:51:00Z",
+      "latitude": -12.0296,
+      "longitude": -55.988,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0041",
+      "observed_at": "2026-04-20T01:00:00Z",
+      "latitude": -11.6192,
+      "longitude": -56.608,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0042",
+      "observed_at": "2026-04-21T07:17:00Z",
+      "latitude": -12.1208,
+      "longitude": -56.948,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0043",
+      "observed_at": "2026-04-22T13:34:00Z",
+      "latitude": -10.88,
+      "longitude": -58.732,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0044",
+      "observed_at": "2026-04-23T19:51:00Z",
+      "latitude": -9.8384,
+      "longitude": -58.892,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0045",
+      "observed_at": "2026-04-25T01:00:00Z",
+      "latitude": -10.0256,
+      "longitude": -57.408,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0046",
+      "observed_at": "2026-04-26T07:17:00Z",
+      "latitude": -9.9656,
+      "longitude": -57.544,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0047",
+      "observed_at": "2026-04-27T13:34:00Z",
+      "latitude": -10.2896,
+      "longitude": -58.144,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0048",
+      "observed_at": "2026-04-28T19:51:00Z",
+      "latitude": -11.216,
+      "longitude": -55.784,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0049",
+      "observed_at": "2026-04-30T01:00:00Z",
+      "latitude": -12.056,
+      "longitude": -55.716,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0050",
+      "observed_at": "2026-05-01T07:17:00Z",
+      "latitude": -11.36,
+      "longitude": -55.204,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0051",
+      "observed_at": "2026-05-02T13:34:00Z",
+      "latitude": -10.6664,
+      "longitude": -57.692,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0052",
+      "observed_at": "2026-05-03T19:51:00Z",
+      "latitude": -10.5944,
+      "longitude": -58.556,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0053",
+      "observed_at": "2026-05-05T01:00:00Z",
+      "latitude": -11.7104,
+      "longitude": -56.02,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0054",
+      "observed_at": "2026-05-06T07:17:00Z",
+      "latitude": -11.7872,
+      "longitude": -58.384,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0055",
+      "observed_at": "2026-05-07T13:34:00Z",
+      "latitude": -10.4792,
+      "longitude": -58.012,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0056",
+      "observed_at": "2026-05-08T19:51:00Z",
+      "latitude": -11.7992,
+      "longitude": -58.792,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0057",
+      "observed_at": "2026-05-10T01:00:00Z",
+      "latitude": -12.1352,
+      "longitude": -55.928,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0058",
+      "observed_at": "2026-05-11T07:17:00Z",
+      "latitude": -12.044,
+      "longitude": -57.368,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0059",
+      "observed_at": "2026-05-12T13:34:00Z",
+      "latitude": -12.0296,
+      "longitude": -56.296,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0060",
+      "observed_at": "2026-05-13T19:51:00Z",
+      "latitude": -11.6,
+      "longitude": -57.536,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0061",
+      "observed_at": "2026-05-15T01:00:00Z",
+      "latitude": -11.168,
+      "longitude": -55.048,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0062",
+      "observed_at": "2026-05-16T07:17:00Z",
+      "latitude": -10.0208,
+      "longitude": -58.26,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0063",
+      "observed_at": "2026-05-17T13:34:00Z",
+      "latitude": -10.4672,
+      "longitude": -55.028,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0064",
+      "observed_at": "2026-05-18T19:51:00Z",
+      "latitude": -11.1344,
+      "longitude": -55.096,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0065",
+      "observed_at": "2026-05-20T01:00:00Z",
+      "latitude": -11.4632,
+      "longitude": -58.28,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0066",
+      "observed_at": "2026-05-21T07:17:00Z",
+      "latitude": -11.06,
+      "longitude": -58.248,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0067",
+      "observed_at": "2026-05-22T13:34:00Z",
+      "latitude": -10.8416,
+      "longitude": -55.2,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0068",
+      "observed_at": "2026-05-23T19:51:00Z",
+      "latitude": -9.9008,
+      "longitude": -57.532,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0069",
+      "observed_at": "2026-05-25T01:00:00Z",
+      "latitude": -10.4312,
+      "longitude": -58.824,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0070",
+      "observed_at": "2026-05-26T07:17:00Z",
+      "latitude": -9.8816,
+      "longitude": -57.092,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0071",
+      "observed_at": "2026-05-27T13:34:00Z",
+      "latitude": -11.168,
+      "longitude": -55.884,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0072",
+      "observed_at": "2026-05-28T19:51:00Z",
+      "latitude": -11.7608,
+      "longitude": -57.06,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0073",
+      "observed_at": "2026-05-30T01:00:00Z",
+      "latitude": -10.22,
+      "longitude": -57.212,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0074",
+      "observed_at": "2026-05-31T07:17:00Z",
+      "latitude": -11.0096,
+      "longitude": -55.372,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0075",
+      "observed_at": "2026-06-01T13:34:00Z",
+      "latitude": -11.2568,
+      "longitude": -58.376,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0076",
+      "observed_at": "2026-06-02T19:51:00Z",
+      "latitude": -11.6432,
+      "longitude": -56.212,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0077",
+      "observed_at": "2026-06-04T01:00:00Z",
+      "latitude": -10.0328,
+      "longitude": -56.916,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0078",
+      "observed_at": "2026-06-05T07:17:00Z",
+      "latitude": -10.448,
+      "longitude": -58.316,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0079",
+      "observed_at": "2026-06-06T13:34:00Z",
+      "latitude": -10.556,
+      "longitude": -58.46,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0080",
+      "observed_at": "2026-06-07T19:51:00Z",
+      "latitude": -10.7936,
+      "longitude": -59.0,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0081",
+      "observed_at": "2026-06-09T01:00:00Z",
+      "latitude": -11.4776,
+      "longitude": -55.004,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0082",
+      "observed_at": "2026-06-10T07:17:00Z",
+      "latitude": -10.9472,
+      "longitude": -58.64,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0083",
+      "observed_at": "2026-06-11T13:34:00Z",
+      "latitude": -10.4456,
+      "longitude": -58.112,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0084",
+      "observed_at": "2026-06-12T19:51:00Z",
+      "latitude": -11.864,
+      "longitude": -56.596,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0085",
+      "observed_at": "2026-06-14T01:00:00Z",
+      "latitude": -11.5736,
+      "longitude": -58.192,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0086",
+      "observed_at": "2026-06-15T07:17:00Z",
+      "latitude": -9.8816,
+      "longitude": -58.232,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0087",
+      "observed_at": "2026-06-16T13:34:00Z",
+      "latitude": -9.8696,
+      "longitude": -56.68,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0088",
+      "observed_at": "2026-06-17T19:51:00Z",
+      "latitude": -11.2112,
+      "longitude": -56.852,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0089",
+      "observed_at": "2026-06-19T01:00:00Z",
+      "latitude": -10.7912,
+      "longitude": -58.08,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0090",
+      "observed_at": "2026-06-20T07:17:00Z",
+      "latitude": -11.5352,
+      "longitude": -57.124,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0091",
+      "observed_at": "2026-06-21T13:34:00Z",
+      "latitude": -11.6504,
+      "longitude": -56.956,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0092",
+      "observed_at": "2026-06-22T19:51:00Z",
+      "latitude": -10.856,
+      "longitude": -55.852,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0093",
+      "observed_at": "2026-06-24T01:00:00Z",
+      "latitude": -11.1056,
+      "longitude": -57.58,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0094",
+      "observed_at": "2026-06-25T07:17:00Z",
+      "latitude": -11.6072,
+      "longitude": -56.952,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0095",
+      "observed_at": "2026-06-26T13:34:00Z",
+      "latitude": -10.8272,
+      "longitude": -57.372,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0096",
+      "observed_at": "2026-06-27T19:51:00Z",
+      "latitude": -12.0824,
+      "longitude": -55.296,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0097",
+      "observed_at": "2026-06-29T01:00:00Z",
+      "latitude": -12.1112,
+      "longitude": -56.38,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0098",
+      "observed_at": "2026-06-30T07:17:00Z",
+      "latitude": -11.9936,
+      "longitude": -56.32,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0099",
+      "observed_at": "2026-07-01T13:34:00Z",
+      "latitude": -10.9328,
+      "longitude": -55.936,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0100",
+      "observed_at": "2026-07-02T19:51:00Z",
+      "latitude": -12.0896,
+      "longitude": -55.552,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0101",
+      "observed_at": "2026-07-04T01:00:00Z",
+      "latitude": -11.1872,
+      "longitude": -55.592,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0102",
+      "observed_at": "2026-07-05T07:17:00Z",
+      "latitude": -11.24,
+      "longitude": -55.356,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0103",
+      "observed_at": "2026-07-06T13:34:00Z",
+      "latitude": -10.8224,
+      "longitude": -55.272,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0104",
+      "observed_at": "2026-07-07T19:51:00Z",
+      "latitude": -11.576,
+      "longitude": -57.172,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0105",
+      "observed_at": "2026-07-09T01:00:00Z",
+      "latitude": -10.1264,
+      "longitude": -58.688,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0106",
+      "observed_at": "2026-07-10T07:17:00Z",
+      "latitude": -10.9328,
+      "longitude": -58.504,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0107",
+      "observed_at": "2026-07-11T13:34:00Z",
+      "latitude": -10.4912,
+      "longitude": -55.3,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0108",
+      "observed_at": "2026-07-12T19:51:00Z",
+      "latitude": -10.9976,
+      "longitude": -58.1,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0109",
+      "observed_at": "2026-07-14T01:00:00Z",
+      "latitude": -11.5544,
+      "longitude": -57.14,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0110",
+      "observed_at": "2026-07-15T07:17:00Z",
+      "latitude": -10.5752,
+      "longitude": -56.808,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0111",
+      "observed_at": "2026-07-16T13:34:00Z",
+      "latitude": -9.9584,
+      "longitude": -55.476,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0112",
+      "observed_at": "2026-07-17T19:51:00Z",
+      "latitude": -11.648,
+      "longitude": -57.94,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0113",
+      "observed_at": "2026-07-19T01:00:00Z",
+      "latitude": -10.5344,
+      "longitude": -55.772,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0114",
+      "observed_at": "2026-07-20T07:17:00Z",
+      "latitude": -11.0312,
+      "longitude": -57.728,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0115",
+      "observed_at": "2026-07-21T13:34:00Z",
+      "latitude": -10.028,
+      "longitude": -56.564,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0116",
+      "observed_at": "2026-07-22T19:51:00Z",
+      "latitude": -10.52,
+      "longitude": -57.62,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0117",
+      "observed_at": "2026-07-24T01:00:00Z",
+      "latitude": -11.744,
+      "longitude": -57.836,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0118",
+      "observed_at": "2026-07-25T07:17:00Z",
+      "latitude": -11.6984,
+      "longitude": -55.956,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0119",
+      "observed_at": "2026-07-26T13:34:00Z",
+      "latitude": -10.1552,
+      "longitude": -57.352,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0120",
+      "observed_at": "2026-07-27T19:51:00Z",
+      "latitude": -11.8232,
+      "longitude": -57.496,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0121",
+      "observed_at": "2026-07-29T01:00:00Z",
+      "latitude": -11.8424,
+      "longitude": -57.24,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0122",
+      "observed_at": "2026-07-30T07:17:00Z",
+      "latitude": -10.244,
+      "longitude": -55.304,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    },
+    {
+      "source_record_id": "INPE_BDQUEIMADAS_2026_0123",
+      "observed_at": "2026-07-31T13:34:00Z",
+      "latitude": -10.7984,
+      "longitude": -55.772,
+      "claim_class": "non_industrial",
+      "confidence": 1.0,
+      "country": "Brazil",
+      "region": "Mato Grosso / Para",
+      "fire_regime": "agricultural",
+      "tier": "TIER_A_AUTHORITATIVE",
+      "metadata": {
+        "agency": "INPE Programa Queimadas / IBAMA",
+        "burn_type": "Agricultural Deforestation / Pasture Clearing Burn",
+        "satellite_reference": "VIIRS / MODIS Daily Adjudicated Registry",
+        "bioma": "Amazonia / Cerrado"
+      }
+    }
+  ]
+}

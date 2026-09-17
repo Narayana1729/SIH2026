@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light Theme Design Tokens */
+  --bg-base: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-raised: #f1f5f9;
+  --bg-surface-hover: #e2e8f0;
+  --bg-surface-active: #cbd5e1;
+
+  /* Typography Colors */
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-disabled: #94a3b8;
+
+  /* Brand & Accents */
+  --accent-primary: #2563eb;
+  --accent-primary-soft: rgba(37, 99, 235, 0.08);
+  --accent-hover: #1d4ed8;
+  --accent-cyan: #0284c7;
+  --accent-blue: #2563eb;
+
+  /* Semantic Status Colors */
+  --state-success: #16a34a;
+  --state-warning: #d97706;
+  --state-error: #dc2626;
+  --state-info: #0284c7;
+
+  /* Borders & Overlays */
+  --border-default: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-active: #2563eb;
+  --overlay-backdrop: rgba(15, 23, 42, 0.45);
+
+  /* Thermal Signals */
+  --thermal-primary: #ea580c;
+  --thermal-hot: #c2410c;
+  --thermal-glow: transparent;
+
+  /* Fonts */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, Menlo, monospace;
+}
+
+.dark {
+  /* Dark Theme Design Tokens */
+  --bg-base: #0b0f19;
+  --bg-surface: #111827;
+  --bg-surface-raised: #1f2937;
+  --bg-surface-hover: #374151;
+  --bg-surface-active: #4b5563;
+
+  /* Typography Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-disabled: #64748b;
+
+  /* Brand & Accents */
+  --accent-primary: #3b82f6;
+  --accent-primary-soft: rgba(59, 130, 246, 0.15);
+  --accent-hover: #60a5fa;
+  --accent-cyan: #38bdf8;
+  --accent-blue: #3b82f6;
+
+  /* Semantic Status Colors */
+  --state-success: #22c55e;
+  --state-warning: #f59e0b;
+  --state-error: #ef4444;
+  --state-info: #38bdf8;
+
+  /* Borders & Overlays */
+  --border-default: #1e293b;
+  --border-strong: #334155;
+  --border-active: #3b82f6;
+  --overlay-backdrop: rgba(0, 0, 0, 0.75);
+
+  /* Thermal Signals */
+  --thermal-primary: #f97316;
+  --thermal-hot: #ea580c;
+  --thermal-glow: transparent;
+}
+
+/* Base resets */
+* {
+  box-sizing: border-box;
+  border-color: var(--border-default);
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Subtle clean scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Operational spatial grid */
+.bg-spatial-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, var(--border-default) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border-default) 1px, transparent 1px);
+  opacity: 0.5;
+}
+
+/* MapLibre Tooltip & Popup Overrides */
+.maplibregl-popup-content {
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.maplibregl-popup-tip {
+  display: none !important;
+}
+
+.industrial-tooltip-popup,
+.forest-tooltip-popup {
+  pointer-events: none !important;
+  z-index: 40 !important;
+}
+
+/* Cesium Widget UI Cleanups */
+.cesium-widget,
+.cesium-widget canvas {
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none;
+}
+
+.cesium-viewer-bottom {
+  display: none !important;
+}
+
+.cesium-credit-logoContainer,
+.cesium-credit-expand-link,
+.cesium-credit-textContainer {
+  display: none !important;
+}
+
+/* Cockpit Visor & HUD Styling */
+.bg-radial-vignette {
+  background: radial-gradient(
+    circle at center,
+    transparent 55%,
+    rgba(10, 13, 20, 0.45) 85%,
+    rgba(5, 7, 10, 0.85) 100%
+  );
+}
+
+.shadow-glow {
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.6);
+}
+

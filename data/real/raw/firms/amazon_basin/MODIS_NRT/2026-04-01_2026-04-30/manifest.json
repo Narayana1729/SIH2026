@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_amazon_basin_MODIS_NRT_2026-04-01_2026-04-30",
+  "source_name": "NASA_FIRMS",
+  "source_product": "MODIS_NRT",
+  "sensor": "MODIS",
+  "study_area_id": "amazon_basin",
+  "study_area_name": "Amazon Basin Deforestation and Agricultural Burning Corridor",
+  "requested_start_date": "2026-04-01",
+  "requested_end_date": "2026-04-30",
+  "bounding_box": {
+    "min_latitude": -14.0,
+    "min_longitude": -62.0,
+    "max_latitude": -8.0,
+    "max_longitude": -52.0
+  },
+  "raw_record_count": 60,
+  "valid_record_count": 60,
+  "canonical_record_count": 60,
+  "raw_file_sha256": "79de966fda6e9dd6f181ca5bd54487c980b7218cb38351c890d22d1354b69f59",
+  "created_at": "2026-09-06T07:47:37.505848+00:00"
+}

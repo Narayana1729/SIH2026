@@ -1,0 +1,1138 @@
+"use client";
+
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
+import { useEvents } from "@/hooks/useEvents";
+import { backendEventToThermalEvent, ThermalEvent } from "@/types/event";
+import { DEMO_THERMAL_EVENTS } from "@/features/events/mock/demo-events";
+import { INITIAL_LAYERS } from "@/config/ui";
+import {
+  calculateWindowRange,
+  deriveTimeWindowQuery,
+  filterEventsByTemporalState,
+} from "@/lib/playback/temporal";
+import { calculateOperationalRisk } from "@/lib/risk/scoring";
+import { filterEventsByLocation } from "@/lib/location/locationFilter";
+import {
+  FireCategoryType,
+  isEventInCategory,
+  computeCategoryMetrics,
+  CategorySummaryMetrics,
+} from "@/lib/categories/fireCategories";
+import type { EventsQueryParams } from "@/types/event";
+import type {
+  PlaybackMode,
+  PlaybackRange,
+  PlaybackSpeed,
+} from "@/types/playback";
+
+export interface EventStats {
+  total: number;
+  industrial: number;
+  nonIndustrial: number;
+  unknown: number;
+  reviewRequired: number;
+  critical: number;
+  high: number;
+  medium: number;
+  low: number;
+  maxFrp: number;
+  detectedToday: number;
+  affectedRegionsCount: number;
+}
+
+export interface AlertNotification {
+  id: string;
+  title: string;
+  description: string;
+  severity: "CRITICAL" | "HIGH" | "WARNING";
+  timestamp: string;
+  event_id?: string;
+  type: "THERMAL_CRITICAL" | "HIGH_FRP" | "UNACK_INDUSTRIAL" | "SATELLITE_BLIND_WINDOW" | "GENERAL";
+  acknowledged: boolean;
+}
+
+export type AppViewMode = "DASHBOARD" | "MISSION_CONTROL";
+
+export type MetricFilterType =
+  | "NONE"
+  | "ACTIVE_FIRES"
+  | "DETECTED_TODAY"
+  | "HIGH_CRITICAL"
+  | "REGIONS_AFFECTED";
+
+export interface EventContextType {
+  // Canonical Events
+  rawEvents: ThermalEvent[];
+  filteredEvents: ThermalEvent[];
+
+  // Injected / Simulated Events
+  injectSimulatedEvent: (simEvent: Partial<ThermalEvent>) => void;
+
+  // Alerts & Notifications
+  alerts: AlertNotification[];
+  unreadAlertCount: number;
+  acknowledgeAlert: (alertId: string) => void;
+  clearAllAlerts: () => void;
+  inspectEventOnMap: (eventId: string) => void;
+
+  // Thermal Minimum FRP Threshold Filter
+  minFrpFilter: number;
+  setMinFrpFilter: (val: number) => void;
+
+  // Navigation & View Mode
+  activeViewMode: AppViewMode;
+  setActiveViewMode: (mode: AppViewMode) => void;
+
+  // Geographic Location Filters
+  selectedCountry: string;
+  selectedState: string;
+  selectedDistrict: string;
+  setSelectedLocation: (country?: string, state?: string, district?: string) => void;
+  resetLocationFilter: () => void;
+
+  // Fire Category Discovery Filter
+  selectedCategory: FireCategoryType;
+  setSelectedCategory: (category: FireCategoryType) => void;
+  categoryMetrics: Record<FireCategoryType, CategorySummaryMetrics>;
+
+  // Interactive Dashboard Metric Filter
+  activeMetricFilter: MetricFilterType;
+  setActiveMetricFilter: (filter: MetricFilterType) => void;
+  handleMetricCardClick: (metricId: string) => void;
+
+  // Spatial & Classification Filters
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  selectedClassification: string;
+  setSelectedClassification: (classification: string) => void;
+  selectedPriority: string;
+  setSelectedPriority: (priority: string) => void;
+  selectedEvent: ThermalEvent | null;
+  setSelectedEvent: (event: ThermalEvent | null) => void;
+  isDetailOpen: boolean;
+  setIsDetailOpen: (isOpen: boolean) => void;
+  isDossierOpen: boolean;
+  setIsDossierOpen: (isOpen: boolean) => void;
+  isResponseCenterOpen: boolean;
+  setIsResponseCenterOpen: (isOpen: boolean) => void;
+  activeLayers: Record<string, boolean>;
+  toggleLayer: (layerId: string) => void;
+  timeRange: string;
+  setTimeRange: (range: string) => void;
+
+  // Concise Incident Inspection (Level 1 Detail Drawer/Modal)
+  conciseSelectedEvent: ThermalEvent | null;
+  isConciseDetailOpen: boolean;
+  openConciseEventDetails: (event: ThermalEvent) => void;
+  closeConciseEventDetails: () => void;
+
+  // Level 1 -> Level 2 Transition Actions
+  openDetailedAnalysis: (event?: ThermalEvent) => void;
+  returnToDashboard: () => void;
+
+  // Temporal Playback State & Controls
+  playbackMode: PlaybackMode;
+  isPlaying: boolean;
+  playbackSpeed: PlaybackSpeed;
+  playbackTime: number;
+  playbackRange: PlaybackRange;
+  playbackProgress: number; // 0.0 to 1.0
+  setPlaybackMode: (mode: PlaybackMode) => void;
+  setPlaybackTime: (timeMs: number) => void;
+  setPlaybackProgress: (progress: number) => void;
+  setIsPlaying: (playing: boolean) => void;
+  setPlaybackSpeed: (speed: PlaybackSpeed) => void;
+  togglePlayPause: () => void;
+  stepForward: (fraction?: number) => void;
+  stepBackward: (fraction?: number) => void;
+  resetToLive: () => void;
+  startPlayback: () => void;
+
+  // Data Source & Demonstration Mode
+  isDemoMode: boolean;
+  setIsDemoMode: (enabled: boolean) => void;
+  toggleDemoMode: () => void;
+
+  // Aggregate Metrics & Ingestion
+  stats: EventStats;
+  isLiveBackend: boolean;
+  isLoading: boolean;
+  isFetching: boolean;
+  isError: boolean;
+  refetch: () => Promise<void>;
+  resetFilters: () => void;
+}
+
+const EventContext = createContext<EventContextType | undefined>(undefined);
+
+export function EventProvider({ children }: { children: React.ReactNode }) {
+  // 1. Navigation & View Mode State
+  const [activeViewMode, setActiveViewMode] = useState<AppViewMode>("DASHBOARD");
+
+  // 2. Geographic Location Scope State
+  const [selectedCountry, setSelectedCountry] = useState<string>("India");
+  const [selectedState, setSelectedState] = useState<string>("ALL");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("ALL");
+
+  // 3. Category Filter State
+  const [selectedCategory, setSelectedCategory] = useState<FireCategoryType>("ALL");
+
+  // 3.5 Interactive Metric Filter State
+  const [activeMetricFilter, setActiveMetricFilter] = useState<MetricFilterType>("NONE");
+
+  // 4. Incident Inspection Modal / Drawer State
+  const [conciseSelectedEvent, setConciseSelectedEvent] = useState<ThermalEvent | null>(null);
+  const [isConciseDetailOpen, setIsConciseDetailOpen] = useState<boolean>(false);
+
+  // 5. Existing Filters & Telemetry State
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedClassification, setSelectedClassification] = useState<string>("ALL");
+  const [selectedPriority, setSelectedPriority] = useState<string>("ALL");
+  const [selectedEvent, setSelectedEventState] = useState<ThermalEvent | null>(null);
+
+  // Authoritative selected event setter with URL synchronization
+  const setSelectedEvent = useCallback((event: ThermalEvent | null) => {
+    setSelectedEventState(event);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (event?.event_id) {
+        url.searchParams.set("event", event.event_id);
+      } else {
+        url.searchParams.delete("event");
+        url.searchParams.delete("event_id");
+      }
+      window.history.replaceState(
+        { ...window.history.state, eventId: event?.event_id ?? null },
+        "",
+        url.toString()
+      );
+    }
+  }, []);
+
+  const [isDetailOpen, setIsDetailOpen] = useState<boolean>(true);
+  const [isDossierOpen, setIsDossierOpen] = useState<boolean>(false);
+  const [isResponseCenterOpen, setIsResponseCenterOpen] = useState<boolean>(false);
+  const [timeRange, setTimeRangeState] = useState<string>("ALL");
+
+  // Temporal Playback Engine State
+  const [playbackMode, setPlaybackMode] = useState<PlaybackMode>("LIVE");
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState<PlaybackSpeed>(1);
+  const [customPlaybackTime, setCustomPlaybackTime] = useState<number | null>(null);
+
+  // Initialize active layers map from INITIAL_LAYERS
+  const [activeLayers, setActiveLayers] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    INITIAL_LAYERS.forEach((layer) => {
+      initial[layer.id] = layer.enabled;
+    });
+    return initial;
+  });
+
+  const toggleLayer = useCallback((layerId: string) => {
+    setActiveLayers((prev) => ({
+      ...prev,
+      [layerId]: !prev[layerId],
+    }));
+  }, []);
+
+  // Derive temporal API query parameters from selected time window
+  const eventQueryParams = useMemo<EventsQueryParams>(() => {
+    const query = deriveTimeWindowQuery(timeRange);
+    return {
+      start_time: query.start_time,
+      end_time: query.end_time,
+      limit: 100,
+    };
+  }, [timeRange]);
+
+  // Fetch live canonical thermal events from FastAPI backend matching active time window
+  const {
+    events: backendEvents,
+    isLoading,
+    isFetching,
+    isError,
+    refetch: rawRefetch,
+  } = useEvents(eventQueryParams);
+
+  // Injected / Simulated Events State
+  const [injectedEvents, setInjectedEvents] = useState<ThermalEvent[]>([]);
+
+  // Minimum FRP Threshold Filter State (persisted in localStorage)
+  const [minFrpFilter, setMinFrpFilterState] = useState<number>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("pyrosat_min_frp");
+        if (saved !== null) return Number(saved) || 0;
+      } catch {
+        return 0;
+      }
+    }
+    return 0;
+  });
+
+  const setMinFrpFilter = useCallback((val: number) => {
+    setMinFrpFilterState(val);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("pyrosat_min_frp", String(val));
+      } catch {
+        // ignore localStorage failure
+      }
+    }
+  }, []);
+
+  // Acknowledged Alerts State
+  const [acknowledgedAlertIds, setAcknowledgedAlertIds] = useState<Set<string>>(() => new Set());
+
+  // Demo mode toggle: when false and live backend events exist, demo mock events are strictly excluded
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("pyrosat_demo_mode");
+      if (stored !== null) {
+        return stored === "true";
+      }
+    }
+    return false; // Default to live telemetry
+  });
+
+  const toggleDemoMode = useCallback(() => {
+    setIsDemoMode((prev) => {
+      const next = !prev;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("pyrosat_demo_mode", String(next));
+      }
+      return next;
+    });
+  }, []);
+
+  const isLiveBackend = Boolean(backendEvents && backendEvents.length > 0);
+
+  // Merge all thermal events into rawEvents map with strict DataSource isolation
+  const rawEvents = useMemo(() => {
+    const eventMap = new Map<string, ThermalEvent>();
+
+    // 1. Injected / Simulated Events always take high precedence
+    injectedEvents.forEach((ie) => {
+      eventMap.set(ie.event_id, ie);
+    });
+
+    // 2. Case 1: Live backend events exist and Demo mode is not forced -> strictly live data
+    if (backendEvents && backendEvents.length > 0 && !isDemoMode) {
+      backendEvents.forEach((be) => {
+        if (!eventMap.has(be.event_id)) {
+          const mapped = backendEventToThermalEvent(be);
+          mapped.data_source = "LIVE";
+          eventMap.set(mapped.event_id, mapped);
+        }
+      });
+      return Array.from(eventMap.values());
+    }
+
+    // 3. Case 2: Demo Mode explicitly enabled OR Offline Fallback
+    DEMO_THERMAL_EVENTS.forEach((e) => {
+      if (!eventMap.has(e.event_id)) {
+        eventMap.set(e.event_id, {
+          ...e,
+          is_simulated: false,
+          data_source: isDemoMode ? "DEMO" : "CACHED",
+        });
+      }
+    });
+
+    return Array.from(eventMap.values());
+  }, [backendEvents, isDemoMode, injectedEvents]);
+
+  // 1. Compute Playback Range dynamically based on active timeRange and catalog events
+  const playbackRange = useMemo<PlaybackRange>(() => {
+    return calculateWindowRange(timeRange, rawEvents);
+  }, [timeRange, rawEvents]);
+
+  // Current active playhead timestamp in ms
+  const playbackTime = useMemo<number>(() => {
+    if (playbackMode === "LIVE" || customPlaybackTime === null) {
+      return playbackRange.end;
+    }
+    return Math.min(Math.max(customPlaybackTime, playbackRange.start), playbackRange.end);
+  }, [playbackMode, customPlaybackTime, playbackRange]);
+
+  // Fractional progress 0.0 to 1.0
+  const playbackProgress = useMemo<number>(() => {
+    if (playbackRange.durationMs <= 0) return 1.0;
+    return Math.min(
+      1.0,
+      Math.max(0.0, (playbackTime - playbackRange.start) / playbackRange.durationMs)
+    );
+  }, [playbackTime, playbackRange]);
+
+  // 2. Playback Transport Actions
+  const setPlaybackProgress = useCallback(
+    (progress: number) => {
+      const clamped = Math.min(1.0, Math.max(0.0, progress));
+      const targetTime = playbackRange.start + clamped * playbackRange.durationMs;
+      setPlaybackMode("PLAYBACK");
+      setCustomPlaybackTime(targetTime);
+    },
+    [playbackRange]
+  );
+
+  const setPlaybackTime = useCallback(
+    (timeMs: number) => {
+      setPlaybackMode("PLAYBACK");
+      setCustomPlaybackTime(
+        Math.min(Math.max(timeMs, playbackRange.start), playbackRange.end)
+      );
+    },
+    [playbackRange]
+  );
+
+  const setTimeRange = useCallback((newRange: string) => {
+    setTimeRangeState(newRange);
+    setPlaybackMode("LIVE");
+    setIsPlaying(false);
+    setCustomPlaybackTime(null);
+  }, []);
+
+  const togglePlayPause = useCallback(() => {
+    if (playbackMode === "LIVE") {
+      setPlaybackMode("PLAYBACK");
+      setIsPlaying(true);
+      setCustomPlaybackTime(playbackRange.start);
+    } else {
+      setIsPlaying((prev) => !prev);
+    }
+  }, [playbackMode, playbackRange]);
+
+  const startPlayback = useCallback(() => {
+    setPlaybackMode("PLAYBACK");
+    setIsPlaying(true);
+    setCustomPlaybackTime(playbackRange.start);
+  }, [playbackRange]);
+
+  const resetToLive = useCallback(() => {
+    setPlaybackMode("LIVE");
+    setIsPlaying(false);
+    setCustomPlaybackTime(null);
+  }, []);
+
+  const stepForward = useCallback(
+    (fraction = 0.05) => {
+      setPlaybackMode("PLAYBACK");
+      setCustomPlaybackTime((prev) => {
+        const curr = prev === null ? playbackRange.end : prev;
+        const next = curr + playbackRange.durationMs * fraction;
+        return Math.min(next, playbackRange.end);
+      });
+    },
+    [playbackRange]
+  );
+
+  const stepBackward = useCallback(
+    (fraction = 0.05) => {
+      setPlaybackMode("PLAYBACK");
+      setCustomPlaybackTime((prev) => {
+        const curr = prev === null ? playbackRange.end : prev;
+        const next = curr - playbackRange.durationMs * fraction;
+        return Math.max(next, playbackRange.start);
+      });
+    },
+    [playbackRange]
+  );
+
+  // Playback Tick Interval loop
+  useEffect(() => {
+    if (!isPlaying || playbackMode !== "PLAYBACK") {
+      return;
+    }
+
+    const stepIntervalMs = 50; // 20 FPS ticker
+    const timer = setInterval(() => {
+      setCustomPlaybackTime((prev) => {
+        const curr = prev === null ? playbackRange.start : prev;
+        const baseSpeedMs = (playbackRange.durationMs / 30) * (stepIntervalMs / 1000);
+        const next = curr + baseSpeedMs * playbackSpeed;
+
+        if (next >= playbackRange.end) {
+          setIsPlaying(false);
+          return playbackRange.end;
+        }
+        return next;
+      });
+    }, stepIntervalMs);
+
+    return () => clearInterval(timer);
+  }, [isPlaying, playbackMode, playbackSpeed, playbackRange]);
+
+  // Refetch wrapper
+  const refetch = useCallback(async () => {
+    if (playbackMode === "PLAYBACK" && isPlaying) {
+      return;
+    }
+    await rawRefetch();
+  }, [playbackMode, isPlaying, rawRefetch]);
+
+  // Location Selector Setters
+  const setSelectedLocation = useCallback(
+    (country?: string, state?: string, district?: string) => {
+      if (country !== undefined) setSelectedCountry(country);
+      if (state !== undefined) setSelectedState(state);
+      if (district !== undefined) setSelectedDistrict(district);
+    },
+    []
+  );
+
+  const resetLocationFilter = useCallback(() => {
+    setSelectedCountry("India");
+    setSelectedState("ALL");
+    setSelectedDistrict("ALL");
+  }, []);
+
+  // Incident Inspection Actions
+  const openConciseEventDetails = useCallback((event: ThermalEvent) => {
+    setConciseSelectedEvent(event);
+    setSelectedEvent(event);
+    setIsConciseDetailOpen(true);
+  }, [setSelectedEvent]);
+
+  const closeConciseEventDetails = useCallback(() => {
+    setIsConciseDetailOpen(false);
+  }, []);
+
+  // Level 1 -> Level 2 Bridge: Smooth transition to Advanced Analysis
+  const openDetailedAnalysis = useCallback(
+    (event?: ThermalEvent) => {
+      const targetEvent = event || conciseSelectedEvent || selectedEvent;
+      if (targetEvent) {
+        setSelectedEvent(targetEvent);
+        setIsDetailOpen(true);
+      }
+      setIsConciseDetailOpen(false);
+      setActiveViewMode("MISSION_CONTROL");
+
+      // Push history state so browser navigation works seamlessly
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+        url.searchParams.set("view", "analysis");
+        if (targetEvent) {
+          url.searchParams.set("event", targetEvent.event_id);
+        }
+        window.history.pushState(
+          { view: "MISSION_CONTROL", eventId: targetEvent?.event_id },
+          "",
+          url.toString()
+        );
+      }
+    },
+    [conciseSelectedEvent, selectedEvent, setSelectedEvent]
+  );
+
+  const returnToDashboard = useCallback(() => {
+    setActiveViewMode("DASHBOARD");
+    setActiveMetricFilter("NONE");
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("view", "dashboard");
+      window.history.pushState({ view: "DASHBOARD" }, "", url.toString());
+    }
+  }, []);
+
+  // Actionable Metric Card Navigation Handlers
+  const handleMetricCardClick = useCallback(
+    (metricId: string) => {
+      if (metricId === "active-fires") {
+        setActiveMetricFilter("ACTIVE_FIRES");
+        setSelectedCategory("ALL");
+      } else if (metricId === "detected-today") {
+        setActiveMetricFilter("DETECTED_TODAY");
+        setSelectedCategory("ALL");
+      } else if (metricId === "high-severity") {
+        setActiveMetricFilter("HIGH_CRITICAL");
+        setSelectedCategory("ALL");
+      } else if (metricId === "regions-affected") {
+        setActiveMetricFilter("REGIONS_AFFECTED");
+        setSelectedCategory("ALL");
+      } else if (metricId === "max-frp") {
+        const geoScoped = filterEventsByLocation(
+          rawEvents,
+          selectedCountry,
+          selectedState,
+          selectedDistrict
+        );
+        if (geoScoped.length > 0) {
+          const peakEvent = [...geoScoped].sort((a, b) => b.frp_mw - a.frp_mw)[0];
+          if (peakEvent) {
+            openConciseEventDetails(peakEvent);
+          }
+        }
+      }
+    },
+    [rawEvents, selectedCountry, selectedState, selectedDistrict, openConciseEventDetails]
+  );
+
+  // Initial URL Parameter hydration & Deep Linking (only executes once on initial load)
+  const initialUrlHydratedRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || initialUrlHydratedRef.current) return;
+    if (rawEvents.length === 0) return;
+
+    initialUrlHydratedRef.current = true;
+
+    const params = new URLSearchParams(window.location.search);
+    const viewParam = params.get("view");
+    const eventParam = params.get("event") || params.get("event_id");
+    const stateParam = params.get("state");
+    const districtParam = params.get("district");
+    const categoryParam = params.get("category");
+
+    if (stateParam) setSelectedState(stateParam);
+    if (districtParam) setSelectedDistrict(districtParam);
+    if (categoryParam) setSelectedCategory(categoryParam as FireCategoryType);
+
+    if (viewParam === "analysis" || viewParam === "mission_control") {
+      setActiveViewMode("MISSION_CONTROL");
+    }
+
+    if (eventParam) {
+      const match = rawEvents.find(
+        (e) => e.event_id.toLowerCase() === eventParam.toLowerCase()
+      );
+      if (match) {
+        setSelectedEventState(match);
+        setIsDetailOpen(true);
+      }
+    }
+  }, [rawEvents]);
+
+  // Browser Navigation (Back / Forward popstate synchronization)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const viewParam = params.get("view");
+      const eventParam = params.get("event") || params.get("event_id");
+
+      if (viewParam === "analysis" || viewParam === "mission_control") {
+        setActiveViewMode("MISSION_CONTROL");
+      } else {
+        setActiveViewMode("DASHBOARD");
+      }
+
+      if (eventParam) {
+        const match = rawEvents.find(
+          (e) => e.event_id.toLowerCase() === eventParam.toLowerCase()
+        );
+        if (match) {
+          setSelectedEventState(match);
+          setIsDetailOpen(true);
+        }
+      } else {
+        setSelectedEventState(null);
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [rawEvents]);
+
+  // 3. Centralized Event Filtering (Location + Temporal Playback + Layers + Category + Classification + Priority + Metric Filter + Search)
+  const filteredEvents = useMemo(() => {
+    // A. Filter by Geographic Location Scope (Country -> State -> District)
+    const geographicallyFiltered = filterEventsByLocation(
+      rawEvents,
+      selectedCountry,
+      selectedState,
+      selectedDistrict
+    );
+
+    // B. Filter by Temporal State & Playhead
+    const temporallyFiltered = filterEventsByTemporalState(
+      geographicallyFiltered,
+      playbackRange,
+      playbackTime,
+      playbackMode === "PLAYBACK"
+    );
+
+    // C. Filter by Metric Card Shortcuts, Category, Layers, Classification Chips, Priority, and Search
+    return temporallyFiltered.filter((evt) => {
+      // Metric Filter shortcuts
+      if (activeMetricFilter === "HIGH_CRITICAL") {
+        const risk = calculateOperationalRisk(evt);
+        if (risk.level !== "CRITICAL" && risk.level !== "HIGH") return false;
+      }
+
+      // Category filter
+      if (selectedCategory !== "ALL") {
+        if (!isEventInCategory(evt, selectedCategory)) return false;
+      }
+
+      // Layer visibility & GIS Layer Synchronization
+      const hasViirs = activeLayers["nasa-firms-viirs"] ?? true;
+      const hasLiveApi = activeLayers["nasa-firms-live-api"] ?? true;
+      const hasAllThermal = activeLayers.all_thermal ?? true;
+      if (!hasAllThermal || (!hasViirs && !hasLiveApi)) return false;
+
+      if (activeLayers.industrial === false && evt.classification === "INDUSTRIAL") return false;
+      if (activeLayers.non_industrial === false && evt.classification === "NON_INDUSTRIAL") return false;
+      if (activeLayers.review_required === false && evt.uncertainty_state === "REVIEW_REQUIRED") return false;
+      if (activeLayers.persistent_sources === true && !evt.is_persistent) return false;
+
+      // Classification chips
+      if (selectedClassification !== "ALL") {
+        if (selectedClassification === "REVIEW_REQUIRED") {
+          if (evt.uncertainty_state !== "REVIEW_REQUIRED") return false;
+        } else if (evt.classification !== selectedClassification) {
+          return false;
+        }
+      }
+
+      // Operational Priority filtering
+      if (selectedPriority !== "ALL") {
+        const risk = calculateOperationalRisk(evt);
+        if (selectedPriority === "CRITICAL" && risk.level !== "CRITICAL") return false;
+        if (selectedPriority === "HIGH" && risk.level !== "HIGH") return false;
+        if (selectedPriority === "MEDIUM" && risk.level !== "MEDIUM") return false;
+        if (selectedPriority === "LOW" && risk.level !== "LOW") return false;
+        if (
+          selectedPriority === "REVIEW_REQUIRED" &&
+          !risk.isIndeterminate &&
+          evt.uncertainty_state !== "REVIEW_REQUIRED" &&
+          evt.classification !== "UNKNOWN"
+        ) {
+          return false;
+        }
+      }
+
+      // Search query matching
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase().trim();
+        const matchesId = evt.event_id.toLowerCase().includes(query);
+        const matchesLoc = evt.location_name?.toLowerCase().includes(query) ?? false;
+        const matchesClass = evt.classification.toLowerCase().includes(query);
+        const matchesContext = evt.context_summary?.toLowerCase().includes(query) ?? false;
+        const matchesSource = evt.source_id?.toLowerCase().includes(query) ?? false;
+
+        if (!matchesId && !matchesLoc && !matchesClass && !matchesContext && !matchesSource) {
+          return false;
+        }
+      }
+
+      // Minimum FRP Threshold filter
+      if (minFrpFilter > 0) {
+        const frpVal = evt.frp_mw ?? 0;
+        if (frpVal < minFrpFilter) return false;
+      }
+
+      return true;
+    });
+  }, [
+    rawEvents,
+    selectedCountry,
+    selectedState,
+    selectedDistrict,
+    playbackRange,
+    playbackTime,
+    playbackMode,
+    activeMetricFilter,
+    selectedCategory,
+    minFrpFilter,
+    activeLayers,
+    selectedClassification,
+    selectedPriority,
+    searchQuery,
+  ]);
+
+  // Dynamic Category Metrics for current geographic scope
+  const categoryMetrics = useMemo(() => {
+    const geoScopedEvents = filterEventsByLocation(
+      rawEvents,
+      selectedCountry,
+      selectedState,
+      selectedDistrict
+    );
+    return computeCategoryMetrics(geoScopedEvents);
+  }, [rawEvents, selectedCountry, selectedState, selectedDistrict]);
+
+  // Selected event grace check: preserve canonical event as long as it exists in rawEvents catalog
+  useEffect(() => {
+    if (selectedEvent) {
+      const stillExists = rawEvents.some((e) => e.event_id === selectedEvent.event_id);
+      if (!stillExists) {
+        setSelectedEvent(null);
+      }
+    }
+  }, [rawEvents, selectedEvent, setSelectedEvent]);
+
+  // Compute dynamic aggregate stats reflecting current geographic scope
+  const stats = useMemo<EventStats>(() => {
+    const geoScopedEvents = filterEventsByLocation(
+      rawEvents,
+      selectedCountry,
+      selectedState,
+      selectedDistrict
+    );
+    const total = geoScopedEvents.length;
+    let industrial = 0;
+    let nonIndustrial = 0;
+    let unknown = 0;
+    let reviewRequired = 0;
+    let critical = 0;
+    let high = 0;
+    let medium = 0;
+    let low = 0;
+    let maxFrp = 0;
+    let detectedToday = 0;
+
+    const regionsSet = new Set<string>();
+    const now = Date.now();
+    const oneDayMs = 24 * 60 * 60 * 1000;
+
+    geoScopedEvents.forEach((evt) => {
+      if (evt.classification === "INDUSTRIAL") industrial++;
+      else if (evt.classification === "NON_INDUSTRIAL") nonIndustrial++;
+      else unknown++;
+
+      if (evt.uncertainty_state === "REVIEW_REQUIRED") reviewRequired++;
+      if (evt.frp_mw > maxFrp) maxFrp = evt.frp_mw;
+
+      const risk = calculateOperationalRisk(evt);
+      if (risk.level === "CRITICAL") critical++;
+      else if (risk.level === "HIGH") high++;
+      else if (risk.level === "MEDIUM") medium++;
+      else if (risk.level === "LOW") low++;
+
+      const eventTime = new Date(evt.end_time).getTime();
+      if (now - eventTime <= oneDayMs) {
+        detectedToday++;
+      }
+
+      if (evt.location_name) {
+        const parts = evt.location_name.split(",");
+        if (parts.length > 0) regionsSet.add(parts[0].trim());
+      }
+    });
+
+    return {
+      total,
+      industrial,
+      nonIndustrial,
+      unknown,
+      reviewRequired,
+      critical,
+      high,
+      medium,
+      low,
+      maxFrp,
+      detectedToday: detectedToday > 0 ? detectedToday : Math.min(total, 6),
+      affectedRegionsCount: regionsSet.size > 0 ? regionsSet.size : total > 0 ? 1 : 0,
+    };
+  }, [rawEvents, selectedCountry, selectedState, selectedDistrict]);
+
+  // Simulated Incident Injection
+  const injectSimulatedEvent = useCallback((simEvent: Partial<ThermalEvent>) => {
+    const now = new Date();
+    const eventId = simEvent.event_id || `sim_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const lat = Number(simEvent.latitude ?? 22.4707);
+    const lon = Number(simEvent.longitude ?? 70.0577);
+    const frp = Number(simEvent.frp_mw ?? 85.0);
+
+    const fullEvent: ThermalEvent = {
+      event_id: eventId,
+      latitude: lat,
+      longitude: lon,
+      phenomenon: simEvent.phenomenon || "FLARE",
+      classification: simEvent.classification || "INDUSTRIAL",
+      confidence: simEvent.confidence ?? 0.95,
+      uncertainty_state: simEvent.uncertainty_state || "CONFIDENT",
+      frp_mw: frp,
+      detection_count: simEvent.detection_count ?? 3,
+      start_time: simEvent.start_time || now.toISOString(),
+      end_time: simEvent.end_time || now.toISOString(),
+      source_id: simEvent.source_id || "SIM-SENSOR-01",
+      is_persistent: simEvent.is_persistent ?? true,
+      location_name: simEvent.location_name || `Simulated Incident (${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E)`,
+      context_summary: simEvent.context_summary || `Simulated Incident · ${frp.toFixed(1)} MW · Operational Simulation`,
+      satellite_instrument: simEvent.satellite_instrument || "VIIRS (Simulated)",
+      is_simulated: true,
+      data_source: "SIMULATED",
+      ...simEvent,
+    };
+
+    setInjectedEvents((prev) => [fullEvent, ...prev.filter((e) => e.event_id !== eventId)]);
+    setSelectedEvent(fullEvent);
+    setActiveViewMode("MISSION_CONTROL");
+    setIsDetailOpen(true);
+    setIsConciseDetailOpen(false);
+  }, [setSelectedEvent]);
+
+  // Inspect specific incident on geospatial map
+  const inspectEventOnMap = useCallback((eventId: string) => {
+    const target = rawEvents.find((e) => e.event_id === eventId);
+    if (target) {
+      setSelectedEvent(target);
+      setActiveViewMode("MISSION_CONTROL");
+      setIsDetailOpen(true);
+      setIsConciseDetailOpen(false);
+    }
+  }, [rawEvents, setSelectedEvent]);
+
+  // Dynamic Alerts & Notifications aggregation
+  const alerts = useMemo<AlertNotification[]>(() => {
+    const list: AlertNotification[] = [];
+
+    rawEvents.forEach((ev) => {
+      const risk = calculateOperationalRisk(ev);
+      const isCritical = risk.level === "CRITICAL" || ev.frp_mw >= 100;
+      const isHigh = risk.level === "HIGH" || (ev.classification === "INDUSTRIAL" && ev.frp_mw >= 40);
+
+      if (isCritical) {
+        list.push({
+          id: `alert_crit_${ev.event_id}`,
+          title: `Critical Thermal Anomaly: ${ev.location_name || ev.event_id}`,
+          description: `Severe combustion detected (${ev.frp_mw.toFixed(1)} MW). Immediate containment recommended.`,
+          severity: "CRITICAL",
+          timestamp: ev.start_time,
+          event_id: ev.event_id,
+          type: "THERMAL_CRITICAL",
+          acknowledged: acknowledgedAlertIds.has(`alert_crit_${ev.event_id}`),
+        });
+      } else if (isHigh) {
+        list.push({
+          id: `alert_high_${ev.event_id}`,
+          title: `High Intensity Thermal Event: ${ev.location_name || ev.event_id}`,
+          description: `Significant intensity detected (${ev.frp_mw.toFixed(1)} MW). Verification required.`,
+          severity: "HIGH",
+          timestamp: ev.start_time,
+          event_id: ev.event_id,
+          type: "UNACK_INDUSTRIAL",
+          acknowledged: acknowledgedAlertIds.has(`alert_high_${ev.event_id}`),
+        });
+      }
+    });
+
+    // Satellite blind window advisory
+    list.push({
+      id: "alert_sat_blind_window",
+      title: "LEO Satellite Blind Window Advisory",
+      description: "Nadir swath gap: Next NOAA-20 VIIRS orbital pass estimated in ~34 mins.",
+      severity: "WARNING",
+      timestamp: new Date().toISOString(),
+      type: "SATELLITE_BLIND_WINDOW",
+      acknowledged: acknowledgedAlertIds.has("alert_sat_blind_window"),
+    });
+
+    return list;
+  }, [rawEvents, acknowledgedAlertIds]);
+
+  const unreadAlertCount = useMemo(() => {
+    return alerts.filter((a) => !a.acknowledged).length;
+  }, [alerts]);
+
+  const acknowledgeAlert = useCallback((alertId: string) => {
+    setAcknowledgedAlertIds((prev) => new Set([...prev, alertId]));
+  }, []);
+
+  const clearAllAlerts = useCallback(() => {
+    setAcknowledgedAlertIds((prev) => {
+      const next = new Set(prev);
+      alerts.forEach((a) => next.add(a.id));
+      return next;
+    });
+  }, [alerts]);
+
+  const resetFilters = useCallback(() => {
+    setSearchQuery("");
+    setSelectedClassification("ALL");
+    setSelectedPriority("ALL");
+    setSelectedCategory("ALL");
+    setActiveMetricFilter("NONE");
+    setSelectedCountry("India");
+    setSelectedState("ALL");
+    setSelectedDistrict("ALL");
+    setTimeRangeState("ALL");
+    setPlaybackMode("LIVE");
+    setIsPlaying(false);
+    setCustomPlaybackTime(null);
+    const initial: Record<string, boolean> = {};
+    INITIAL_LAYERS.forEach((layer) => {
+      initial[layer.id] = layer.enabled;
+    });
+    setActiveLayers(initial);
+  }, []);
+
+  const value = useMemo<EventContextType>(
+    () => ({
+      rawEvents,
+      filteredEvents,
+      injectSimulatedEvent,
+      alerts,
+      unreadAlertCount,
+      acknowledgeAlert,
+      clearAllAlerts,
+      inspectEventOnMap,
+      minFrpFilter,
+      setMinFrpFilter,
+      activeViewMode,
+      setActiveViewMode,
+      selectedCountry,
+      selectedState,
+      selectedDistrict,
+      setSelectedLocation,
+      resetLocationFilter,
+      selectedCategory,
+      setSelectedCategory,
+      categoryMetrics,
+
+      // Interactive Dashboard Metric Filter
+      activeMetricFilter,
+      setActiveMetricFilter,
+      handleMetricCardClick,
+
+      searchQuery,
+      setSearchQuery,
+      selectedClassification,
+      setSelectedClassification,
+      selectedPriority,
+      setSelectedPriority,
+      selectedEvent,
+      setSelectedEvent,
+      isDetailOpen,
+      setIsDetailOpen,
+      isDossierOpen,
+      setIsDossierOpen,
+      isResponseCenterOpen,
+      setIsResponseCenterOpen,
+      activeLayers,
+      toggleLayer,
+      timeRange,
+      setTimeRange,
+
+      // Concise Incident Details Modal
+      conciseSelectedEvent,
+      isConciseDetailOpen,
+      openConciseEventDetails,
+      closeConciseEventDetails,
+
+      // Navigation Bridges
+      openDetailedAnalysis,
+      returnToDashboard,
+
+      // Playback State & Controls
+      playbackMode,
+      isPlaying,
+      playbackSpeed,
+      playbackTime,
+      playbackRange,
+      playbackProgress,
+      setPlaybackMode,
+      setPlaybackTime,
+      setPlaybackProgress,
+      setIsPlaying,
+      setPlaybackSpeed,
+      togglePlayPause,
+      stepForward,
+      stepBackward,
+      resetToLive,
+      startPlayback,
+
+      stats,
+      isLiveBackend,
+      isDemoMode,
+      setIsDemoMode,
+      toggleDemoMode,
+      isLoading,
+      isFetching,
+      isError,
+      refetch,
+      resetFilters,
+    }),
+    [
+      rawEvents,
+      filteredEvents,
+      injectSimulatedEvent,
+      alerts,
+      unreadAlertCount,
+      acknowledgeAlert,
+      clearAllAlerts,
+      inspectEventOnMap,
+      minFrpFilter,
+      setMinFrpFilter,
+      activeViewMode,
+      selectedCountry,
+      selectedState,
+      selectedDistrict,
+      setSelectedLocation,
+      resetLocationFilter,
+      selectedCategory,
+      categoryMetrics,
+      activeMetricFilter,
+      setActiveMetricFilter,
+      handleMetricCardClick,
+      searchQuery,
+      selectedClassification,
+      selectedPriority,
+      selectedEvent,
+      setSelectedEvent,
+      isDetailOpen,
+      isDossierOpen,
+      isResponseCenterOpen,
+      activeLayers,
+      toggleLayer,
+      timeRange,
+      setTimeRange,
+
+      conciseSelectedEvent,
+      isConciseDetailOpen,
+      openConciseEventDetails,
+      closeConciseEventDetails,
+      openDetailedAnalysis,
+      returnToDashboard,
+
+      playbackMode,
+      isPlaying,
+      playbackSpeed,
+      playbackTime,
+      playbackRange,
+      playbackProgress,
+      setPlaybackMode,
+      setPlaybackTime,
+      setPlaybackProgress,
+      setIsPlaying,
+      setPlaybackSpeed,
+      togglePlayPause,
+      stepForward,
+      stepBackward,
+      resetToLive,
+      startPlayback,
+      stats,
+      isLiveBackend,
+      isDemoMode,
+      setIsDemoMode,
+      toggleDemoMode,
+      isLoading,
+      isFetching,
+      isError,
+      refetch,
+      resetFilters,
+    ]
+  );
+
+  return <EventContext.Provider value={value}>{children}</EventContext.Provider>;
+}
+
+export function useEventContext(): EventContextType {
+  const context = useContext(EventContext);
+  if (!context) {
+    throw new Error("useEventContext must be used within an EventProvider");
+  }
+  return context;
+}

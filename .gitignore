@@ -1,0 +1,90 @@
+# ==============================================================================
+# PyroSat / SIH2026 — Root .gitignore
+# ==============================================================================
+
+# Dependencies & Package Managers
+node_modules
+node_modules/
+**/node_modules/
+**/node_modules
+dist/
+build/
+.cache/
+**/.cache/
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Next.js & Frontend Caches
+.next/
+**/.next/
+out/
+.turbo/
+.vercel/
+
+# Python, Virtual Environments & Caches
+.venv/
+**/.venv/
+venv/
+**/venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+**/.pytest_cache/
+.ruff_cache/
+**/.ruff_cache/
+.mypy_cache/
+**/.mypy_cache/
+
+# Databases, Large Caches & Raw Satellite Archives
+*.db
+**/*.db
+*.sqlite
+**/*.sqlite
+*.sqlite3
+**/*.sqlite3
+data/firms_cache.db
+**/data/firms_cache.db
+data/raw_thermal/
+**/data/raw_thermal/
+*.pack
+**/*.pack
+*.zip
+**/*.zip
+
+# Submodule & Local Backups
+.git_submodule_backup
+.git_submodule_backup/
+**/.git_submodule_backup/
+**/.git_submodule_backup
+
+# Local App Caches
+.srivision-cache/
+.gev-cache/
+.gev-logs/
+
+# Environment, Secrets & Keys
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.key
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Operating System & IDE
+.DS_Store
+**/.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json

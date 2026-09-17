@@ -1,0 +1,142 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: pyrosat-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-pyrosat}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pyrosat_secure_password_change_in_prod}
+      POSTGRES_DB: ${POSTGRES_DB:-pyrosat_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/init-scripts:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pyrosat} -d ${POSTGRES_DB:-pyrosat_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - pyrosat-backend-net
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: pyrosat-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:-pyrosat_redis_password_change_in_prod}"]
+    volumes:
+      - redis_data:/data
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-pyrosat_redis_password_change_in_prod}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pyrosat-backend-net
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    container_name: pyrosat-api
+    restart: unless-stopped
+    environment:
+      PYROSAT_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-pyrosat}:${POSTGRES_PASSWORD:-pyrosat_secure_password_change_in_prod}@postgres:5432/${POSTGRES_DB:-pyrosat_db}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-pyrosat_redis_password_change_in_prod}@redis:6379/0
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-change_this_to_a_secure_random_64_char_key_in_production}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - pyrosat-backend-net
+      - pyrosat-frontend-net
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/worker.Dockerfile
+    container_name: pyrosat-worker
+    restart: unless-stopped
+    environment:
+      PYROSAT_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-pyrosat}:${POSTGRES_PASSWORD:-pyrosat_secure_password_change_in_prod}@postgres:5432/${POSTGRES_DB:-pyrosat_db}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-pyrosat_redis_password_change_in_prod}@redis:6379/0
+      FIRMS_MAP_KEY: ${FIRMS_MAP_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - pyrosat-backend-net
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 1536M
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    container_name: pyrosat-web
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      BACKEND_INTERNAL_URL: http://api:8000
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - pyrosat-frontend-net
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 1024M
+
+networks:
+  pyrosat-backend-net:
+    driver: bridge
+  pyrosat-frontend-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

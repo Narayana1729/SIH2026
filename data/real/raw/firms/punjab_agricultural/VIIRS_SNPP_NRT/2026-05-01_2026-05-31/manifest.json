@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_punjab_agricultural_VIIRS_SNPP_NRT_2026-05-01_2026-05-31",
+  "source_name": "NASA_FIRMS",
+  "source_product": "VIIRS_SNPP_NRT",
+  "sensor": "VIIRS",
+  "study_area_id": "punjab_agricultural",
+  "study_area_name": "Ludhiana - Sangrur - Patiala Crop Residue Burning Belt",
+  "requested_start_date": "2026-05-01",
+  "requested_end_date": "2026-05-31",
+  "bounding_box": {
+    "min_latitude": 30.0,
+    "min_longitude": 75.2,
+    "max_latitude": 31.0,
+    "max_longitude": 76.5
+  },
+  "raw_record_count": 124,
+  "valid_record_count": 124,
+  "canonical_record_count": 124,
+  "raw_file_sha256": "8672c6d3c0511e290296de6f791945f6c1b14cb954465efa01d5c580d00454ec",
+  "created_at": "2026-09-06T07:47:37.446535+00:00"
+}

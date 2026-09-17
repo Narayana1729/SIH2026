@@ -1,0 +1,75 @@
+{
+  "source_metadata": {
+    "source_id": "FAC_GUJARAT_REF_2026",
+    "source_name": "Gujarat Western Industrial Corridor Petrochemical Registry",
+    "source_type": "OFFICIAL_FACILITY_REGISTRY",
+    "provider": "wri_osm_facility_db",
+    "dataset_name": "gujarat_energy_facilities",
+    "dataset_version": "v2026.1",
+    "tier": "TIER_A_AUTHORITATIVE",
+    "country": "India",
+    "region": "Gujarat"
+  },
+  "features": [
+    {
+      "feature_id": "FAC-GUJ-001",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "gujarat_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "oil_gas",
+      "latitude": 22.4707,
+      "longitude": 70.0577,
+      "facility_name": "Reliance Jamnagar Petrochemical Refinery Complex",
+      "metadata": {
+        "operator": "Reliance Industries Limited",
+        "capacity_bpd": 1240000,
+        "state": "Gujarat"
+      }
+    },
+    {
+      "feature_id": "FAC-GUJ-002",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "gujarat_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "oil_gas",
+      "latitude": 22.388,
+      "longitude": 69.83,
+      "facility_name": "Nayara Energy Vadinar Refinery",
+      "metadata": {
+        "operator": "Nayara Energy",
+        "capacity_bpd": 400000,
+        "state": "Gujarat"
+      }
+    },
+    {
+      "feature_id": "FAC-GUJ-003",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "gujarat_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "power",
+      "latitude": 22.822,
+      "longitude": 69.525,
+      "facility_name": "Adani Mundra Thermal Power Station",
+      "metadata": {
+        "operator": "Adani Power",
+        "capacity_mw": 4620,
+        "state": "Gujarat"
+      }
+    },
+    {
+      "feature_id": "FAC-GUJ-004",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "gujarat_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "industrial",
+      "latitude": 21.12,
+      "longitude": 72.685,
+      "facility_name": "AM/NS Hazira Steel Plant Complex",
+      "metadata": {
+        "operator": "ArcelorMittal Nippon Steel India",
+        "capacity_mtpa": 9.6,
+        "state": "Gujarat"
+      }
+    }
+  ]
+}

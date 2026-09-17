@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_singrauli_sonbhadra_MODIS_NRT_2026-04-01_2026-04-30",
+  "source_name": "NASA_FIRMS",
+  "source_product": "MODIS_NRT",
+  "sensor": "MODIS",
+  "study_area_id": "singrauli_sonbhadra",
+  "study_area_name": "Singrauli & Sonbhadra Energy & Heavy Metallurgy Hub",
+  "requested_start_date": "2026-04-01",
+  "requested_end_date": "2026-04-30",
+  "bounding_box": {
+    "min_latitude": 23.8,
+    "min_longitude": 82.3,
+    "max_latitude": 24.5,
+    "max_longitude": 83.2
+  },
+  "raw_record_count": 60,
+  "valid_record_count": 60,
+  "canonical_record_count": 60,
+  "raw_file_sha256": "e6247d8b8b81db8566d681d1d796fd7eeffe5beb32659faab3f51816e369b0b2",
+  "created_at": "2026-09-06T07:47:37.423236+00:00"
+}

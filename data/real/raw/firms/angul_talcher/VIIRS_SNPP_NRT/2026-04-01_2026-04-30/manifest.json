@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_angul_talcher_VIIRS_SNPP_NRT_2026-04-01_2026-04-30",
+  "source_name": "NASA_FIRMS",
+  "source_product": "VIIRS_SNPP_NRT",
+  "sensor": "VIIRS",
+  "study_area_id": "angul_talcher",
+  "study_area_name": "Angul - Talcher Mining & Industrial Metallurgy Corridor",
+  "requested_start_date": "2026-04-01",
+  "requested_end_date": "2026-04-30",
+  "bounding_box": {
+    "min_latitude": 20.7,
+    "min_longitude": 84.8,
+    "max_latitude": 21.8,
+    "max_longitude": 85.6
+  },
+  "raw_record_count": 120,
+  "valid_record_count": 120,
+  "canonical_record_count": 120,
+  "raw_file_sha256": "4d6927fa9a1133c161b12947797d1754a8c35114e743f02b6098fece5d66be97",
+  "created_at": "2026-09-06T07:47:37.428436+00:00"
+}

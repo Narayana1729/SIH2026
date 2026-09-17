@@ -1,0 +1,59 @@
+{
+  "source_metadata": {
+    "source_id": "FAC_PUNJAB_REF_2026",
+    "source_name": "Punjab Energy & Petrochemical Infrastructure Registry",
+    "source_type": "OFFICIAL_FACILITY_REGISTRY",
+    "provider": "wri_osm_facility_db",
+    "dataset_name": "punjab_energy_facilities",
+    "dataset_version": "v2026.1",
+    "tier": "TIER_A_AUTHORITATIVE",
+    "country": "India",
+    "region": "Punjab"
+  },
+  "features": [
+    {
+      "feature_id": "FAC-PUN-001",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "punjab_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "oil_gas",
+      "latitude": 30.038,
+      "longitude": 75.012,
+      "facility_name": "HMEL Guru Gobind Singh Refinery Bathinda",
+      "metadata": {
+        "operator": "HPCL-Mittal Energy Limited",
+        "capacity_bpd": 230000,
+        "state": "Punjab"
+      }
+    },
+    {
+      "feature_id": "FAC-PUN-002",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "punjab_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "power",
+      "latitude": 30.273,
+      "longitude": 75.185,
+      "facility_name": "Guru Hargobind Thermal Power Station Lehra Mohabbat",
+      "metadata": {
+        "operator": "PSPCL",
+        "capacity_mw": 920,
+        "state": "Punjab"
+      }
+    },
+    {
+      "feature_id": "FAC-PUN-003",
+      "provider": "wri_osm_facility_db",
+      "dataset_name": "punjab_energy_facilities",
+      "dataset_version": "v2026.1",
+      "context_type": "industrial",
+      "latitude": 30.22,
+      "longitude": 74.95,
+      "facility_name": "National Fertilizers Limited Bathinda Unit",
+      "metadata": {
+        "operator": "National Fertilizers Limited",
+        "state": "Punjab"
+      }
+    }
+  ]
+}

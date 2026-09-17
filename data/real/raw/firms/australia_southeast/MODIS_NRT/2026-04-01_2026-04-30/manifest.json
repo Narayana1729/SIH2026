@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_australia_southeast_MODIS_NRT_2026-04-01_2026-04-30",
+  "source_name": "NASA_FIRMS",
+  "source_product": "MODIS_NRT",
+  "sensor": "MODIS",
+  "study_area_id": "australia_southeast",
+  "study_area_name": "Southeast Australia Eucalyptus & Bushfire Corridor",
+  "requested_start_date": "2026-04-01",
+  "requested_end_date": "2026-04-30",
+  "bounding_box": {
+    "min_latitude": -38.0,
+    "min_longitude": 144.0,
+    "max_latitude": -32.0,
+    "max_longitude": 152.0
+  },
+  "raw_record_count": 60,
+  "valid_record_count": 60,
+  "canonical_record_count": 60,
+  "raw_file_sha256": "349abdf37eb62c2f027e4566855e561cf5a4a238e5b6245b56c1b0f886d55461",
+  "created_at": "2026-09-06T07:47:37.523785+00:00"
+}

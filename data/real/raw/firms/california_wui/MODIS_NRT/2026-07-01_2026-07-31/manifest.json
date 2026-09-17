@@ -1,0 +1,21 @@
+{
+  "dataset_id": "firms_california_wui_MODIS_NRT_2026-07-01_2026-07-31",
+  "source_name": "NASA_FIRMS",
+  "source_product": "MODIS_NRT",
+  "sensor": "MODIS",
+  "study_area_id": "california_wui",
+  "study_area_name": "California Wildland-Urban Interface & Sierra Forest Fire Corridor",
+  "requested_start_date": "2026-07-01",
+  "requested_end_date": "2026-07-31",
+  "bounding_box": {
+    "min_latitude": 34.0,
+    "min_longitude": -122.0,
+    "max_latitude": 40.0,
+    "max_longitude": -118.0
+  },
+  "raw_record_count": 62,
+  "valid_record_count": 62,
+  "canonical_record_count": 62,
+  "raw_file_sha256": "4e027fcaad3ddbd0848e1069e8c93086991da8b088d62ccda93ea1fc163f1db0",
+  "created_at": "2026-09-06T07:47:37.491794+00:00"
+}
