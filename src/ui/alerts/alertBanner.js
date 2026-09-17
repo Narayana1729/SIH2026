@@ -151,15 +151,6 @@ export class AlertBanner {
           this.onSelectHazard(match);
         }
 
-        const dispLayer = window.__sriVision?.hazardLayerManager?.getLayer('hazard-dispersion');
-        if (dispLayer) {
-          dispLayer.show();
-          void dispLayer.simulatePlumeAt(lat, lon, {
-            chemical: 'BENZENE',
-            facilityName: match?.title || 'Thermal Incident Plume',
-          });
-        }
-
         // Trigger plume simulation event
         eventBus.emit(SRI_EVENTS.SIMULATION_REQUESTED, {
           latitude: lat,

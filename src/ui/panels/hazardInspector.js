@@ -235,17 +235,26 @@ export class HazardInspector {
   }
 
   setHazard(hazardContract) {
+    if (!hazardContract) {
+      this.renderEmpty();
+      return;
+    }
+
+    const hazardId = hazardContract.id || `${hazardContract.location?.latitude}_${hazardContract.location?.longitude}`;
+    if (this.currentHazard && this._currentHazardId === hazardId) {
+      // Same hazard already active, do not re-trigger lifecycle or clear active plume
+      return;
+    }
+    this._currentHazardId = hazardId;
+
     // Clear any previous active plume simulation when switching hazards
     const viewer = window.__sriVision?.viewer;
     if (viewer) clearPlumeFromCesium(viewer);
     const dispLayer = window.__sriVision?.hazardLayerManager?.getLayer('hazard-dispersion');
     if (dispLayer) dispLayer.clearPlumeEntities();
+    this._renderedPlumeHazardId = null;
 
     this.currentHazard = hazardContract;
-    if (!hazardContract) {
-      this.renderEmpty();
-      return;
-    }
     this.render();
 
     const lat = hazardContract.location?.latitude;
@@ -355,10 +364,15 @@ export class HazardInspector {
 
   async _autoRenderLivePlume(lat, lon, weather) {
     if (!this.currentHazard) return;
+    const hazardId = this.currentHazard.id || `${lat}_${lon}`;
+    if (this._renderedPlumeHazardId === hazardId) {
+      return; // Already rendered once for this FIRM detection; do not re-render
+    }
+    this._renderedPlumeHazardId = hazardId;
+
     try {
       const hazmat = this.currentHazard.hazmat_profile || resolveHazmatProfile(this.currentHazard.facility || this.currentHazard);
       const chemKey = hazmat?.default_dispersion_chemical || 'Benzene Vapor (C₆H₆)';
-      const chemCode = hazmat?.chemical_code || 'BENZENE';
       const thresholds = hazmat?.dispersion_thresholds || { advisory: 10.0, evacuation: 50.0, critical: 500.0 };
       const windSpeedMps = Math.max(0.8, (weather.windSpeedKmh || 16.5) / 3.6);
       const windDirectionDeg = weather.windDir ?? 225;
@@ -379,12 +393,6 @@ export class HazardInspector {
       if (viewer) {
         renderPlumeOnCesium(viewer, plume);
       }
-
-      const dispLayer = window.__sriVision?.hazardLayerManager?.getLayer('hazard-dispersion');
-      if (dispLayer) {
-        dispLayer.show();
-        await dispLayer.simulatePlumeAt(lat, lon, { chemical: chemCode, facilityName: this.currentHazard.title });
-      }
     } catch (err) {
       console.warn('[HazardInspector] Auto plume render failed:', err);
     }
@@ -397,6 +405,8 @@ export class HazardInspector {
     const dispLayer = window.__sriVision?.hazardLayerManager?.getLayer('hazard-dispersion');
     if (dispLayer) dispLayer.clearPlumeEntities();
 
+    this._currentHazardId = null;
+    this._renderedPlumeHazardId = null;
     this.container.style.display = 'none';
     this.container.innerHTML = '';
     this.currentHazard = null;
@@ -1026,12 +1036,6 @@ CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
         const viewer = window.__sriVision?.viewer;
         if (viewer) {
           renderPlumeOnCesium(viewer, plume);
-        }
-
-        const dispLayer = window.__sriVision?.hazardLayerManager?.getLayer('hazard-dispersion');
-        if (dispLayer) {
-          dispLayer.show();
-          await dispLayer.simulatePlumeAt(hLat, hLon, { chemical: chemCode, facilityName: this.currentHazard.title });
         }
 
         btn.textContent = '✅ 3D PLUME & WIND VECTOR RENDERED';

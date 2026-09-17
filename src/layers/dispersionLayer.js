@@ -245,7 +245,6 @@ export class DispersionLayer extends BaseHazardLayer {
         weather: weatherData,
       });
 
-      super.onSelect(normalizedHazard);
       return normalizedHazard;
 
     } catch (err) {
