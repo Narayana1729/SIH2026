@@ -916,6 +916,11 @@ body.cockpit-mode #cockpit-cloud-effects.active {
   50% { opacity: 1; }
 }
 
+@keyframes sri-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 /* ── Post-Processing Toggles ─────────────────── */
 #pp-toggles {
   --pp-expanded-width: var(--display-panel-expanded-width);
@@ -2325,16 +2330,7 @@ body.ui-clean-view #scene-runtime.active {
   display: none !important;
 }
 
-/* Sci-fi HUD decorative overlays - Hiding corner brackets, reticles, scanlines */
-#intel-hud .hud-corner,
-#intel-hud .hud-edge,
-#intel-hud .hud-bracket,
-#intel-hud .hud-decor,
-#intel-hud .hud-top-bar,
-#intel-hud .hud-bottom-bar,
-#intel-hud .hud-crosshair {
-  display: none !important;
-}
+
 
 .cockpit-roll-arc span {
   position: absolute;

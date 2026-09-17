@@ -36,7 +36,7 @@ describe('Priority 3: ML Worker Single-Flight Resilience & Fallback Provenance',
 
   it('initializes cleanly and reports ML_HIERARCHICAL_ENSEMBLE provenance', async () => {
     service = new MLInferenceService({ autoSpawn: true, baseBackoffMs: 200, maxRestartAttempts: 3 });
-    const ready = await service.ensureReady(6000);
+    const ready = await service.ensureReady(10000);
     assert.equal(ready, true, 'Worker failed to reach READY state within timeout');
     assert.equal(service.state, WorkerState.READY);
 

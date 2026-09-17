@@ -325,7 +325,7 @@ export class HazardInspector {
         const headerPill = this.container.querySelector('#sri-header-weather-pill');
         if (headerPill) {
           headerPill.innerHTML = `
-            <span id="sri-header-wind-arrow" style="display: inline-block; font-size: 9px; transform: rotate(${windDir}deg); transition: transform 0.4s ease; color: #38bdf8;">⬆</span>
+            <span id="sri-header-wind-arrow" style="display: inline-block; font-size: 9px; transform: rotate(${downwindDir}deg); transition: transform 0.4s ease; color: #38bdf8;" title="Wind flow vector: blowing towards ${getCardinal(downwindDir)} (${downwindDir}°)">⬆</span>
             <span style="color: #38bdf8; font-weight: 600;">${windSpeedKmh} km/h ${getCardinal(windDir)} (${windDir}°) ➔ ${getCardinal(downwindDir)}</span>
             <span style="color: #64748b;">|</span>
             <span style="color: #fde047; font-weight: 600;">${tempC}°C</span>
@@ -647,13 +647,14 @@ export class HazardInspector {
       </div>
     `;
 
-    const weather = h.weather || { windSpeedKmh: 16.2, windDirectionDegrees: 225, temperatureC: 31.4, humidityPercent: 46 };
-    const windMps = Math.round((weather.windSpeedKmh / 3.6) * 10) / 10;
-    const windDir = weather.windDirectionDegrees;
+    const weather = h.weather || null;
+    const hasWeather = !!weather;
+    const windMps = hasWeather ? Math.round((weather.windSpeedKmh / 3.6) * 10) / 10 : 0;
+    const windDir = hasWeather ? weather.windDirectionDegrees : 225;
     const downwindDir = (windDir + 180) % 360;
 
-    const weatherHtml = `
-      <div class="sri-section-title">LIVE METEOROLOGY & WIND VECTOR</div>
+    const weatherHtml = hasWeather ? `
+      <div class="sri-section-title">LIVE METEOROLOGY &amp; WIND VECTOR</div>
       <div class="sri-weather-card" id="sri-live-weather-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(0,212,255,0.25); border-radius: 6px; padding: 10px; margin-bottom: 10px; font-size: 10px;">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
           <div><span style="color: #94a3b8;">Wind Speed:</span> <strong style="color: #00d4ff;">${weather.windSpeedKmh} km/h (${windMps} m/s)</strong></div>
@@ -665,6 +666,12 @@ export class HazardInspector {
           <span>Source: ${weather.source || 'Open-Meteo Atmospheric Model'}</span>
           <span style="color: #34d399; font-weight: 700;">● LIVE TELEMETRY</span>
         </div>
+      </div>
+    ` : `
+      <div class="sri-section-title">LIVE METEOROLOGY &amp; WIND VECTOR</div>
+      <div id="sri-live-weather-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(0,212,255,0.15); border-radius: 6px; padding: 10px; margin-bottom: 10px; font-size: 10px; display: flex; align-items: center; gap: 8px; color: #475569;">
+        <span style="animation: sri-spin 1.2s linear infinite; display: inline-block; font-size: 11px;">⟳</span>
+        <span style="font-family: var(--font-mono, monospace); font-size: 9px; letter-spacing: 0.5px;">ACQUIRING OPEN-METEO ATMOSPHERIC TELEMETRY...</span>
       </div>
     `;
 
@@ -703,10 +710,12 @@ export class HazardInspector {
               font-family: var(--font-mono, 'JetBrains Mono', monospace);
               letter-spacing: 0.3px;
             ">
-              <span id="sri-header-wind-arrow" style="display: inline-block; font-size: 9px; transform: rotate(${windDir}deg); transition: transform 0.4s ease; color: #38bdf8;">⬆</span>
-              <span id="sri-header-wind-text" style="color: #38bdf8; font-weight: 600;">${weather.windSpeedKmh} km/h ${getCardinal(windDir)} (${windDir}°) ➔ ${getCardinal(downwindDir)}</span>
-              <span style="color: #64748b;">|</span>
-              <span id="sri-header-temp-text" style="color: #fde047; font-weight: 600;">${weather.temperatureC}°C</span>
+              ${hasWeather ? `
+                <span id="sri-header-wind-arrow" style="display: inline-block; font-size: 9px; transform: rotate(${downwindDir}deg); transition: transform 0.4s ease; color: #38bdf8;" title="Wind flow vector: blowing towards ${getCardinal(downwindDir)} (${downwindDir}°)">⬆</span>
+                <span id="sri-header-wind-text" style="color: #38bdf8; font-weight: 600;">${weather.windSpeedKmh} km/h ${getCardinal(windDir)} (${windDir}°) ➔ ${getCardinal(downwindDir)}</span>
+                <span style="color: #64748b;">|</span>
+                <span id="sri-header-temp-text" style="color: #fde047; font-weight: 600;">${weather.temperatureC}°C</span>
+              ` : `<span style="color: #475569; font-size: 8px; letter-spacing: 0.3px; animation: sri-spin 1.2s linear infinite; display: inline-block;">⟳</span><span id="sri-header-wind-text" style="color: #475569; font-size: 8px;"> FETCHING TELEMETRY</span>`}
             </div>
           </div>
         </div>
