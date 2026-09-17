@@ -1,16 +1,10 @@
-/**
- * @module layers/wildfireLayer
- * @description Wildfire Intelligence Layer for sriVision.
- * Visualizes NASA FIRMS thermal hotspots (OBSERVED), and upon selection, dynamically renders
- * Rothermel 1h/2h/4h elliptical fire spread perimeters (SIMULATED) and wind vectors directly on the 3D globe.
- */
-
 import * as Cesium from 'cesium';
 import { BaseHazardLayer } from './layerRegistry.js';
 import { sriVisionApi } from '../core/api.js';
 import { normalizeWildfireRecord } from '../core/hazardNormalizer.js';
 import { getSeverityCesiumColor } from '../core/risk.js';
 import { eventBus, SRI_EVENTS } from '../core/eventBus.js';
+import { classifyThermalIncident, ThermalCategories } from '../intelligence/thermalClassifier.js';
 
 export class WildfireLayer extends BaseHazardLayer {
   constructor() {
@@ -24,6 +18,7 @@ export class WildfireLayer extends BaseHazardLayer {
     this.hotspots = [];
     this.selectedSpreadEntities = [];
     this.currentDate = null;
+    this.activeCategoryFilter = 'ALL';
   }
 
   async initialize(viewer, layerManager) {
@@ -39,6 +34,32 @@ export class WildfireLayer extends BaseHazardLayer {
         void this.load(evt.date);
       }
     });
+
+    // Listen to live category segregation filter changes
+    eventBus.on(SRI_EVENTS.CATEGORY_FILTER_CHANGED, (evt) => {
+      this.applyCategoryFilter(evt?.category || 'ALL');
+    });
+  }
+
+  applyCategoryFilter(filterKey = 'ALL') {
+    this.activeCategoryFilter = filterKey;
+    if (!this.dataSource) return;
+
+    const entities = this.dataSource.entities.values;
+    for (let i = 0; i < entities.length; i++) {
+      const entity = entities[i];
+      const cat = entity._sriCategory || ThermalCategories.FOREST_WILDFIRE;
+
+      if (filterKey === 'ALL') {
+        entity.show = true;
+      } else if (filterKey === 'INDUSTRIAL') {
+        entity.show = (cat === ThermalCategories.INDUSTRIAL_FLARE || cat === ThermalCategories.INDUSTRIAL_DISASTER);
+      } else if (filterKey === 'NON_INDUSTRIAL') {
+        entity.show = (cat !== ThermalCategories.INDUSTRIAL_FLARE && cat !== ThermalCategories.INDUSTRIAL_DISASTER);
+      } else {
+        entity.show = (cat === filterKey);
+      }
+    }
   }
 
   async load(targetDate = null) {
@@ -53,41 +74,91 @@ export class WildfireLayer extends BaseHazardLayer {
       const rows = data.fires || data.records || data.data || [];
       this.hotspots = rows.slice(0, 400); // Guarded batch
 
+      const counts = {
+        ALL: this.hotspots.length,
+        INDUSTRIAL: 0,
+        INDUSTRIAL_FLARE: 0,
+        INDUSTRIAL_DISASTER: 0,
+        FOREST_WILDFIRE: 0,
+        AGRICULTURAL_BURNING: 0,
+        MINING_SMELTING: 0,
+        NON_INDUSTRIAL: 0,
+      };
+
       for (const record of this.hotspots) {
         const hazard = normalizeWildfireRecord(record);
         const lat = hazard.location.latitude;
         const lon = hazard.location.longitude;
         const frp = Number(record.frp) || 10;
 
-        // Dynamic billboard / point sizing based on Fire Radiative Power (MW)
-        const pointSize = Math.max(6, Math.min(22, 6 + Math.log10(frp + 1) * 6));
-        const color = getSeverityCesiumColor(hazard.severity);
+        // Perform 2-stage hierarchical classification & attribution
+        const classification = classifyThermalIncident(record);
+        const category = classification?.category || ThermalCategories.FOREST_WILDFIRE;
+
+        // Track live counts for HUD badges
+        if (counts[category] !== undefined) counts[category]++;
+        if (category === ThermalCategories.INDUSTRIAL_FLARE || category === ThermalCategories.INDUSTRIAL_DISASTER) {
+          counts.INDUSTRIAL++;
+        } else {
+          counts.NON_INDUSTRIAL++;
+        }
+
+        // Distinct styling based on segregated category
+        let categoryIcon = '🔥';
+        let customColor = getSeverityCesiumColor(hazard.severity);
+
+        if (category === ThermalCategories.INDUSTRIAL_DISASTER) {
+          categoryIcon = '💥';
+          customColor = Cesium.Color.fromCssColorString('#ef4444'); // Crimson Red
+        } else if (category === ThermalCategories.INDUSTRIAL_FLARE) {
+          categoryIcon = '⚡';
+          customColor = Cesium.Color.fromCssColorString('#00d4ff'); // Electric Cyan
+        } else if (category === ThermalCategories.AGRICULTURAL_BURNING) {
+          categoryIcon = '🌾';
+          customColor = Cesium.Color.fromCssColorString('#facc15'); // Harvest Yellow
+        } else if (category === ThermalCategories.MINING_SMELTING) {
+          categoryIcon = '⛏️';
+          customColor = Cesium.Color.fromCssColorString('#fb923c'); // Amber
+        } else if (category === ThermalCategories.FOREST_WILDFIRE) {
+          categoryIcon = '🌲';
+          customColor = Cesium.Color.fromCssColorString('#ea580c'); // Deep Wildfire Orange
+        }
+
+        const pointSize = Math.max(7, Math.min(22, 7 + Math.log10(frp + 1) * 6));
 
         const entity = this.dataSource.entities.add({
           position: Cesium.Cartesian3.fromDegrees(lon, lat, 20),
           point: {
             pixelSize: pointSize,
-            color: color,
+            color: customColor,
             outlineColor: Cesium.Color.BLACK,
             outlineWidth: 1.5,
             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
             disableDepthTestDistance: 50000,
           },
           label: {
-            text: `🔥 ${frp.toFixed(0)} MW`,
+            text: `${categoryIcon} ${frp.toFixed(0)}MW`,
             font: '10px "JetBrains Mono", monospace',
             fillColor: Cesium.Color.fromCssColorString('#e8eaed'),
             showBackground: true,
             backgroundColor: Cesium.Color.fromCssColorString('#0c0c14').withAlpha(0.75),
             backgroundPadding: new Cesium.Cartesian2(5, 3),
             pixelOffset: new Cesium.Cartesian2(0, -16),
-            distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 450000), // LOD culling for zoomed-out globe
+            distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 450000), // LOD culling
           },
         });
 
         entity._sriHazardContract = hazard;
         entity._sriFireRecord = record;
+        entity._sriClassification = classification;
+        entity._sriCategory = category;
       }
+
+      // Re-apply active filter on freshly loaded batch
+      this.applyCategoryFilter(this.activeCategoryFilter);
+
+      // Broadcast live counts to HUD toggle chips
+      eventBus.emit('srivision:category-counts-updated', counts);
     } catch (err) {
       console.warn('[WildfireLayer] Failed to load live FIRMS data:', err);
     }

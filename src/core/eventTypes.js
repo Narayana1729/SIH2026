@@ -30,4 +30,5 @@ export const SRI_EVENTS = Object.freeze({
   LAYER_VISIBILITY_CHANGED: 'srivision:layer-visibility-changed',
   TIMELINE_DATE_CHANGED: 'srivision:timeline-date-changed',
   TIMELINE_VISIBILITY_CHANGED: 'srivision:timeline-visibility-changed',
+  CATEGORY_FILTER_CHANGED: 'srivision:category-filter-changed',
 });

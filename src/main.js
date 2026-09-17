@@ -33,6 +33,7 @@ import { AlertBanner } from './ui/alerts/alertBanner.js';
 import { DossierModal } from './ui/dossier/dossierModal.js';
 import { HazardTooltip } from './ui/hud/hazardTooltip.js';
 import { QuickZoneBar } from './ui/hud/quickZoneBar.js';
+import { SegregationFilterBar } from './ui/hud/segregationFilterBar.js';
 import { ThreatLegend } from './ui/hud/threatLegend.js';
 import { openFirmsUploadModal } from './ui/ingestion/firmsUploadModal.js';
 import { openAiSimulationLabModal } from './ui/simulation/aiSimulationLabModal.js';
@@ -227,6 +228,7 @@ async function init() {
     const dossierModal = new DossierModal();
     const hazardTooltip = new HazardTooltip(viewer);
     const quickZoneBar = new QuickZoneBar(viewer, hazardLayerManager);
+    const segregationFilterBar = new SegregationFilterBar(hazardLayerManager);
     const threatLegend = new ThreatLegend();
     const historicalTimelineBar = new HistoricalTimelineBar(viewer, dataManager);
 
@@ -405,6 +407,7 @@ async function init() {
       dossierModal,
       thermalListPanel,
       historicalTimelineBar,
+      segregationFilterBar,
       openAnomalyListPanel: (cat) => thermalListPanel.open(cat),
       openFirmsUploadModal,
       openAiSimulationLabModal,
