@@ -26,6 +26,8 @@ const testFiles = [
   'tests/p1-strengthen.test.mjs',
   'tests/real-sat-treeshap.test.mjs',
   'tests/ml-worker-resilience.test.mjs',
+  'tests/briggs-plume-rise.test.mjs',
+  'tests/enhanced-validation.test.mjs',
   'src/firstRunExperience.test.mjs',
 ];
 

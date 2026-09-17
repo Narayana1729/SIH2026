@@ -151,14 +151,11 @@ export class AlertBanner {
           this.onSelectHazard(match);
         }
 
-        // Trigger plume simulation event
-        eventBus.emit(SRI_EVENTS.SIMULATION_REQUESTED, {
-          latitude: lat,
-          longitude: lon,
-          incident_title: match?.title || 'Industrial Thermal Incident',
-          chemical: 'BENZENE',
-          release_rate_kg_s: 15.0,
-        });
+        // Trigger single plume simulation on the selected FIRM detection
+        const inspector = window.__sriVision?.hazardInspector;
+        if (inspector && typeof inspector.triggerPlumeSimulation === 'function') {
+          void inspector.triggerPlumeSimulation(match);
+        }
       });
     });
 

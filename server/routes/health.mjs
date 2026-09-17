@@ -8,6 +8,7 @@ import { metricsRegistry } from '../services/metrics.mjs';
 import { defaultCache } from '../services/cache.mjs';
 import { firmsCircuitBreaker, usgsCircuitBreaker, openMeteoCircuitBreaker } from '../services/circuitBreaker.mjs';
 import { defaultMLInferenceService } from '../services/mlInferenceService.mjs';
+import { defaultHistoricalFirmsStore as historicalFirmsStore } from '../services/historicalFirmsStore.mjs';
 
 /**
  * Handles Liveness Probes (/healthz, /api/health/live).
@@ -40,6 +41,11 @@ export async function handleReadinessRoute(req, res) {
     mlRuntime: {
       ready: defaultMLInferenceService.isReady,
       mode: defaultMLInferenceService.isReady ? 'ACTIVE' : 'FALLBACK',
+    },
+    historicalStore: {
+      loaded: historicalFirmsStore.isLoaded,
+      indexedDatesCount: historicalFirmsStore.dateIndex.size,
+      latestDate: historicalFirmsStore.latestDate,
     },
     nodeVersion: process.version,
   };

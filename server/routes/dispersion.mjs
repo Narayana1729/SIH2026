@@ -4,6 +4,7 @@
  */
 
 import { generatePlumeFootprint, calculateGroundConcentration, estimateStabilityClass } from '../../src/disasters/dispersion/gaussianPlume.js';
+import { calculateBriggsPlumeRise } from '../../src/disasters/dispersion/briggsPlumeRise.js';
 import { findFacilitiesNearby, resolveHazmatProfile } from '../../src/disasters/industrial/industrialFacilities.js';
 import { createRateLimiter } from '../services/rateLimit.mjs';
 import { sendJson, getClientIp } from '../middleware/security.mjs';
@@ -39,7 +40,6 @@ export async function handleDispersionRoute(req, res, url) {
       windDirectionDeg = params.windDirectionDegrees ?? params.windDir ?? 270,
       windSpeedMps = params.windSpeedMs ?? params.windSpeed ?? 4,
       emissionRateGps = params.emissionRateGPerSec ?? params.emissionRate ?? 500,
-      effectiveHeightMeters = 15,
       maxDistanceKm = 15,
       stabilityClass = 'D',
     } = params;
@@ -51,7 +51,19 @@ export async function handleDispersionRoute(req, res, url) {
     // Cross-reference nearby industrial infrastructure to obtain authentic CAMEO/NIOSH HazMat profile
     const nearby = findFacilitiesNearby(Number(sourceLat), Number(sourceLon), 30);
     const matchedFacility = nearby[0] || null;
+    const isIndustrial = Boolean(matchedFacility || params.isIndustrial || params.sector);
     const hazmat = matchedFacility?.hazmat_profile || (params.sector ? resolveHazmatProfile(params.sector) : null);
+
+    // Compute classical US EPA Briggs (1969/1975) convective plume rise
+    const briggsResult = calculateBriggsPlumeRise(null, {
+      frpMw: Number(params.frpMw ?? params.frp ?? (isIndustrial ? 45.0 : 15.0)),
+      windSpeedMs: Number(windSpeedMps),
+      physicalStackHeightM: Number(params.physicalStackHeightM ?? params.stackHeightMeters ?? (isIndustrial ? 32.0 : 2.0)),
+      stabilityClass: String(stabilityClass).toUpperCase(),
+      isIndustrial,
+    });
+
+    const effectiveHeightMeters = Number(params.effectiveHeightMeters ?? briggsResult.effectiveReleaseHeightHeffM ?? 15);
 
     // Resolve chemical name & realistic IDLH/ERPG thresholds
     let chemicalName = params.chemicalName || params.chemical;
@@ -81,6 +93,7 @@ export async function handleDispersionRoute(req, res, url) {
       success: true,
       data: result,
       ...result,
+      briggs_plume_rise: briggsResult,
       hazmat_intelligence: hazmat ? {
         matched_facility: matchedFacility ? {
           id: matchedFacility.id,

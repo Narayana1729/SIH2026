@@ -8,6 +8,7 @@
  * Usage: Attach to the middleware chain before route handlers.
  */
 
+import crypto from 'node:crypto';
 import { sendError } from './security.mjs';
 
 const DEV_MODE = (process.env.APP_ENV || 'development') === 'development';
@@ -49,8 +50,8 @@ export function authenticateRequest(req, res) {
     return false;
   }
 
-  // Constant-time comparison to prevent timing attacks
-  if (providedKey.length !== configuredKey.length || !timingSafeEqual(providedKey, configuredKey)) {
+  // Crypto-grade constant-time comparison to prevent timing side-channels
+  if (!timingSafeCompare(providedKey, configuredKey)) {
     sendError(res, 403, 'INVALID_API_KEY', 'The provided API key is invalid.', [], req);
     return false;
   }
@@ -59,13 +60,11 @@ export function authenticateRequest(req, res) {
 }
 
 /**
- * Constant-time string comparison (not crypto-grade but prevents trivial timing attacks).
+ * Crypto-grade constant-time comparison.
  */
-function timingSafeEqual(a, b) {
-  if (a.length !== b.length) return false;
-  let result = 0;
-  for (let i = 0; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-  return result === 0;
+function timingSafeCompare(a, b) {
+  const bufA = Buffer.from(String(a));
+  const bufB = Buffer.from(String(b));
+  if (bufA.length !== bufB.length) return false;
+  return crypto.timingSafeEqual(bufA, bufB);
 }

@@ -348,34 +348,71 @@ export class HazardInspector {
             </div>
           `;
         }
-
-        // 3. Automatically Compute & Render 3D Atmospheric Dispersion Plume & Wind Vector on Cesium
-        await this._autoRenderLivePlume(lat, lon, {
-          windSpeedKmh,
-          windDir,
-          tempC,
-          hum,
-        });
       }
     } catch (err) {
       console.warn('[HazardInspector] Live weather fetch fallback:', err);
     }
   }
 
-  async _autoRenderLivePlume(lat, lon, weather) {
-    if (!this.currentHazard) return;
-    const hazardId = this.currentHazard.id || `${lat}_${lon}`;
-    if (this._renderedPlumeHazardId === hazardId) {
-      return; // Already rendered once for this FIRM detection; do not re-render
+  resetPlumeButtonState() {
+    this._renderedPlumeHazardId = null;
+    const btn = this.container.querySelector('#sri-simulate-plume-btn');
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'SIMULATE ATMOSPHERIC DISPERSION PLUME';
+      btn.style.borderColor = '#00d4ff';
+      btn.style.color = '#bae6fd';
     }
-    this._renderedPlumeHazardId = hazardId;
+  }
+
+  async triggerPlumeSimulation(hazard = null) {
+    const targetHazard = hazard || this.currentHazard;
+    if (!targetHazard) return;
+
+    const lat = targetHazard.location?.latitude;
+    const lon = targetHazard.location?.longitude;
+    if (lat == null || lon == null) return;
+
+    if (this._isPlumeSimulating) return; // Guard against concurrent overlapping runs
+    this._isPlumeSimulating = true;
+
+    const btn = this.container.querySelector('#sri-simulate-plume-btn');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'COMPUTING GAUSSIAN DISPERSION PLUME...';
+    }
 
     try {
-      const hazmat = this.currentHazard.hazmat_profile || resolveHazmatProfile(this.currentHazard.facility || this.currentHazard);
-      const chemKey = hazmat?.default_dispersion_chemical || 'Benzene Vapor (C₆H₆)';
+      const viewer = window.__sriVision?.viewer;
+      if (viewer) {
+        clearPlumeFromCesium(viewer);
+        const dispLayer = window.__sriVision?.hazardLayerManager?.getLayer('hazard-dispersion');
+        if (dispLayer) dispLayer.clearPlumeEntities();
+      }
+
+      // Resolve atmospheric conditions from telemetry or live API
+      let weather = targetHazard.weather;
+      if (!weather) {
+        try {
+          const res = await sriVisionApi.getWeather(lat, lon);
+          if (res?.current) {
+            weather = {
+              windSpeedKmh: typeof res.current.wind_speed_10m === 'number' ? Math.round(res.current.wind_speed_10m * 10) / 10 : 16.2,
+              windDirectionDegrees: res.current.wind_direction_10m ?? 225,
+              temperatureC: res.current.temperature_2m ?? 31.0,
+            };
+          }
+        } catch {
+          // Graceful fallback
+        }
+      }
+      weather = weather || { windSpeedKmh: 16.2, windDirectionDegrees: 225, temperatureC: 31.0 };
+
+      const windSpeedMps = Math.max(0.8, (weather.windSpeedKmh || 16.2) / 3.6);
+      const windDirectionDeg = weather.windDirectionDegrees ?? 225;
+      const hazmat = targetHazard.hazmat_profile || resolveHazmatProfile(targetHazard.facility || targetHazard);
+      const chemKey = hazmat?.default_dispersion_chemical || 'Toxic Chemical Vapor';
       const thresholds = hazmat?.dispersion_thresholds || { advisory: 10.0, evacuation: 50.0, critical: 500.0 };
-      const windSpeedMps = Math.max(0.8, (weather.windSpeedKmh || 16.5) / 3.6);
-      const windDirectionDeg = weather.windDir ?? 225;
 
       const plume = generatePlumeFootprint({
         sourceLat: lat,
@@ -383,18 +420,32 @@ export class HazardInspector {
         windDirectionDeg,
         windSpeedMps,
         emissionRateGps: 650,
-        heatReleaseRateMw: this.currentHazard.frp || 35,
+        heatReleaseRateMw: targetHazard.frp || 35,
         chemicalName: chemKey,
         thresholds: thresholds,
-        ambientTempC: weather.tempC || 30,
+        ambientTempC: weather.temperatureC || 30,
       });
 
-      const viewer = window.__sriVision?.viewer;
       if (viewer) {
         renderPlumeOnCesium(viewer, plume);
       }
-    } catch (err) {
-      console.warn('[HazardInspector] Auto plume render failed:', err);
+
+      this._renderedPlumeHazardId = targetHazard.id || `${lat}_${lon}`;
+
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'PLUME SIMULATION ACTIVE (RE-SIMULATE)';
+        btn.style.borderColor = '#10b981';
+        btn.style.color = '#a7f3d0';
+      }
+    } catch (simErr) {
+      console.warn('[HazardInspector] Plume simulation failed:', simErr);
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'SIMULATE ATMOSPHERIC DISPERSION PLUME';
+      }
+    } finally {
+      this._isPlumeSimulating = false;
     }
   }
 
@@ -913,7 +964,7 @@ export class HazardInspector {
             cursor: pointer;
             transition: all 150ms ease;
           ">
-            🌪️ RENDER 3D ATMOSPHERIC DISPERSION PLUME
+            ${this._renderedPlumeHazardId === (h.id || `${lat}_${lon}`) ? 'PLUME SIMULATION ACTIVE (RE-SIMULATE)' : 'SIMULATE ATMOSPHERIC DISPERSION PLUME'}
           </button>
 
           <button class="sri-dossier-btn" id="sri-generate-dossier-btn">
@@ -1012,51 +1063,8 @@ CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
       this.renderEmpty();
     });
 
-    document.getElementById('sri-simulate-plume-btn')?.addEventListener('click', async (e) => {
-      const btn = e.currentTarget;
-      if (!this.currentHazard || !btn) return;
-      const hLat = this.currentHazard.location?.latitude;
-      const hLon = this.currentHazard.location?.longitude;
-      if (hLat == null || hLon == null) return;
-
-      btn.disabled = true;
-      btn.textContent = '🌪️ COMPUTING PLUME & WIND VECTOR...';
-      try {
-        const weather = this.currentHazard.weather || { windSpeedKmh: 16.5, windDirectionDegrees: 225, temperatureC: 31.5 };
-        const windSpeedMps = Math.max(0.8, weather.windSpeedKmh / 3.6);
-        const windDirectionDeg = weather.windDirectionDegrees || 225;
-        const hazmat = this.currentHazard.hazmat_profile || resolveHazmatProfile(this.currentHazard.facility || this.currentHazard);
-        const chemKey = hazmat?.default_dispersion_chemical || 'Toxic Chemical Vapor';
-        const chemCode = hazmat?.chemical_code || 'BENZENE';
-        const thresholds = hazmat?.dispersion_thresholds || { advisory: 10.0, evacuation: 50.0, critical: 500.0 };
-
-        const plume = generatePlumeFootprint({
-          sourceLat: hLat,
-          sourceLon: hLon,
-          windDirectionDeg,
-          windSpeedMps,
-          emissionRateGps: 650,
-          heatReleaseRateMw: this.currentHazard.frp || 35,
-          chemicalName: chemKey,
-          thresholds: thresholds,
-          ambientTempC: weather.temperatureC || 30,
-        });
-
-        const viewer = window.__sriVision?.viewer;
-        if (viewer) {
-          renderPlumeOnCesium(viewer, plume);
-        }
-
-        btn.textContent = '✅ 3D PLUME & WIND VECTOR RENDERED';
-        setTimeout(() => {
-          btn.disabled = false;
-          btn.textContent = '🌪️ RE-RENDER ATMOSPHERIC PLUME';
-        }, 3000);
-      } catch (simErr) {
-        console.warn('Plume simulation error:', simErr);
-        btn.disabled = false;
-        btn.textContent = '🌪️ RENDER 3D ATMOSPHERIC DISPERSION PLUME';
-      }
+    document.getElementById('sri-simulate-plume-btn')?.addEventListener('click', async () => {
+      await this.triggerPlumeSimulation();
     });
 
     document.getElementById('sri-dispatch-responders-btn')?.addEventListener('click', () => {

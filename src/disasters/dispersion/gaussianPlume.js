@@ -561,4 +561,5 @@ export function clearPlumeFromCesium(viewer) {
     activePlumeDataSource.entities.removeAll();
   }
   hidePlumeActiveBanner();
+  window.__sriVision?.hazardInspector?.resetPlumeButtonState?.();
 }
