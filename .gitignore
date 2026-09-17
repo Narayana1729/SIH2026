@@ -17,9 +17,12 @@ tsconfig.tsbuildinfo
 # Next.js & Frontend Caches
 .next/
 **/.next/
+apps/web/.next/
+**/apps/web/.next/
 out/
 .turbo/
 .vercel/
+**/data2/
 
 # Python, Virtual Environments & Caches
 .venv/
