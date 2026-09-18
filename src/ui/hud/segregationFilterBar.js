@@ -138,7 +138,7 @@ export class SegregationFilterBar {
     style.textContent = `
       #sri-segregation-bar {
         position: fixed;
-        top: 62px;
+        top: 16px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 995;

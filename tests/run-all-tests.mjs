@@ -29,6 +29,8 @@ const testFiles = [
   'tests/briggs-plume-rise.test.mjs',
   'tests/enhanced-validation.test.mjs',
   'tests/satellite-revisit.test.mjs',
+  'tests/gap-filling-capabilities.test.mjs',
+  'tests/agni-voice-assistant.test.mjs',
   'src/firstRunExperience.test.mjs',
 ];
 

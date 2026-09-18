@@ -32,7 +32,6 @@ import { HazardInspector } from './ui/panels/hazardInspector.js';
 import { AlertBanner } from './ui/alerts/alertBanner.js';
 import { DossierModal } from './ui/dossier/dossierModal.js';
 import { HazardTooltip } from './ui/hud/hazardTooltip.js';
-import { QuickZoneBar } from './ui/hud/quickZoneBar.js';
 import { SegregationFilterBar } from './ui/hud/segregationFilterBar.js';
 import { ThreatLegend } from './ui/hud/threatLegend.js';
 import { openFirmsUploadModal } from './ui/ingestion/firmsUploadModal.js';
@@ -228,7 +227,6 @@ async function init() {
     const alertBanner = new AlertBanner('sri-alert-banner-container', viewer);
     const dossierModal = new DossierModal();
     const hazardTooltip = new HazardTooltip(viewer);
-    const quickZoneBar = new QuickZoneBar(viewer, hazardLayerManager);
     const segregationFilterBar = new SegregationFilterBar(hazardLayerManager);
     const threatLegend = new ThreatLegend();
     const historicalTimelineBar = new HistoricalTimelineBar(viewer, dataManager);
@@ -356,37 +354,157 @@ async function init() {
     bindDockVoiceButton();
     setTimeout(bindDockVoiceButton, 500);
 
-    initAgniVoiceHud((action) => {
+    initAgniVoiceHud((cmd) => {
       tacticalAudio.playAlert();
-      if (action === 'LIST_MINING') {
-        thermalListPanel.open('MINING');
-      } else if (action === 'LIST_ALL') {
-        thermalListPanel.open('ALL');
-      } else if (action === 'LIST_INDUSTRIAL') {
-        thermalListPanel.open('INDUSTRIAL');
-      } else if (action === 'LIST_AGRICULTURAL') {
-        thermalListPanel.open('AGRICULTURAL');
-      } else if (action === 'LIST_WILDFIRE') {
-        thermalListPanel.open('WILDFIRE');
-      } else if (action === 'SHOW_FLARES') {
-        const indLayer = hazardLayerManager.getLayer('hazard-industrial');
-        if (indLayer) indLayer.show();
-      } else if (action === 'ZOOM_JAMNAGAR') {
+      const action = typeof cmd === 'string' ? cmd : cmd?.action;
+      const filters = cmd?.filters || {};
+      const mapAction = cmd?.map_action;
+
+      // 1. Filtering thermal events on 3D globe AND registry panels
+      if (action === 'FILTER_THERMAL_EVENTS' || action?.startsWith('LIST_')) {
+        const cat = (filters.category || '').toUpperCase();
+        const classification = (filters.classification || '').toUpperCase();
+
+        // Map voice/NLU categories to the WildfireLayer filter keys
+        let globeFilterKey = 'ALL';
+        let panelCategory = 'ALL';
+
+        if (action === 'LIST_MINING' || cat.includes('MIN') || cat.includes('COAL')) {
+          globeFilterKey = 'MINING_SMELTING';
+          panelCategory = 'MINING';
+        } else if (action === 'LIST_AGRICULTURAL' || cat.includes('CROP') || cat.includes('STUBBLE') || cat.includes('AGRI')) {
+          globeFilterKey = 'AGRICULTURAL_BURNING';
+          panelCategory = 'AGRICULTURAL';
+        } else if (action === 'LIST_WILDFIRE' || cat.includes('WILD') || cat.includes('FOREST')) {
+          globeFilterKey = 'FOREST_WILDFIRE';
+          panelCategory = 'WILDFIRE';
+        } else if (action === 'LIST_INDUSTRIAL' || cat.includes('IND') || cat.includes('REFIN') || cat.includes('FLARE') || classification === 'INDUSTRIAL') {
+          globeFilterKey = 'INDUSTRIAL';
+          panelCategory = 'INDUSTRIAL';
+        } else if (classification === 'NON_INDUSTRIAL') {
+          globeFilterKey = 'NON_INDUSTRIAL';
+          panelCategory = 'ALL';
+        }
+
+        // A) Apply filter on the 3D globe map — this is the critical missing step
+        const wfLayer = hazardLayerManager.getLayer('hazard-wildfire');
+        if (wfLayer?.applyCategoryFilter) {
+          wfLayer.applyCategoryFilter(globeFilterKey, { flyTo: false });
+        }
+        // Also broadcast via event bus so any other listeners sync up
+        eventBus.emit(SRI_EVENTS.CATEGORY_FILTER_CHANGED, { category: globeFilterKey, flyTo: false });
+
+        // B) Sync the SegregationFilterBar chip UI to reflect the active voice filter
+        if (segregationFilterBar) {
+          segregationFilterBar.activeFilter = globeFilterKey;
+          segregationFilterBar.container.querySelectorAll('.sri-filter-chip').forEach((btn) => {
+            const catId = btn.getAttribute('data-cat-id');
+            if (catId === globeFilterKey) btn.classList.add('active');
+            else btn.classList.remove('active');
+          });
+        }
+
+        // C) Open the thermal list panel with the corresponding panel category
+        thermalListPanel.open(panelCategory);
+
+        // D) Fly camera to requested state/region if specified
+        const stateFilter = (filters.state || '').toUpperCase().trim();
+        if (stateFilter) {
+          const STATE_COORDS = {
+            'TELANGANA': { lon: 79.0193, lat: 18.1124, height: 420000 },
+            'ANDHRA PRADESH': { lon: 79.7400, lat: 15.9129, height: 520000 },
+            'GUJARAT': { lon: 71.1924, lat: 22.2587, height: 480000 },
+            'MAHARASHTRA': { lon: 75.7139, lat: 19.7515, height: 550000 },
+            'ODISHA': { lon: 84.0167, lat: 20.9517, height: 450000 },
+            'JHARKHAND': { lon: 85.2799, lat: 23.6102, height: 380000 },
+            'CHHATTISGARH': { lon: 81.8661, lat: 21.2787, height: 450000 },
+            'KARNATAKA': { lon: 75.7139, lat: 15.3173, height: 500000 },
+            'TAMIL NADU': { lon: 78.6569, lat: 11.1271, height: 480000 },
+            'RAJASTHAN': { lon: 73.7684, lat: 27.0238, height: 600000 },
+            'MADHYA PRADESH': { lon: 78.6569, lat: 23.4734, height: 580000 },
+            'WEST BENGAL': { lon: 87.8550, lat: 22.9868, height: 450000 },
+            'PUNJAB': { lon: 75.3412, lat: 31.1471, height: 350000 },
+            'HARYANA': { lon: 76.0856, lat: 29.0588, height: 350000 },
+            'ASSAM': { lon: 92.9376, lat: 26.2006, height: 400000 },
+            'KERALA': { lon: 76.2711, lat: 10.8505, height: 380000 },
+            'UTTAR PRADESH': { lon: 80.9462, lat: 26.8467, height: 600000 },
+            'BIHAR': { lon: 85.3131, lat: 25.0961, height: 400000 },
+            'GOA': { lon: 74.1240, lat: 15.2993, height: 200000 },
+          };
+          const coords = STATE_COORDS[stateFilter];
+          if (coords) {
+            viewer.camera.flyTo({
+              destination: Cesium.Cartesian3.fromDegrees(coords.lon, coords.lat, coords.height),
+              duration: 1.8
+            });
+          }
+        }
+      }
+
+      // 2. Geospatial camera & map mode actions
+      else if (action === 'MAP_ACTION') {
+        if (mapAction === 'RECENTER_INDIA' || mapAction === 'RESET_VIEW') {
+          viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(78.9629, 20.5937, 3200000),
+            duration: 1.8
+          });
+        } else if (mapAction === 'ZOOM_IN') {
+          viewer.camera.zoomIn(viewer.camera.positionCartographic.height * 0.35);
+        } else if (mapAction === 'ZOOM_OUT') {
+          viewer.camera.zoomOut(viewer.camera.positionCartographic.height * 0.4);
+        } else if (mapAction === 'SET_VIEW_MODE') {
+          if (cmd.view_mode === '2D') {
+            viewer.scene.morphTo2D(1.0);
+          } else {
+            viewer.scene.morphTo3D(1.0);
+          }
+        }
+      }
+
+      // 3. Incident selection & Flying
+      else if (action === 'SELECT_INCIDENT' || action === 'ZOOM_JAMNAGAR') {
         viewer.camera.flyTo({
           destination: Cesium.Cartesian3.fromDegrees(70.0577, 22.4707, 18000),
           duration: 2.2
         });
-      } else if (action === 'SIMULATE_PLUME') {
+      }
+
+      // 4. Hazard simulation (Gaussian Plume)
+      else if (action === 'SHOW_HAZARD' || action === 'SIMULATE_PLUME') {
         const dispLayer = hazardLayerManager.getLayer('hazard-dispersion');
         if (dispLayer) {
           dispLayer.show();
           dispLayer.simulatePlumeAt(22.4707, 70.0577, { chemical: 'BENZENE', facilityName: 'Jamnagar Flare Outburst' });
         }
-      } else if (action === 'OPEN_UPLOAD') {
-        openFirmsUploadModal();
-      } else if (action === 'OPEN_SIM_LAB') {
+      }
+
+      // 5. Explainable AI Feature Attribution (TreeSHAP)
+      else if (action === 'OPEN_XAI') {
+        const indLayer = hazardLayerManager.getLayer('hazard-industrial');
+        const sample = indLayer?.hotspots?.[0];
+        if (sample) {
+          hazardInspector.setHazard(sample);
+        }
+        setTimeout(() => {
+          const xaiBtn = document.querySelector('[data-tab="xai"]') || document.querySelector('.xai-trigger-btn');
+          if (xaiBtn) xaiBtn.click();
+        }, 300);
+      }
+
+      // 6. Simulation Lab
+      else if (action === 'OPEN_SIMULATION_LAB' || action === 'OPEN_SIM_LAB') {
         openAiSimulationLabModal();
-      } else if (action === 'DISPATCH_EMERGENCY') {
+      }
+
+      // 7. Tactical Dossier / Incident Action Plan (IAP)
+      else if (action === 'OPEN_DOSSIER') {
+        if (dossierModal && typeof dossierModal.open === 'function') {
+          dossierModal.open();
+        }
+      }
+
+      // 8. Emergency Dispatch Modal (Fast2SMS / Responders)
+      else if (action === 'DISPATCH_PREVIEW' || action === 'DISPATCH_EMERGENCY') {
         openDispatchModal({
           lat: 22.4707,
           lon: 70.0577,
@@ -395,6 +513,39 @@ async function init() {
           flameTempC: 1350,
           flameTempK: 1623
         });
+      }
+
+      // 9. NASA FIRMS CSV Upload Modal
+      else if (action === 'OPEN_UPLOAD') {
+        openFirmsUploadModal();
+      }
+
+      // 10. GIS & Infrastructure Layer Toggle
+      else if (action === 'LAYER_TOGGLE' || action === 'SHOW_FLARES') {
+        const layerKey = cmd?.layer || 'hazard-industrial';
+        const layer = hazardLayerManager.getLayer(layerKey);
+        if (layer) {
+          if (cmd?.layer_action === 'HIDE') layer.hide();
+          else layer.show();
+        }
+      }
+
+      // 11. Clear all filters — reset globe to ALL detections
+      else if (action === 'CLEAR_FILTERS') {
+        const wfLayer = hazardLayerManager.getLayer('hazard-wildfire');
+        if (wfLayer?.applyCategoryFilter) {
+          wfLayer.applyCategoryFilter('ALL', { flyTo: false });
+        }
+        eventBus.emit(SRI_EVENTS.CATEGORY_FILTER_CHANGED, { category: 'ALL', flyTo: false });
+        if (segregationFilterBar) {
+          segregationFilterBar.activeFilter = 'ALL';
+          segregationFilterBar.container.querySelectorAll('.sri-filter-chip').forEach((btn) => {
+            const catId = btn.getAttribute('data-cat-id');
+            if (catId === 'ALL') btn.classList.add('active');
+            else btn.classList.remove('active');
+          });
+        }
+        thermalListPanel.open('ALL');
       }
     });
 

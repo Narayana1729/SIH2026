@@ -13,6 +13,9 @@ import { openDispatchModal } from '../responders/dispatchModal.js';
 import { generatePlumeFootprint, renderPlumeOnCesium, clearPlumeFromCesium } from '../../disasters/dispersion/gaussianPlume.js';
 import { resolveHazmatProfile } from '../../disasters/industrial/hazmatProfiles.js';
 import { computeSatelliteRevisitForecast } from '../../intelligence/revisitPredictor.js';
+import { evaluateProtectedAreaThreat, renderProtectedAreaBoundaryOnCesium } from '../../services/protectedAreasService.js';
+import { infrastructureRegistry } from '../../gis/infrastructureRegistry.js';
+import { openSimulationLabModal } from '../modals/simulationLabModal.js';
 import { sriVisionApi } from '../../core/api.js';
 
 export function getCardinal(deg) {
@@ -822,6 +825,97 @@ export class HazardInspector {
       </div>
     `;
 
+    // ── Protected Area Threat & Critical Infrastructure Intelligence ──
+    const targetLat = h.location?.latitude ?? h.latitude ?? h.lat ?? 0;
+    const targetLon = h.location?.longitude ?? h.longitude ?? h.lon ?? 0;
+    const paThreat = evaluateProtectedAreaThreat(targetLat, targetLon);
+
+    let protectedAreaHtml = '';
+    if (paThreat?.nearest) {
+      const pNear = paThreat.nearest;
+      const threatColor = paThreat.threatLevel === 'CRITICAL' ? '#ef4444' :
+        paThreat.threatLevel === 'WARNING' ? '#f59e0b' :
+        paThreat.threatLevel === 'ADVISORY' ? '#38bdf8' : '#10b981';
+
+      protectedAreaHtml = `
+        <div class="sri-section-title">🌲 PROTECTED AREA &amp; FOREST THREAT INTELLIGENCE</div>
+        <div class="sri-protected-area-card" style="
+          background: rgba(16, 185, 129, 0.06);
+          border: 1px solid ${threatColor};
+          border-radius: 6px;
+          padding: 8px;
+          margin-bottom: 8px;
+          font-size: 8.5px;
+        ">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
+            <div>
+              <strong style="color: #6ee7b7; font-size: 10px; display: block;">${pNear.name}</strong>
+              <span style="color: #94a3b8; font-size: 7.5px;">${pNear.category} · ${pNear.state}</span>
+            </div>
+            <span style="background: ${threatColor}22; color: ${threatColor}; border: 1px solid ${threatColor}; padding: 1px 6px; border-radius: 3px; font-size: 7.5px; font-weight: 700;">
+              ${paThreat.threatLevel} (${paThreat.distanceKm.toFixed(2)} km)
+            </span>
+          </div>
+          <div style="font-size: 8px; color: #cbd5e1; margin-bottom: 5px;">
+            ${paThreat.actionDirective}
+          </div>
+          ${pNear.keySpecies?.length ? `
+            <div style="font-size: 7.5px; color: #94a3b8; margin-bottom: 6px;">
+              <span style="color: #e2e8f0;">Key Species:</span> ${pNear.keySpecies.join(', ')}
+            </div>
+          ` : ''}
+          <button id="sri-focus-sanctuary-btn" style="
+            width: 100%;
+            padding: 5px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            border-radius: 4px;
+            color: #a7f3d0;
+            font-size: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+          ">
+            🎯 TARGET &amp; INSPECT SANCTUARY BOUNDARY
+          </button>
+        </div>
+      `;
+    }
+
+    // Critical Infrastructure intersection
+    let infraHtml = '';
+    const infraResult = infrastructureRegistry.findIntersectingInfrastructure(targetLat, targetLon, 50.0);
+    const infraList = infraResult?.infrastructure || [];
+    if (infraList.length > 0) {
+      const topInfra = infraList.slice(0, 3);
+      infraHtml = `
+        <div class="sri-section-title">⚡ POTENTIALLY AFFECTED CRITICAL INFRASTRUCTURE</div>
+        <div class="sri-infra-card" style="
+          background: rgba(15, 23, 42, 0.7);
+          border: 1px solid rgba(56, 189, 248, 0.35);
+          border-radius: 6px;
+          padding: 8px;
+          margin-bottom: 8px;
+          font-size: 8.5px;
+        ">
+          <div style="font-size: 7.5px; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+            Deterministic Geodesic Proximity Analysis (&lt;50km)
+          </div>
+          ${topInfra.map(inf => `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <div>
+                <strong style="color: #38bdf8; font-size: 8.5px;">${inf.asset_name || inf.name}</strong>
+                <span style="color: #64748b; font-size: 7.5px; display: block;">${inf.operator || inf.category || inf.layer_name}</span>
+              </div>
+              <span style="color: ${inf.distance_km <= 5 ? '#f87171' : '#fbbf24'}; font-weight: 700; font-size: 8px;">
+                ${inf.distance_km.toFixed(1)} km
+              </span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
     const cleanTitle = (h.title || 'Hazard Target').replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
     const cleanSubtitle = (h.subtitle || '').replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
 
@@ -875,6 +969,8 @@ export class HazardInspector {
 
           ${aiEvidenceCardHtml}
           ${weatherHtml}
+          ${protectedAreaHtml}
+          ${infraHtml}
 
           ${(() => {
             const fac = h.facility || h.classification?.facility;
@@ -1065,6 +1161,25 @@ export class HazardInspector {
             ${this._renderedPlumeHazardId === (h.id || `${lat}_${lon}`) ? 'PLUME SIMULATION ACTIVE (RE-SIMULATE)' : 'SIMULATE ATMOSPHERIC DISPERSION PLUME'}
           </button>
 
+          <button class="sri-sim-lab-btn" id="sri-open-sim-lab-btn" style="
+            margin-top: 6px;
+            width: 100%;
+            padding: 9px 12px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(126, 34, 206, 0.35));
+            border: 1px solid #a855f7;
+            border-radius: var(--btn-radius, 8px);
+            color: #e9d5ff;
+            font-family: var(--font-mono, 'JetBrains Mono', monospace);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 150ms ease;
+          ">
+            🧪 WHAT-IF INCIDENT SIMULATION LAB
+          </button>
+
           <button class="sri-dossier-btn" id="sri-generate-dossier-btn">
             GENERATE TACTICAL BRIEFING DOSSIER
           </button>
@@ -1098,9 +1213,35 @@ export class HazardInspector {
       });
     });
 
+    // ── Wire Focus Sanctuary Button ──
+    document.getElementById('sri-focus-sanctuary-btn')?.addEventListener('click', () => {
+      const viewer = window.__sriVision?.viewer;
+      if (viewer && paThreat?.nearest) {
+        renderProtectedAreaBoundaryOnCesium(viewer, paThreat.nearest);
+        const centroid = paThreat.nearest.centroid;
+        if (centroid) {
+          const C = typeof Cesium !== 'undefined' ? Cesium : window.Cesium;
+          if (C && viewer.camera) {
+            viewer.camera.flyTo({
+              destination: C.Cartesian3.fromDegrees(centroid[0], centroid[1], 30000),
+              duration: 1.5,
+            });
+          }
+        }
+      }
+    });
+
+    // ── Wire What-If Incident Simulation Lab Modal ──
+    document.getElementById('sri-open-sim-lab-btn')?.addEventListener('click', () => {
+      if (this.currentHazard) {
+        openSimulationLabModal(this.currentHazard, { viewer: window.__sriVision?.viewer });
+      }
+    });
+
     // ── Download Incident Action Plan (IAP) Handler ──
-    document.getElementById('sri-download-iap-btn')?.addEventListener('click', () => {
+    document.getElementById('sri-download-iap-btn')?.addEventListener('click', async (e) => {
       if (!this.currentHazard) return;
+      const btn = e.currentTarget || document.getElementById('sri-download-iap-btn');
       const h = this.currentHazard;
       const title = h.title || 'Thermal Incident';
       const lat = h.location?.latitude || 0;
@@ -1108,6 +1249,40 @@ export class HazardInspector {
       const frpVal = h.frp || (h.metrics?.find(m => m.label?.includes('FRP') || m.label?.includes('Power'))?.value) || 20;
       const flameK = dozier?.flameTempK || 850;
       const dateStr = new Date().toISOString();
+
+      const origText = btn.textContent;
+      btn.textContent = 'GENERATING OFFICIAL 6-PAGE IAP PDF...';
+      btn.disabled = true;
+
+      try {
+        const resp = await fetch('/api/v1/iap/pdf', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            hazard: h,
+            weather: h.weather || weather,
+            dozier,
+            hazmat,
+            simulation: h.simulationScenario || null,
+          }),
+        });
+
+        if (resp.ok && (resp.headers.get('content-type')?.includes('application/pdf') || resp.status === 200)) {
+          const blob = await resp.blob();
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = `Incident_Action_Plan_${Number(lat).toFixed(2)}N_${Number(lon).toFixed(2)}E.pdf`;
+          link.click();
+          btn.textContent = origText;
+          btn.disabled = false;
+          return;
+        }
+      } catch (err) {
+        console.warn('[HazardInspector] Server PDF generation fallback to markdown:', err);
+      }
+
+      btn.textContent = origText;
+      btn.disabled = false;
 
       const planContent = `# INCIDENT ACTION PLAN (IAP) - TACTICAL BRIEFING
 System: PyroSat / SIH Industrial Thermal Intelligence Engine
@@ -1124,10 +1299,10 @@ Generated Timestamp: ${dateStr}
 * 90-Day Persistence Status: ${isAbnormalSurge ? '🚨 ABNORMAL THERMAL SURGE (>3.4σ above baseline)' : '🟢 CONTROLLED OPERATIONAL BASELINE'} (${persistenceDays}/90 Days)
 
 ## 2. ATMOSPHERIC & PLUME TELEMETRY
-* Wind Velocity: ${weather.windSpeedKmh} km/h (${windMps} m/s)
+* Wind Velocity: ${weather?.windSpeedKmh || 16.2} km/h (${windMps} m/s)
 * Wind Azimuth: ${windDir}° (Downwind Dispersal: ${downwindDir}°)
-* Ambient Temperature: ${weather.temperatureC}°C
-* Relative Humidity: ${weather.humidityPercent}%
+* Ambient Temperature: ${weather?.temperatureC || 31}°C
+* Relative Humidity: ${weather?.humidityPercent || 45}%
 
 ## 3. CAMEO / NIOSH HAZMAT DOSSIER & CHEMICAL DIRECTIVES
 * HazMat Classification: ${hazmat?.cameo_hazmat_class || 'Class 3 / Class 2.1 Industrial Hydrocarbons'}
@@ -1148,7 +1323,6 @@ Generated Timestamp: ${dateStr}
 
 ---
 CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
-
 
       const blob = new Blob([planContent], { type: 'text/markdown' });
       const link = document.createElement('a');

@@ -19,6 +19,11 @@ import { handleWeatherRoute } from './routes/weather.mjs';
 import { handleDossierRoute } from './routes/dossier.mjs';
 import { handleSimulationRoute } from './routes/simulation.mjs';
 import { handleAlertsRoute } from './routes/alerts.mjs';
+import { handleProtectedAreasRoute } from './routes/protectedAreas.mjs';
+import { handleGisLayersRoute } from './routes/gisLayers.mjs';
+import { handleEventsRoute } from './routes/events.mjs';
+import { handleHazmatRoute } from './routes/hazmat.mjs';
+import { handleAgniRoute } from './routes/agni.mjs';
 import { handleEventsStreamRoute } from './routes/stream.mjs';
 import { handleLivenessRoute, handleReadinessRoute, handleMetricsRoute } from './routes/health.mjs';
 import { sendJson, sendError, getClientIp, isPrivateIp } from './middleware/security.mjs';
@@ -133,12 +138,32 @@ export function createSriVisionMiddleware() {
         return sendJson(res, 200, keySetupStatus(process.env), { 'Cache-Control': 'no-store' }, req);
       }
 
-      // 5. SIH FIRMS Industrial Thermal Anomaly Domain Endpoints (/api/v1/firms/* and /api/firms)
+      // 5. Spatiotemporal Incident Clustering (/api/v1/firms/clusters/*)
+      if (pathname === '/api/v1/firms/clusters' || pathname.startsWith('/api/v1/firms/clusters/') || pathname === '/api/v1/events' || pathname.startsWith('/api/v1/events/')) {
+        return await handleEventsRoute(req, res, url);
+      }
+
+      // 6. SIH FIRMS Industrial Thermal Anomaly Domain Endpoints (/api/v1/firms/* and /api/firms)
       if (pathname === '/api/firms' || pathname.startsWith('/api/firms/') || pathname.startsWith('/api/v1/firms/')) {
         return await handleFirmsApiRoute(req, res, url);
       }
 
-      // 6. Industrial Infrastructure, HazMat & Tactical Response Supporting Intelligence
+      // 7. Protected-Area & Forest Threat Intelligence (/api/v1/protected-areas/*)
+      if (pathname === '/api/v1/protected-areas' || pathname.startsWith('/api/v1/protected-areas/')) {
+        return await handleProtectedAreasRoute(req, res, url);
+      }
+
+      // 8. Critical Infrastructure GIS Overlays (/api/v1/gis/*)
+      if (pathname === '/api/v1/gis' || pathname.startsWith('/api/v1/gis/') || pathname === '/api/gis' || pathname.startsWith('/api/gis/')) {
+        return await handleGisLayersRoute(req, res, url);
+      }
+
+      // 9. NOAA CAMEO & NIOSH HazMat Chemical Registry (/api/v1/hazmat/*)
+      if (pathname === '/api/v1/hazmat' || pathname.startsWith('/api/v1/hazmat/') || pathname === '/api/hazmat' || pathname.startsWith('/api/hazmat/')) {
+        return await handleHazmatRoute(req, res, url);
+      }
+
+      // 10. Industrial Infrastructure, HazMat & Tactical Response Supporting Intelligence
       if (pathname === '/api/industrial' || pathname.startsWith('/api/industrial/')) {
         return await handleIndustrialRoute(req, res, url);
       }
@@ -151,7 +176,7 @@ export function createSriVisionMiddleware() {
       if (pathname === '/api/weather' || pathname.startsWith('/api/weather/')) {
         return await handleWeatherRoute(req, res, url);
       }
-      if (pathname === '/api/dossier' || pathname.startsWith('/api/dossier/')) {
+      if (pathname === '/api/dossier' || pathname.startsWith('/api/dossier/') || pathname === '/api/v1/iap' || pathname.startsWith('/api/v1/iap/')) {
         return await handleDossierRoute(req, res, url);
       }
       if (pathname === '/api/simulation' || pathname.startsWith('/api/simulation/')) {
@@ -159,6 +184,9 @@ export function createSriVisionMiddleware() {
       }
       if (pathname === '/api/alerts' || pathname.startsWith('/api/alerts/') || pathname.startsWith('/api/v1/alerts/')) {
         return await handleAlertsRoute(req, res, url);
+      }
+      if (pathname === '/api/agni' || pathname.startsWith('/api/agni/') || pathname === '/api/v1/agni' || pathname.startsWith('/api/v1/agni/')) {
+        return await handleAgniRoute(req, res, url);
       }
 
       // 7. 404 Unified Error for unknown or purged routes

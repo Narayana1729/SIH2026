@@ -177,7 +177,7 @@ export class AlertBanner {
     style.textContent = `
       #sri-alert-banner-container {
         position: fixed;
-        top: 58px;
+        top: 68px;
         left: 20px;
         z-index: 998;
         font-family: var(--font-mono, 'JetBrains Mono', monospace);

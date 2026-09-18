@@ -1,0 +1,372 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "dataset": "National Parks, Wildlife Sanctuaries & Biosphere Reserves of India",
+    "provider": "Forest Survey of India (FSI) / Wildlife Institute of India (WII) / OpenStreetMap Protected Areas",
+    "crs": "EPSG:4326 (WGS 84)",
+    "last_updated": "2026-08-01",
+    "license": "ODbL / Open Government Data (OGD) India"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "pa_corbett",
+      "properties": {
+        "id": "pa_corbett",
+        "name": "Jim Corbett National Park & Tiger Reserve",
+        "short_name": "Jim Corbett",
+        "type": "National Park",
+        "category": "PROTECTED_RESERVE",
+        "state": "Uttarakhand",
+        "iucn_category": "II",
+        "area_km2": 1288.3,
+        "established_year": 1936,
+        "primary_biome": "Dense Sal & Mixed Himalayan Moist Deciduous Forest",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / WII 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [78.70, 29.45],
+            [79.10, 29.45],
+            [79.15, 29.70],
+            [78.75, 29.75],
+            [78.70, 29.45]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pa_bandipur",
+      "properties": {
+        "id": "pa_bandipur",
+        "name": "Bandipur National Park & Tiger Reserve",
+        "short_name": "Bandipur",
+        "type": "National Park",
+        "category": "PROTECTED_RESERVE",
+        "state": "Karnataka",
+        "iucn_category": "II",
+        "area_km2": 874.2,
+        "established_year": 1974,
+        "primary_biome": "Dry Deciduous & Tropical Moist Deciduous Forest",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / Karnataka Forest Dept"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [76.45, 11.60],
+            [76.85, 11.60],
+            [76.88, 11.85],
+            [76.50, 11.90],
+            [76.45, 11.60]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pa_similipal",
+      "properties": {
+        "id": "pa_similipal",
+        "name": "Similipal Biosphere Reserve & Tiger Reserve",
+        "short_name": "Similipal",
+        "type": "Biosphere Reserve",
+        "category": "PROTECTED_RESERVE",
+        "state": "Odisha",
+        "iucn_category": "Ib",
+        "area_km2": 2750.0,
+        "established_year": 1979,
+        "primary_biome": "Northern Tropical Moist Deciduous & Dense Sal Canopy",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / MoEFCC"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [86.15, 21.65],
+            [86.60, 21.65],
+            [86.65, 22.15],
+            [86.20, 22.18],
+            [86.15, 21.65]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pa_gir",
+      "properties": {
+        "id": "pa_gir",
+        "name": "Gir National Park & Wildlife Sanctuary",
+        "short_name": "Gir Forest",
+        "type": "National Park",
+        "category": "PROTECTED_RESERVE",
+        "state": "Gujarat",
+        "iucn_category": "II",
+        "area_km2": 1412.0,
+        "established_year": 1965,
+        "primary_biome": "Dry Deciduous Teak & Scrub Forest",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / Gujarat Forest Dept"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [70.50, 21.05],
+            [70.90, 21.05],
+            [70.95, 21.30],
+            [70.55, 21.35],
+            [70.50, 21.05]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pa_kaziranga",
+      "properties": {
+        "id": "pa_kaziranga",
+        "name": "Kaziranga National Park & World Heritage Site",
+        "short_name": "Kaziranga",
+        "type": "National Park",
+        "category": "PROTECTED_RESERVE",
+        "state": "Assam",
+        "iucn_category": "II",
+        "area_km2": 858.98,
+        "established_year": 1905,
+        "primary_biome": "Tropical Moist Broadleaf Alluvial Grassland & Swamp",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / UNESCO World Heritage"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [93.10, 26.50],
+            [93.50, 26.50],
+            [93.55, 26.80],
+            [93.15, 26.85],
+            [93.10, 26.50]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pa_sundarbans",
+      "properties": {
+        "id": "pa_sundarbans",
+        "name": "Sundarbans National Park & Biosphere Reserve",
+        "short_name": "Sundarbans",
+        "type": "Biosphere Reserve",
+        "category": "PROTECTED_RESERVE",
+        "state": "West Bengal",
+        "iucn_category": "Ia",
+        "area_km2": 2585.0,
+        "established_year": 1984,
+        "primary_biome": "Littoral Coastal Mangrove Forest & Tidal Estuary",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / UNESCO World Heritage"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [88.40, 21.60],
+            [89.10, 21.60],
+            [89.15, 22.00],
+            [88.45, 22.05],
+            [88.40, 21.60]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pa_kanha",
+      "properties": {
+        "id": "pa_kanha",
+        "name": "Kanha National Park & Tiger Reserve",
+        "short_name": "Kanha",
+        "type": "National Park",
+        "category": "PROTECTED_RESERVE",
+        "state": "Madhya Pradesh",
+        "iucn_category": "II",
+        "area_km2": 940.0,
+        "established_year": 1955,
+        "primary_biome": "Sal and Bamboo Forest & Grassy Meadows",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / MP Forest Dept"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [80.40, 22.15],
+            [80.85, 22.15],
+            [80.88, 22.50],
+            [80.42, 22.52],
+            [80.40, 22.15]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pa_bandhavgarh",
+      "properties": {
+        "id": "pa_bandhavgarh",
+        "name": "Bandhavgarh National Park",
+        "short_name": "Bandhavgarh",
+        "type": "National Park",
+        "category": "PROTECTED_RESERVE",
+        "state": "Madhya Pradesh",
+        "iucn_category": "II",
+        "area_km2": 716.0,
+        "established_year": 1968,
+        "primary_biome": "Tropical Moist Deciduous Sal & Bamboo Jungle",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / MP Forest Dept"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [80.85, 23.55],
+            [81.25, 23.55],
+            [81.28, 23.85],
+            [80.88, 23.88],
+            [80.85, 23.55]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pa_ranthambore",
+      "properties": {
+        "id": "pa_ranthambore",
+        "name": "Ranthambore National Park & Tiger Reserve",
+        "short_name": "Ranthambore",
+        "type": "National Park",
+        "category": "PROTECTED_RESERVE",
+        "state": "Rajasthan",
+        "iucn_category": "II",
+        "area_km2": 1334.0,
+        "established_year": 1980,
+        "primary_biome": "Northern Dry Deciduous Dhok Forest & Scrubland",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / Rajasthan Forest Dept"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [76.35, 25.85],
+            [76.70, 25.85],
+            [76.72, 26.15],
+            [76.38, 26.18],
+            [76.35, 25.85]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pa_mudumalai",
+      "properties": {
+        "id": "pa_mudumalai",
+        "name": "Mudumalai National Park & Wildlife Sanctuary",
+        "short_name": "Mudumalai",
+        "type": "National Park",
+        "category": "PROTECTED_RESERVE",
+        "state": "Tamil Nadu",
+        "iucn_category": "II",
+        "area_km2": 321.0,
+        "established_year": 1940,
+        "primary_biome": "Western Ghats Tropical Moist & Dry Deciduous Forest",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / Tamil Nadu Forest Dept"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [76.40, 11.50],
+            [76.70, 11.50],
+            [76.72, 11.65],
+            [76.42, 11.68],
+            [76.40, 11.50]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pa_western_ghats",
+      "properties": {
+        "id": "pa_western_ghats",
+        "name": "Western Ghats High Wilderness Tract (Anamalai Corridor)",
+        "short_name": "Anamalai Reserve",
+        "type": "Reserved Forest",
+        "category": "PROTECTED_RESERVE",
+        "state": "Kerala / Tamil Nadu",
+        "iucn_category": "IV",
+        "area_km2": 958.0,
+        "established_year": 1989,
+        "primary_biome": "Tropical Wet Evergreen Rainforest & Shola Grassland",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / UNESCO World Heritage"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [76.80, 10.15],
+            [77.20, 10.15],
+            [77.25, 10.45],
+            [76.85, 10.50],
+            [76.80, 10.15]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pa_silent_valley",
+      "properties": {
+        "id": "pa_silent_valley",
+        "name": "Silent Valley National Park",
+        "short_name": "Silent Valley",
+        "type": "National Park",
+        "category": "PROTECTED_RESERVE",
+        "state": "Kerala",
+        "iucn_category": "II",
+        "area_km2": 236.74,
+        "established_year": 1984,
+        "primary_biome": "Undisturbed Tropical Rainforest & Riverine System",
+        "threat_advisory_radius_km": 10.0,
+        "source": "FSI / Kerala Forest Dept"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [76.35, 11.00],
+            [76.55, 11.00],
+            [76.58, 11.20],
+            [76.38, 11.22],
+            [76.35, 11.00]
+          ]
+        ]
+      }
+    }
+  ]
+}

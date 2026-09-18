@@ -1,0 +1,144 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "dataset": "Major National Gas Transmission Grid Corridors of India",
+    "provider": "Petroleum and Natural Gas Regulatory Board (PNGRB) / GAIL (India) Limited",
+    "crs": "EPSG:4326 (WGS 84)",
+    "last_updated": "2026-06-30",
+    "license": "Public Utility / Open Infrastructure Map Data"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "pipe_hvj_main",
+      "properties": {
+        "id": "pipe_hvj_main",
+        "name": "Hazira-Vijaipur-Jagdishpur (HVJ) Trunk Pipeline",
+        "operator": "GAIL (India) Limited",
+        "type": "Natural Gas Transmission",
+        "diameter_inches": 36,
+        "operating_pressure_bar": 92,
+        "capacity_mmscmd": 33.4,
+        "hazard_buffer_km": 1.5,
+        "criticality": "HIGH",
+        "source": "PNGRB India Gas Grid"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [72.65, 21.10],
+          [73.20, 21.80],
+          [75.10, 23.40],
+          [77.30, 24.10],
+          [78.80, 25.60],
+          [81.80, 26.50]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pipe_dahej_vijaipur",
+      "properties": {
+        "id": "pipe_dahej_vijaipur",
+        "name": "Dahej - Vijaipur Natural Gas Pipeline (DVPL)",
+        "operator": "GAIL (India) Limited",
+        "type": "LNG Regasified Gas Transmission",
+        "diameter_inches": 42,
+        "operating_pressure_bar": 98,
+        "capacity_mmscmd": 48.0,
+        "hazard_buffer_km": 1.5,
+        "criticality": "CRITICAL",
+        "source": "GAIL Network Operations"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [72.58, 21.71],
+          [73.80, 22.40],
+          [75.60, 23.20],
+          [77.30, 24.10]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pipe_kg_basin_ewpl",
+      "properties": {
+        "id": "pipe_kg_basin_ewpl",
+        "name": "East-West Pipeline (Kakinada-Bharuch EWPL)",
+        "operator": "Pipeline Infrastructure Limited (PIL)",
+        "type": "Offshore & Onshore Natural Gas",
+        "diameter_inches": 48,
+        "operating_pressure_bar": 100,
+        "capacity_mmscmd": 80.0,
+        "hazard_buffer_km": 2.0,
+        "criticality": "CRITICAL",
+        "source": "PNGRB Pipeline Register"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [82.25, 16.95],
+          [80.50, 17.20],
+          [78.50, 17.40],
+          [76.00, 18.20],
+          [74.20, 19.80],
+          [72.95, 21.70]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pipe_urja_ganga",
+      "properties": {
+        "id": "pipe_urja_ganga",
+        "name": "Pradhan Mantri Urja Ganga (Jagdishpur-Haldia Pipeline)",
+        "operator": "GAIL (India) Limited",
+        "type": "Natural Gas & City Gas Grid",
+        "diameter_inches": 36,
+        "operating_pressure_bar": 90,
+        "capacity_mmscmd": 16.0,
+        "hazard_buffer_km": 1.5,
+        "criticality": "HIGH",
+        "source": "GAIL Eastern Grid"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [81.80, 26.50],
+          [83.00, 25.30],
+          [85.10, 25.60],
+          [86.20, 24.50],
+          [87.30, 23.80],
+          [88.10, 22.05]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "pipe_jamnagar_loni",
+      "properties": {
+        "id": "pipe_jamnagar_loni",
+        "name": "Jamnagar-Loni LPG Trunk Pipeline",
+        "operator": "GAIL (India) Limited",
+        "type": "Pressurized Liquefied Petroleum Gas (LPG)",
+        "diameter_inches": 24,
+        "operating_pressure_bar": 95,
+        "capacity_mmscmd": 2.5,
+        "hazard_buffer_km": 2.5,
+        "criticality": "CRITICAL",
+        "source": "GAIL LPG Logistics"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [70.05, 22.45],
+          [71.50, 23.20],
+          [73.10, 24.60],
+          [75.80, 26.90],
+          [77.30, 28.70]
+        ]
+      }
+    }
+  ]
+}

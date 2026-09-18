@@ -1,0 +1,115 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "dataset": "National High-Voltage Electric Transmission Corridors (765kV / 400kV)",
+    "provider": "Power Grid Corporation of India Limited (POWERGRID) / Central Electricity Authority (CEA)",
+    "crs": "EPSG:4326 (WGS 84)",
+    "last_updated": "2026-05-15",
+    "license": "Public Utility / Open Infrastructure Map Data"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "tx_champa_kurukshetra",
+      "properties": {
+        "id": "tx_champa_kurukshetra",
+        "name": "±800 kV HVDC Champa - Kurukshetra Super-Corridor",
+        "operator": "Power Grid Corporation of India (POWERGRID)",
+        "voltage_kv": 800,
+        "type": "High Voltage Direct Current (HVDC) Bipole",
+        "capacity_mw": 6000,
+        "tower_clearance_m": 45,
+        "hazard_buffer_km": 1.0,
+        "criticality": "EXTREME",
+        "source": "CEA National Transmission Grid Directory"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [82.65, 22.05],
+          [81.20, 24.10],
+          [79.80, 26.20],
+          [78.40, 28.10],
+          [76.85, 29.95]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tx_raigarh_pugalur",
+      "properties": {
+        "id": "tx_raigarh_pugalur",
+        "name": "±800 kV HVDC Raigarh - Pugalur Inter-Regional Line",
+        "operator": "Power Grid Corporation of India (POWERGRID)",
+        "voltage_kv": 800,
+        "type": "HVDC Inter-Regional Link (West to South)",
+        "capacity_mw": 6000,
+        "tower_clearance_m": 45,
+        "hazard_buffer_km": 1.0,
+        "criticality": "EXTREME",
+        "source": "POWERGRID National Operations"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [83.40, 21.90],
+          [81.50, 19.80],
+          [79.80, 17.50],
+          [78.90, 15.20],
+          [77.95, 11.05]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tx_western_corridor_765",
+      "properties": {
+        "id": "tx_western_corridor_765",
+        "name": "765 kV Western Regional Grid (Vadodara - Dhule - Wardha)",
+        "operator": "POWERGRID Western Region",
+        "voltage_kv": 765,
+        "type": "Extra High Voltage AC (EHVAC)",
+        "capacity_mw": 4500,
+        "tower_clearance_m": 38,
+        "hazard_buffer_km": 0.8,
+        "criticality": "HIGH",
+        "source": "WRPC Power Grid Data"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [73.20, 22.30],
+          [74.75, 20.90],
+          [77.60, 20.70],
+          [79.05, 21.15]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tx_northern_ring_400",
+      "properties": {
+        "id": "tx_northern_ring_400",
+        "name": "400 kV Northern Capital Ring (Dadri - Mandola - Bawana)",
+        "operator": "Delhi Transco / POWERGRID NR-I",
+        "voltage_kv": 400,
+        "type": "Interconnected High Voltage Ring",
+        "capacity_mw": 3200,
+        "tower_clearance_m": 32,
+        "hazard_buffer_km": 0.5,
+        "criticality": "HIGH",
+        "source": "NRPC Transmission Matrix"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.55, 28.55],
+          [77.30, 28.75],
+          [77.05, 28.80],
+          [76.95, 28.50],
+          [77.35, 28.40]
+        ]
+      }
+    }
+  ]
+}

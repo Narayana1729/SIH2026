@@ -1,22 +1,23 @@
 /**
  * @module src/ui/hud/agniVoiceHud
- * @description AGNI Tactical Voice AI Command HUD
+ * @description AGNI Tactical Voice AI Command HUD for PyroSat / Firms
  * 
- * High-performance speech recognition and live 32-bar microphone audio
- * spectrum visualizer (Web Audio API + Web Speech API + Quick Command Fallbacks).
+ * Features:
+ *  - 32-Bar Real-Time Web Audio API frequency visualizer
+ *  - Full-duplex STT & verbal voice synthesis (TTS) with Mute toggle
+ *  - REST integration with Gemini-backed /api/v1/agni/interpret
+ *  - Live interim transcript display + tactical verbal response banner
+ *  - Quick tactical chips covering mining, stubble, flares, XAI, plume, sim lab, and map navigation
  */
 
 import { tacticalAudio } from '../../core/audio.js';
+import { agniVoiceService } from '../../services/agniVoiceService.js';
 
 let hudElement = null;
-let recognition = null;
-let isListening = false;
-let audioContext = null;
-let analyser = null;
-let micStream = null;
-let animFrameId = null;
 let commandCallback = null;
-let restartTimeout = null;
+let animFrameId = null;
+let isVisualizerRunning = false;
+let autoCloseTimer = null;
 
 export function initAgniVoiceHud(onCommand) {
   commandCallback = onCommand;
@@ -39,18 +40,24 @@ export function toggleAgniVoiceHud() {
 
 export function openVoiceHud() {
   if (!hudElement) createVoiceHudDOM();
+  clearTimeout(autoCloseTimer);
   hudElement.style.display = 'block';
+
   const transcriptEl = hudElement.querySelector('#agni-transcript');
   if (transcriptEl) {
-    transcriptEl.innerHTML = `"Listening for voice command... (e.g. 'List mining activities')"`;
+    transcriptEl.innerHTML = `<span style="color: #64748b;">Listening for voice command... (e.g. <i>"Filter critical thermal events"</i>)</span>`;
   }
-  const statusEl = hudElement.querySelector('#agni-mic-status');
-  if (statusEl) {
-    statusEl.textContent = "MIC ACTIVE";
-    statusEl.style.color = "#38bdf8";
+  const responseBubble = hudElement.querySelector('#agni-response-bubble');
+  if (responseBubble) {
+    responseBubble.style.display = 'none';
+    responseBubble.textContent = '';
   }
+
+  updateMuteButtonUI();
+  updateStatus("MIC ACTIVE", "#38bdf8");
   tacticalAudio.playAlert();
-  startVoiceListening();
+  startListening();
+
   setTimeout(() => {
     const input = hudElement?.querySelector('#agni-voice-input');
     if (input) input.focus();
@@ -61,7 +68,39 @@ export function closeVoiceHud() {
   if (hudElement) {
     hudElement.style.display = 'none';
   }
-  stopVoiceListening();
+  clearTimeout(autoCloseTimer);
+  stopListening();
+}
+
+function updateStatus(text, color = '#38bdf8') {
+  const statusEl = hudElement?.querySelector('#agni-mic-status');
+  if (statusEl) {
+    statusEl.textContent = text;
+    statusEl.style.color = color;
+  }
+  const pulseDot = hudElement?.querySelector('#agni-pulse-dot');
+  if (pulseDot) {
+    pulseDot.style.background = color;
+    pulseDot.style.boxShadow = `0 0 12px ${color}`;
+  }
+}
+
+function updateMuteButtonUI() {
+  const muteBtn = hudElement?.querySelector('#agni-mute-btn');
+  if (!muteBtn) return;
+  if (agniVoiceService.isMuted) {
+    muteBtn.innerHTML = '🔇 VOICE OFF';
+    muteBtn.title = 'Speech synthesis muted. Click to enable verbal audio responses.';
+    muteBtn.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+    muteBtn.style.color = '#f87171';
+    muteBtn.style.background = 'rgba(239, 68, 68, 0.12)';
+  } else {
+    muteBtn.innerHTML = '🔊 VOICE ON';
+    muteBtn.title = 'Verbal audio responses enabled. Click to mute.';
+    muteBtn.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+    muteBtn.style.color = '#34d399';
+    muteBtn.style.background = 'rgba(16, 185, 129, 0.12)';
+  }
 }
 
 function createVoiceHudDOM() {
@@ -77,58 +116,65 @@ function createVoiceHudDOM() {
     bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(8, 14, 26, 0.94);
-    border: 1px solid rgba(0, 212, 255, 0.4);
+    background: rgba(8, 14, 26, 0.96);
+    border: 1px solid rgba(0, 212, 255, 0.45);
     border-radius: 16px;
     padding: 16px 20px;
-    box-shadow: 0 16px 48px rgba(0,0,0,0.85), 0 0 30px rgba(0, 212, 255, 0.2);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 35px rgba(0, 212, 255, 0.25);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     z-index: 10001;
     display: none;
     font-family: var(--font-mono, 'JetBrains Mono', monospace);
     color: #f1f5f9;
-    width: 520px;
-    max-width: calc(100vw - 40px);
+    width: 540px;
+    max-width: calc(100vw - 32px);
     animation: agniHudSlideUp 220ms cubic-bezier(0.16, 1, 0.3, 1);
   `;
 
   hudElement.innerHTML = `
+    <!-- HUD Header -->
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
       <div style="display: flex; align-items: center; gap: 8px;">
         <div id="agni-pulse-dot" style="width: 10px; height: 10px; border-radius: 50%; background: #00d4ff; box-shadow: 0 0 12px #00d4ff; animation: agniGlowPulse 1.2s infinite ease-in-out;"></div>
         <span style="font-size: 12px; font-weight: 800; color: #00d4ff; letter-spacing: 1px;">AGNI TACTICAL VOICE AI</span>
-        <span id="agni-mic-status" style="font-size: 9px; padding: 1px 6px; background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3); border-radius: 4px; color: #38bdf8;">MIC ACTIVE</span>
+        <span id="agni-mic-status" style="font-size: 9px; padding: 2px 7px; background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3); border-radius: 4px; color: #38bdf8; font-weight: 700;">MIC ACTIVE</span>
       </div>
-      <button id="agni-close-btn" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #94a3b8; width: 24px; height: 24px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 120ms ease;">✕</button>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <button id="agni-mute-btn" type="button" style="background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.35); border-radius: 5px; color: #34d399; font-size: 9.5px; font-weight: 700; padding: 3px 8px; cursor: pointer; transition: all 150ms ease;">🔊 VOICE ON</button>
+        <button id="agni-close-btn" type="button" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #94a3b8; width: 24px; height: 24px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 120ms ease;">✕</button>
+      </div>
     </div>
 
     <!-- 32-Bar Live Audio Visualizer Canvas -->
-    <canvas id="agni-waveform-canvas" width="480" height="42" style="width: 100%; height: 42px; border-radius: 8px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.06); display: block; margin-bottom: 10px;"></canvas>
+    <canvas id="agni-waveform-canvas" width="500" height="42" style="width: 100%; height: 42px; border-radius: 8px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.08); display: block; margin-bottom: 10px;"></canvas>
 
     <!-- Real-time Speech Transcript Display -->
-    <div id="agni-transcript" style="font-size: 13px; color: #38bdf8; min-height: 22px; margin-bottom: 10px; text-align: center; padding: 4px 8px; background: rgba(0,212,255,0.05); border: 1px dashed rgba(0,212,255,0.25); border-radius: 6px; word-break: break-word;">
-      "Listening for voice command... (e.g. 'List mining activities')"
+    <div id="agni-transcript" style="font-size: 12.5px; color: #38bdf8; min-height: 24px; margin-bottom: 8px; text-align: center; padding: 5px 10px; background: rgba(0,212,255,0.05); border: 1px dashed rgba(0,212,255,0.25); border-radius: 6px; word-break: break-word;">
+      <span style="color: #64748b;">Listening for voice command... (e.g. <i>"Filter critical thermal events"</i>)</span>
     </div>
+
+    <!-- Spoken Voice Feedback Bubble -->
+    <div id="agni-response-bubble" style="display: none; font-size: 11.5px; color: #a7f3d0; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; padding: 6px 10px; margin-bottom: 10px; text-align: left; line-height: 1.4;"></div>
 
     <!-- Quick Text Fallback Input -->
     <div style="display: flex; gap: 6px; margin-bottom: 10px;">
-      <input id="agni-voice-input" type="text" placeholder="Speak into mic or type command (e.g. 'list mining')..." style="
+      <input id="agni-voice-input" type="text" placeholder="Speak into mic or type command (e.g. 'show stubble fires')..." style="
         flex: 1;
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.45);
         border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 6px;
-        padding: 6px 10px;
+        padding: 7px 11px;
         font-family: inherit;
         font-size: 11px;
         color: #f8fafc;
         outline: none;
       " />
-      <button id="agni-send-btn" style="
+      <button id="agni-send-btn" type="button" style="
         background: linear-gradient(135deg, #00d4ff, #0284c7);
         border: none;
         border-radius: 6px;
-        padding: 0 14px;
+        padding: 0 16px;
         font-family: inherit;
         font-size: 10px;
         font-weight: 700;
@@ -138,20 +184,23 @@ function createVoiceHudDOM() {
       ">RUN</button>
     </div>
 
-    <!-- Interactive Quick Action Chips -->
-    <div style="display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; font-size: 9.5px;">
-      <button type="button" class="agni-quick-chip" data-cmd="list out all mining activities" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">⛏️ List Mining</button>
-      <button type="button" class="agni-quick-chip" data-cmd="list all thermal targets" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">⚡ All Targets</button>
-      <button type="button" class="agni-quick-chip" data-cmd="list industrial refineries" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🏭 Industry</button>
-      <button type="button" class="agni-quick-chip" data-cmd="list stubble burning" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🌾 Stubble</button>
-      <button type="button" class="agni-quick-chip" data-cmd="zoom to jamnagar" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">📍 Jamnagar</button>
-      <button type="button" class="agni-quick-chip" data-cmd="simulate plume" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🔬 Plume Sim</button>
+    <!-- Interactive Quick Tactical Action Chips -->
+    <div style="display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; font-size: 9px;">
+      <button type="button" class="agni-quick-chip" data-cmd="list mining activities" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">⛏️ Mining Basins</button>
+      <button type="button" class="agni-quick-chip" data-cmd="show stubble fires in punjab" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🌾 Stubble Fires</button>
+      <button type="button" class="agni-quick-chip" data-cmd="filter critical thermal events" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🚨 Critical Surges</button>
+      <button type="button" class="agni-quick-chip" data-cmd="list industrial refineries" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🏭 Refineries</button>
+      <button type="button" class="agni-quick-chip" data-cmd="simulate plume dispersion" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🔬 Plume Sim</button>
+      <button type="button" class="agni-quick-chip" data-cmd="explain why this is classified industrial" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🧠 TreeSHAP XAI</button>
+      <button type="button" class="agni-quick-chip" data-cmd="open simulation lab" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🧪 Simulation Lab</button>
+      <button type="button" class="agni-quick-chip" data-cmd="recenter map to india" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🇮🇳 Recenter India</button>
+      <button type="button" class="agni-quick-chip" data-cmd="dispatch emergency team" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🚨 Fast2SMS Dispatch</button>
     </div>
 
     <style>
       @keyframes agniGlowPulse {
         0% { opacity: 0.5; transform: scale(0.9); }
-        50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 16px #00d4ff; }
+        50% { opacity: 1; transform: scale(1.2); }
         100% { opacity: 0.5; transform: scale(0.9); }
       }
       @keyframes agniHudSlideUp {
@@ -159,7 +208,7 @@ function createVoiceHudDOM() {
         to { opacity: 1; transform: translate(-50%, 0); }
       }
       .agni-quick-chip:hover {
-        background: rgba(0, 212, 255, 0.2) !important;
+        background: rgba(0, 212, 255, 0.22) !important;
         border-color: #00d4ff !important;
         color: #00d4ff !important;
       }
@@ -175,6 +224,13 @@ function createVoiceHudDOM() {
 
   hudElement.querySelector('#agni-close-btn')?.addEventListener('click', closeVoiceHud);
 
+  const muteBtn = hudElement.querySelector('#agni-mute-btn');
+  muteBtn?.addEventListener('click', () => {
+    tacticalAudio.playClick();
+    agniVoiceService.toggleMute();
+    updateMuteButtonUI();
+  });
+
   const inputEl = hudElement.querySelector('#agni-voice-input');
   const sendBtn = hudElement.querySelector('#agni-send-btn');
 
@@ -182,7 +238,7 @@ function createVoiceHudDOM() {
     const val = inputEl?.value?.trim();
     if (val) {
       inputEl.value = '';
-      handleVoiceCommand(val.toLowerCase());
+      processCommand(val);
     }
   };
 
@@ -199,244 +255,144 @@ function createVoiceHudDOM() {
       tacticalAudio.playClick();
       const cmd = chip.getAttribute('data-cmd');
       if (cmd) {
-        handleVoiceCommand(cmd.toLowerCase());
+        processCommand(cmd);
       }
     });
   });
 }
 
-function startVoiceListening() {
-  isListening = true;
-  initLiveMicrophone();
+function startListening() {
+  clearTimeout(autoCloseTimer);
+  // 1. Start audio visualizer
+  startVisualizer();
 
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) {
-    const statusEl = hudElement?.querySelector('#agni-mic-status');
-    const transcriptEl = hudElement?.querySelector('#agni-transcript');
-    if (statusEl) {
-      statusEl.textContent = "TYPE / CHIPS";
-      statusEl.style.color = "#f59e0b";
-    }
-    if (transcriptEl) {
-      transcriptEl.textContent = "Speech recognition unavailable. Click quick buttons or type below.";
-    }
-    return;
-  }
-
-  try {
-    if (recognition) {
-      try { recognition.stop(); } catch (err) {}
-      recognition = null;
-    }
-
-    recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = 'en-US';
-    recognition.maxAlternatives = 3;
-
-    recognition.onstart = () => {
-      const statusEl = hudElement?.querySelector('#agni-mic-status');
-      if (statusEl) {
-        statusEl.textContent = "LISTENING LIVE";
-        statusEl.style.color = "#10b981";
-      }
-    };
-
-    recognition.onresult = (event) => {
-      let interim = '';
-      let final = '';
-
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        const t = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          final += t;
-        } else {
-          interim += t;
-        }
-      }
-
-      const text = (final || interim).trim();
+  // 2. Start speech recognition
+  const success = agniVoiceService.startSpeechRecognition({
+    onStart: () => {
+      updateStatus("LISTENING LIVE", "#10b981");
+    },
+    onTranscript: (text, isFinal) => {
       const transcriptEl = hudElement?.querySelector('#agni-transcript');
       if (transcriptEl && text) {
         transcriptEl.innerHTML = `<span>"${text}"</span>`;
       }
-
-      if (text) {
-        handleVoiceCommand(text.toLowerCase());
+      if (isFinal) {
+        processCommand(text);
       }
-    };
-
-    recognition.onerror = (e) => {
-      console.warn('AGNI Voice Recognition Error:', e.error);
-      if (e.error === 'not-allowed') {
-        const statusEl = hudElement?.querySelector('#agni-mic-status');
-        if (statusEl) {
-          statusEl.textContent = "MIC BLOCKED";
-          statusEl.style.color = "#ef4444";
-        }
+    },
+    onError: (err) => {
+      if (err?.error === 'not-allowed') {
+        updateStatus("MIC BLOCKED", "#ef4444");
       }
-    };
-
-    recognition.onend = () => {
-      if (isListening) {
-        clearTimeout(restartTimeout);
-        restartTimeout = setTimeout(() => {
-          if (isListening && recognition) {
-            try { recognition.start(); } catch (err) {}
+    },
+    onEnd: () => {
+      // If HUD is still open, keep speech recognition restarted smoothly
+      if (hudElement && hudElement.style.display !== 'none' && !autoCloseTimer) {
+        setTimeout(() => {
+          if (hudElement && hudElement.style.display !== 'none' && !autoCloseTimer) {
+            agniVoiceService.startSpeechRecognition();
           }
         }, 300);
       }
-    };
+    },
+  });
 
-    recognition.start();
-  } catch (err) {
-    console.warn('SpeechRecognition initialization error:', err);
+  if (!success) {
+    updateStatus("TEXT ONLY / CHIPS", "#f59e0b");
+    const transcriptEl = hudElement?.querySelector('#agni-transcript');
+    if (transcriptEl) {
+      transcriptEl.innerHTML = `<span style="color: #cbd5e1;">Speech recognition inactive in this browser. Use input below or quick action chips.</span>`;
+    }
   }
 }
 
-function stopVoiceListening() {
-  isListening = false;
-  clearTimeout(restartTimeout);
-  if (recognition) {
-    try { recognition.stop(); } catch (err) {}
-    recognition = null;
-  }
-  if (micStream) {
-    try {
-      micStream.getTracks().forEach((track) => track.stop());
-    } catch (err) {}
-    micStream = null;
-  }
-  if (animFrameId) {
-    cancelAnimationFrame(animFrameId);
-    animFrameId = null;
-  }
+function stopListening() {
+  agniVoiceService.stopSpeechRecognition();
+  stopVisualizer();
 }
 
 let lastCommandTime = 0;
 let lastCommandText = '';
 
-function handleVoiceCommand(cmd) {
+async function processCommand(cmdText) {
   const now = Date.now();
-  // Prevent rapid duplicate fire within 1.2s for identical command
-  if (cmd === lastCommandText && now - lastCommandTime < 1200) {
+  if (cmdText === lastCommandText && now - lastCommandTime < 1500) {
     return;
   }
+  lastCommandText = cmdText;
+  lastCommandTime = now;
 
-  const transcriptEl = hudElement?.querySelector('#agni-transcript');
-  
-  if (cmd.includes('mining') || cmd.includes('smelter') || cmd.includes('coal') || cmd.includes('mine') || cmd.includes('extraction')) {
-    lastCommandTime = now;
-    lastCommandText = cmd;
-    executeAction('LIST_MINING', '⛏️ Opening Mining & Smelting Registry');
-  } else if (cmd.includes('all target') || cmd.includes('all thermal') || cmd.includes('list all') || cmd.includes('registry') || cmd.includes('anomalies')) {
-    lastCommandTime = now;
-    lastCommandText = cmd;
-    executeAction('LIST_ALL', '⚡ Opening Thermal Anomaly Intelligence Registry');
-  } else if (cmd.includes('stubble') || cmd.includes('agri') || cmd.includes('crop') || cmd.includes('farm') || cmd.includes('paddy')) {
-    lastCommandTime = now;
-    lastCommandText = cmd;
-    executeAction('LIST_AGRICULTURAL', '🌾 Opening Agricultural Stubble Registry');
-  } else if (cmd.includes('wildfire') || cmd.includes('forest') || cmd.includes('timber') || cmd.includes('canopy')) {
-    lastCommandTime = now;
-    lastCommandText = cmd;
-    executeAction('LIST_WILDFIRE', '🌲 Opening Forest Wildfire Registry');
-  } else if (cmd.includes('refiner') || cmd.includes('steel') || cmd.includes('plant') || cmd.includes('industr')) {
-    lastCommandTime = now;
-    lastCommandText = cmd;
-    executeAction('LIST_INDUSTRIAL', '🏭 Opening Industrial Facilities Registry');
-  } else if (cmd.includes('flare') || cmd.includes('gas flare')) {
-    lastCommandTime = now;
-    lastCommandText = cmd;
-    executeAction('SHOW_FLARES', '🔥 Filtered for Gas Flares');
-  } else if (cmd.includes('jamnagar') || cmd.includes('gujarat')) {
-    lastCommandTime = now;
-    lastCommandText = cmd;
-    executeAction('ZOOM_JAMNAGAR', '📍 Flying to Jamnagar Petrochemical Complex');
-  } else if (cmd.includes('plume') || cmd.includes('dispersion')) {
-    lastCommandTime = now;
-    lastCommandText = cmd;
-    executeAction('SIMULATE_PLUME', '🔬 Running Gaussian Plume Dispersion');
-  } else if (cmd.includes('upload') || cmd.includes('csv') || cmd.includes('firms')) {
-    lastCommandTime = now;
-    lastCommandText = cmd;
-    executeAction('OPEN_UPLOAD', '📁 Opening NASA FIRMS CSV Uploader');
-  } else if (cmd.includes('lab') || cmd.includes('sandbox')) {
-    lastCommandTime = now;
-    lastCommandText = cmd;
-    executeAction('OPEN_SIM_LAB', '🧪 Opening AI Simulation Lab');
-  } else if (cmd.includes('dispatch') || cmd.includes('emergency') || cmd.includes('sms')) {
-    lastCommandTime = now;
-    lastCommandText = cmd;
-    executeAction('DISPATCH_EMERGENCY', '🚨 Opening Emergency Dispatch Modal');
-  } else {
-    if (transcriptEl) {
-      transcriptEl.innerHTML = `<span style="color: #94a3b8;">Heard: "${cmd}"</span>`;
-    }
-  }
-}
-
-function executeAction(action, feedback) {
-  tacticalAudio.playAlert();
+  updateStatus("PROCESSING...", "#f59e0b");
   const transcriptEl = hudElement?.querySelector('#agni-transcript');
   if (transcriptEl) {
-    transcriptEl.innerHTML = `<span style="color: #34d399; font-weight: 800;">✅ ${feedback}</span>`;
-  }
-  const statusEl = hudElement?.querySelector('#agni-mic-status');
-  if (statusEl) {
-    statusEl.textContent = "COMMAND EXECUTED";
-    statusEl.style.color = "#10b981";
+    transcriptEl.innerHTML = `<span style="color: #38bdf8;">"${cmdText}"</span>`;
   }
 
-  // Stop microphone & speech recognition immediately to prevent repeating/looping
-  stopVoiceListening();
+  // Gather context from window state
+  const context = {
+    incident_id: window.__sriVision?.hazardInspector?.currentHazard?.id || null,
+    selected_sector: window.__sriVision?.selectedSector || null,
+    has_active_plume: Boolean(window.__sriVision?.hazardLayerManager?.getLayer('hazard-dispersion')?.isVisible),
+  };
 
-  if (typeof commandCallback === 'function') {
-    commandCallback(action);
+  try {
+    const result = await agniVoiceService.interpretCommand(cmdText, context);
+    if (!result) return;
+
+    // Display verbal response bubble
+    const responseBubble = hudElement?.querySelector('#agni-response-bubble');
+    if (responseBubble && result.speech_response) {
+      responseBubble.style.display = 'block';
+      responseBubble.innerHTML = `<strong>🗣️ AGNI:</strong> ${result.speech_response}`;
+    }
+
+    if (transcriptEl && result.feedback) {
+      transcriptEl.innerHTML = `<span style="color: #34d399; font-weight: 700;">✅ ${result.feedback}</span>`;
+    }
+
+    updateStatus("COMMAND EXECUTED", "#10b981");
+    tacticalAudio.playAlert();
+
+    // Speak tactical response
+    if (result.speech_response) {
+      agniVoiceService.speak(result.speech_response);
+    }
+
+    // Dispatch command to application handler
+    if (typeof commandCallback === 'function') {
+      commandCallback(result);
+    }
+
+    // Auto-close HUD after 2.8 seconds so user can see what happened
+    clearTimeout(autoCloseTimer);
+    autoCloseTimer = setTimeout(() => {
+      closeVoiceHud();
+    }, 2800);
+  } catch (err) {
+    console.warn('[AGNI HUD] Execution failed:', err);
+    updateStatus("ERROR", "#ef4444");
   }
-
-  // Auto-dismiss HUD after 650ms confirmation flash
-  setTimeout(() => {
-    closeVoiceHud();
-  }, 650);
 }
 
-function initLiveMicrophone() {
+function startVisualizer() {
+  if (isVisualizerRunning) return;
+  isVisualizerRunning = true;
+
+  agniVoiceService.startAudioCapture().catch(() => {
+    // Fall back to synthetic waveform animation if mic access rejected
+  });
+
   const canvas = hudElement?.querySelector('#agni-waveform-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      micStream = stream;
-      try {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (AudioContextClass) {
-          audioContext = new AudioContextClass();
-          const source = audioContext.createMediaStreamSource(stream);
-          analyser = audioContext.createAnalyser();
-          analyser.fftSize = 64;
-          source.connect(analyser);
-        }
-      } catch (err) {
-        console.warn('AudioContext setup warning:', err);
-      }
-    }).catch((err) => {
-      console.warn('Microphone permission request error:', err);
-    });
-  }
-
   function renderWaveform() {
-    if (!isListening) return;
+    if (!isVisualizerRunning) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const numBars = 32;
     const barWidth = (canvas.width / numBars) - 3;
-    const freqData = analyser ? new Uint8Array(analyser.frequencyBinCount) : null;
-    if (analyser && freqData) {
-      analyser.getByteFrequencyData(freqData);
-    }
+    const freqData = agniVoiceService.getAudioFrequencyData();
 
     for (let i = 0; i < numBars; i++) {
       let height = 4;
@@ -445,8 +401,8 @@ function initLiveMicrophone() {
         const val = freqData[binIndex] / 255;
         height = Math.max(4, val * (canvas.height - 6));
       } else {
-        // Fallback smooth subtle wave
-        const t = Date.now() * 0.004;
+        // Fallback procedural waveform
+        const t = Date.now() * 0.0035;
         height = Math.abs(Math.sin(t + i * 0.25) * Math.cos(t * 0.4 + i * 0.15)) * (canvas.height - 10) + 4;
       }
 
@@ -460,7 +416,11 @@ function initLiveMicrophone() {
 
       ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.roundRect ? ctx.roundRect(x, y, barWidth, height, 2) : ctx.fillRect(x, y, barWidth, height);
+      if (ctx.roundRect) {
+        ctx.roundRect(x, y, barWidth, height, 2);
+      } else {
+        ctx.fillRect(x, y, barWidth, height);
+      }
       ctx.fill();
     }
 
@@ -468,4 +428,13 @@ function initLiveMicrophone() {
   }
 
   renderWaveform();
+}
+
+function stopVisualizer() {
+  isVisualizerRunning = false;
+  if (animFrameId) {
+    cancelAnimationFrame(animFrameId);
+    animFrameId = null;
+  }
+  agniVoiceService.stopAudioCapture();
 }

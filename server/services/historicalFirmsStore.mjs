@@ -290,3 +290,4 @@ export class HistoricalFirmsStore {
 }
 
 export const defaultHistoricalFirmsStore = new HistoricalFirmsStore();
+export const historicalFirmsStore = defaultHistoricalFirmsStore;

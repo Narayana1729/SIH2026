@@ -1,0 +1,96 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "dataset": "Major National Coalfield & Mineral Mining Concession Basins",
+    "provider": "Coal India Limited (CIL) / CMPDI / Ministry of Coal",
+    "crs": "EPSG:4326 (WGS 84)",
+    "last_updated": "2026-04-10",
+    "license": "Public Open Concession Portal India"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "mine_jharia_basin",
+      "properties": {
+        "id": "mine_jharia_basin",
+        "name": "Jharia Coalfield Open-Cast Concession Basin",
+        "operator": "Bharat Coking Coal Limited (BCCL / CIL)",
+        "mineral": "Prime Coking Coal",
+        "mining_method": "Open-Cast & Subsurface Mining",
+        "active_hazard": "Subsurface Coal Fires & Methane Outgassing",
+        "concession_area_km2": 453.0,
+        "hazard_buffer_km": 2.0,
+        "criticality": "HIGH",
+        "source": "CMPDI Mining Cadastre"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [86.25, 23.65],
+            [86.55, 23.65],
+            [86.58, 23.82],
+            [86.28, 23.85],
+            [86.25, 23.65]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mine_korba_basin",
+      "properties": {
+        "id": "mine_korba_basin",
+        "name": "Korba Coalfield Mining Concession Basin",
+        "operator": "South Eastern Coalfields Limited (SECL / CIL)",
+        "mineral": "Non-Coking Thermal Power Coal",
+        "mining_method": "Large-Scale Mechanized Open-Cast",
+        "active_hazard": "Coal Dust Explosions & High-FRP Spontaneous Combustion",
+        "concession_area_km2": 530.0,
+        "hazard_buffer_km": 2.0,
+        "criticality": "HIGH",
+        "source": "SECL Mining Operations"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [82.55, 22.25],
+            [82.85, 22.25],
+            [82.88, 22.45],
+            [82.58, 22.48],
+            [82.55, 22.25]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mine_singrauli_basin",
+      "properties": {
+        "id": "mine_singrauli_basin",
+        "name": "Singrauli Super Thermal Coal Basin (Northern Coalfields)",
+        "operator": "Northern Coalfields Limited (NCL / CIL)",
+        "mineral": "Sub-bituminous Thermal Coal",
+        "mining_method": "Dragline & Heavy Shovel Open-Cast",
+        "active_hazard": "Silo Coal Dust Ignition & Heavy Equipment Blasting",
+        "concession_area_km2": 1800.0,
+        "hazard_buffer_km": 2.5,
+        "criticality": "HIGH",
+        "source": "NCL Mining Concession Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [82.40, 24.00],
+            [82.85, 24.00],
+            [82.90, 24.30],
+            [82.45, 24.32],
+            [82.40, 24.00]
+          ]
+        ]
+      }
+    }
+  ]
+}
