@@ -23,6 +23,21 @@ export class ThermalAnomalyListPanel {
 
     this._initDOM();
     this._loadInitialData();
+
+    eventBus.on(SRI_EVENTS.CATEGORY_FILTER_CHANGED, (evt) => {
+      const cat = evt?.category;
+      if (!cat) return;
+      let mapped = cat;
+      if (cat === 'INDUSTRIAL_FLARE' || cat === 'INDUSTRIAL_DISASTER' || cat === 'INDUSTRIAL_PROCESS') mapped = 'INDUSTRIAL';
+      else if (cat === 'FOREST_WILDFIRE') mapped = 'WILDFIRE';
+      else if (cat === 'AGRICULTURAL_BURNING') mapped = 'AGRICULTURAL';
+      else if (cat === 'MINING_SMELTING') mapped = 'MINING';
+
+      this.currentCategory = mapped;
+      if (this.container && this.container.style.display !== 'none') {
+        this.render();
+      }
+    });
   }
 
   _initDOM() {

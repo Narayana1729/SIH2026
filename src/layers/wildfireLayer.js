@@ -58,9 +58,13 @@ export class WildfireLayer extends BaseHazardLayer {
       if (filterKey === 'ALL') {
         show = true;
       } else if (filterKey === 'INDUSTRIAL') {
-        show = (cat === ThermalCategories.INDUSTRIAL_FLARE || cat === ThermalCategories.INDUSTRIAL_DISASTER);
+        show = (cat === ThermalCategories.INDUSTRIAL_FLARE ||
+                cat === ThermalCategories.INDUSTRIAL_PROCESS ||
+                cat === ThermalCategories.INDUSTRIAL_DISASTER);
       } else if (filterKey === 'NON_INDUSTRIAL') {
-        show = (cat !== ThermalCategories.INDUSTRIAL_FLARE && cat !== ThermalCategories.INDUSTRIAL_DISASTER);
+        show = (cat !== ThermalCategories.INDUSTRIAL_FLARE &&
+                cat !== ThermalCategories.INDUSTRIAL_PROCESS &&
+                cat !== ThermalCategories.INDUSTRIAL_DISASTER);
       } else {
         show = (cat === filterKey);
       }
@@ -124,6 +128,7 @@ export class WildfireLayer extends BaseHazardLayer {
         ALL: this.hotspots.length,
         INDUSTRIAL: 0,
         INDUSTRIAL_FLARE: 0,
+        INDUSTRIAL_PROCESS: 0,
         INDUSTRIAL_DISASTER: 0,
         FOREST_WILDFIRE: 0,
         AGRICULTURAL_BURNING: 0,
@@ -143,7 +148,9 @@ export class WildfireLayer extends BaseHazardLayer {
 
         // Track live counts for HUD badges
         if (counts[category] !== undefined) counts[category]++;
-        if (category === ThermalCategories.INDUSTRIAL_FLARE || category === ThermalCategories.INDUSTRIAL_DISASTER) {
+        if (category === ThermalCategories.INDUSTRIAL_FLARE ||
+            category === ThermalCategories.INDUSTRIAL_PROCESS ||
+            category === ThermalCategories.INDUSTRIAL_DISASTER) {
           counts.INDUSTRIAL++;
         } else {
           counts.NON_INDUSTRIAL++;
@@ -158,7 +165,10 @@ export class WildfireLayer extends BaseHazardLayer {
           customColor = Cesium.Color.fromCssColorString('#ef4444'); // Crimson Red
         } else if (category === ThermalCategories.INDUSTRIAL_FLARE) {
           categoryIcon = '⚡';
-          customColor = Cesium.Color.fromCssColorString('#00d4ff'); // Electric Cyan
+          customColor = Cesium.Color.fromCssColorString('#a855f7'); // Electric Violet Flare
+        } else if (category === ThermalCategories.INDUSTRIAL_PROCESS) {
+          categoryIcon = '🏭';
+          customColor = Cesium.Color.fromCssColorString('#00d4ff'); // Cyan Industrial
         } else if (category === ThermalCategories.AGRICULTURAL_BURNING) {
           categoryIcon = '🌾';
           customColor = Cesium.Color.fromCssColorString('#facc15'); // Harvest Yellow

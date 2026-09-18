@@ -20,11 +20,12 @@ import { findFacilitiesNearby, getAllFacilities } from '../disasters/industrial/
 import { haversineDistanceKm } from '../core/geospatial.js';
 
 export const ThermalCategories = {
-  INDUSTRIAL_FLARE: 'INDUSTRIAL_FLARE',           // Controlled flaring, blast furnace, routine operational heat
+  INDUSTRIAL_FLARE: 'INDUSTRIAL_FLARE',           // Controlled hydrocarbon flare stack at refinery / petrochem facility
+  INDUSTRIAL_PROCESS: 'INDUSTRIAL_PROCESS',       // Industrial thermal power plant, steel mill, blast furnace, boiler, kiln
   INDUSTRIAL_DISASTER: 'INDUSTRIAL_DISASTER',     // Accidental fire, tank explosion, gas leak ignition, major thermal surge
   FOREST_WILDFIRE: 'FOREST_WILDFIRE',             // Vegetation / canopy wildfire in forest or woodland
   AGRICULTURAL_BURNING: 'AGRICULTURAL_BURNING',   // Seasonal crop residue / stubble burning in farmland
-  MINING_SMELTING: 'MINING_SMELTING',             // Open-cast coal seam fires, slag dumps, metallurgical processing
+  MINING_SMELTING: 'MINING_SMELTING',             // Open-cast coal seam fires, slag dumps, metallurgical smelters
   UNKNOWN_ANOMALY: 'UNKNOWN_ANOMALY',             // Unclassified / low-confidence thermal anomaly
 };
 
@@ -96,10 +97,33 @@ export class ThermalAnomalyClassifier {
     }
     // ── Case B: Industrial Domain (within industrial buffer of thermal plant or industrial LULC) ──
     else if ((thermalFacility && distThermalKm <= 8.0) || lulc === 'industrial') {
-      const isMiningOrMetallurgy = (thermalFacility?.sector || '').toLowerCase().includes('mining') ||
-                                   (thermalFacility?.sector || '').toLowerCase().includes('coal') ||
-                                   (thermalFacility?.sector || '').toLowerCase().includes('metallurgy') ||
-                                   (thermalFacility?.sector || '').toLowerCase().includes('smelter');
+      const facSector = (thermalFacility?.sector || '').toLowerCase();
+      const facName = (thermalFacility?.name || '').toLowerCase();
+      const facType = (thermalFacility?.type || '').toLowerCase();
+
+      // Differentiate thermal power generation utilities from actual mineral extraction / mining sites
+      const isPowerPlant = facSector.includes('power') || facType.includes('power') || facName.includes('power') || facName.includes('tpp') || facName.includes('tps');
+
+      const isMiningOrMetallurgy = !isPowerPlant && (
+        facSector.includes('mining') ||
+        facSector.includes('smelter') ||
+        facSector.includes('metallurgy') ||
+        facType.includes('mining') ||
+        facName.includes('mine') ||
+        facName.includes('colliery') ||
+        facName.includes('coalfield') ||
+        facName.includes('ocp') ||
+        facName.includes('quarry')
+      );
+
+      const isOilGasOrRefinery = facSector.includes('refinery') ||
+                                 facSector.includes('petro') ||
+                                 facSector.includes('oil') ||
+                                 facSector.includes('gas') ||
+                                 facName.includes('refinery') ||
+                                 facName.includes('petro') ||
+                                 facName.includes('cracker') ||
+                                 facName.includes('gas');
 
       if (isMiningOrMetallurgy) {
         category = ThermalCategories.MINING_SMELTING;
@@ -111,7 +135,7 @@ export class ThermalAnomalyClassifier {
           weight: 0.90,
         });
       } else {
-        // Distinguish Normal Flaring vs Accidental Explosion/Fire
+        // Distinguish Normal Operational Heat vs Accidental Explosion/Fire
         const isHighSurge = frp > this.flareFrpThreshold || brightness > 365;
         const isNightTimeSurge = daynight === 'N' && frp > 60;
 
@@ -126,14 +150,24 @@ export class ThermalAnomalyClassifier {
             detail: `Extreme thermal energy (FRP: ${frp.toFixed(1)} MW, Brightness: ${brightness.toFixed(1)} K) within ${distThermalKm.toFixed(2)} km of ${thermalFacility?.name || 'industrial facility'}`,
             weight: 0.95,
           });
-        } else {
-          // Expected, persistent operational flaring (Refinery / Thermal Power / Steel Plant)
+        } else if (isOilGasOrRefinery) {
+          // Controlled Hydrocarbon Gas Flaring (Refinery / Petrochemical / Oil & Gas)
           category = ThermalCategories.INDUSTRIAL_FLARE;
+          confidence = 0.88;
+          severity = 'LOW';
+          evidence.push({
+            factor: 'Controlled Hydrocarbon Gas Flaring',
+            detail: `Operational flare stack (FRP: ${frp.toFixed(1)} MW) at registered ${thermalFacility?.sector || 'refinery / petrochemical'} (${thermalFacility?.name || 'facility'})`,
+            weight: 0.88,
+          });
+        } else {
+          // Continuous Industrial Process Heat / Power Generation (Thermal Power Plant / Steel Mill / Manufacturing)
+          category = ThermalCategories.INDUSTRIAL_PROCESS;
           confidence = 0.85;
           severity = 'LOW';
           evidence.push({
-            factor: 'Controlled Industrial Flaring',
-            detail: `Consistent thermal footprint (FRP: ${frp.toFixed(1)} MW) at registered ${thermalFacility?.sector || 'industrial sector'} (${thermalFacility?.name || 'facility'})`,
+            factor: 'Industrial Power / Process Heat',
+            detail: `Operational combustion heat (FRP: ${frp.toFixed(1)} MW) at registered ${thermalFacility?.sector || 'industrial facility'} (${thermalFacility?.name || 'facility'})`,
             weight: 0.85,
           });
         }
@@ -141,9 +175,28 @@ export class ThermalAnomalyClassifier {
     }
     // ── Case C: Industrial Corridor Proximity (within 8-15km of registered thermal plant) ──
     else if (thermalFacility && distThermalKm <= 15.0 && !this._isCoreAgriculturalStubbleZone(lat, lon)) {
-      category = (thermalFacility.sector || '').toLowerCase().includes('smelter') || (thermalFacility.sector || '').toLowerCase().includes('mining')
-        ? ThermalCategories.MINING_SMELTING
-        : ThermalCategories.INDUSTRIAL_FLARE;
+      const facSector = (thermalFacility.sector || '').toLowerCase();
+      const facName = (thermalFacility.name || '').toLowerCase();
+      const isPowerPlant = facSector.includes('power') || facName.includes('power') || facName.includes('tpp') || facName.includes('tps');
+      const isMining = !isPowerPlant && (
+        facSector.includes('smelter') ||
+        facSector.includes('mining') ||
+        facSector.includes('metallurgy') ||
+        facName.includes('mine') ||
+        facName.includes('colliery') ||
+        facName.includes('coalfield') ||
+        facName.includes('ocp')
+      );
+      const isOilGas = facSector.includes('refinery') || facSector.includes('petro') || facSector.includes('oil') || facSector.includes('gas');
+
+      if (isMining) {
+        category = ThermalCategories.MINING_SMELTING;
+      } else if (isOilGas) {
+        category = ThermalCategories.INDUSTRIAL_FLARE;
+      } else {
+        category = ThermalCategories.INDUSTRIAL_PROCESS;
+      }
+
       confidence = 0.80;
       severity = 'LOW';
       evidence.push({
@@ -314,7 +367,9 @@ export class ThermalAnomalyClassifier {
   _getCategoryLabel(category) {
     switch (category) {
       case ThermalCategories.INDUSTRIAL_FLARE:
-        return 'Industrial Routine Flaring';
+        return 'Refinery / Gas Flare Stack';
+      case ThermalCategories.INDUSTRIAL_PROCESS:
+        return 'Industrial Power / Process Heat';
       case ThermalCategories.INDUSTRIAL_DISASTER:
         return 'Industrial Accidental Fire / Explosion';
       case ThermalCategories.FOREST_WILDFIRE:
@@ -334,7 +389,10 @@ export class ThermalAnomalyClassifier {
       return `CRITICAL: Trigger Emergency HazMat Protocol. Enforce ${radius}m initial isolation perimeter around ${facility?.name || 'industrial facility'}. Deploy NDRF HazMat battalion and monitor downwind atmospheric toxic dispersion.`;
     }
     if (category === ThermalCategories.INDUSTRIAL_FLARE) {
-      return `NOMINAL: Operational process heat detected at ${facility?.name || 'facility'}. Maintain routine satellite emission monitoring.`;
+      return `NOMINAL: Operational process heat / controlled gas flaring at ${facility?.name || 'refinery / petrochemical facility'}. Maintain continuous emission monitoring.`;
+    }
+    if (category === ThermalCategories.INDUSTRIAL_PROCESS) {
+      return `NOMINAL: Industrial power generation / process heat at ${facility?.name || 'industrial complex'}. Standard operational envelope.`;
     }
     if (category === ThermalCategories.FOREST_WILDFIRE) {
       return `ALERT: Active forest fire. Dispatch Forestry Rapid Response Unit, execute Rothermel rate-of-spread modeling, and establish containment firebreaks.`;
