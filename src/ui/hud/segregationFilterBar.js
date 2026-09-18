@@ -71,13 +71,13 @@ export class SegregationFilterBar {
       }
     });
 
-    // Broadcast filter change across the application
-    eventBus.emit(SRI_EVENTS.CATEGORY_FILTER_CHANGED, { category: categoryKey });
+    // Broadcast filter change across the application (no zoom, retain user view)
+    eventBus.emit(SRI_EVENTS.CATEGORY_FILTER_CHANGED, { category: categoryKey, flyTo: false });
 
     // Directly trigger WildfireLayer if accessible
     const wildfireLayer = this.hazardLayerManager?.getLayer('hazard-wildfire');
     if (wildfireLayer?.applyCategoryFilter) {
-      wildfireLayer.applyCategoryFilter(categoryKey);
+      wildfireLayer.applyCategoryFilter(categoryKey, { flyTo: false });
     }
   }
 

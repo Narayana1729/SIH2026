@@ -35,30 +35,76 @@ export class WildfireLayer extends BaseHazardLayer {
       }
     });
 
-    // Listen to live category segregation filter changes
+    // Listen to live category segregation filter changes (default flyTo: false to maintain user viewport)
     eventBus.on(SRI_EVENTS.CATEGORY_FILTER_CHANGED, (evt) => {
-      this.applyCategoryFilter(evt?.category || 'ALL');
+      this.applyCategoryFilter(evt?.category || 'ALL', { flyTo: Boolean(evt?.flyTo) });
     });
   }
 
-  applyCategoryFilter(filterKey = 'ALL') {
+  applyCategoryFilter(filterKey = 'ALL', options = {}) {
     this.activeCategoryFilter = filterKey;
     if (!this.dataSource) return;
+
+    let visibleCount = 0;
+    let topEntity = null;
+    let maxFrp = -1;
 
     const entities = this.dataSource.entities.values;
     for (let i = 0; i < entities.length; i++) {
       const entity = entities[i];
       const cat = entity._sriCategory || ThermalCategories.FOREST_WILDFIRE;
 
+      let show = false;
       if (filterKey === 'ALL') {
-        entity.show = true;
+        show = true;
       } else if (filterKey === 'INDUSTRIAL') {
-        entity.show = (cat === ThermalCategories.INDUSTRIAL_FLARE || cat === ThermalCategories.INDUSTRIAL_DISASTER);
+        show = (cat === ThermalCategories.INDUSTRIAL_FLARE || cat === ThermalCategories.INDUSTRIAL_DISASTER);
       } else if (filterKey === 'NON_INDUSTRIAL') {
-        entity.show = (cat !== ThermalCategories.INDUSTRIAL_FLARE && cat !== ThermalCategories.INDUSTRIAL_DISASTER);
+        show = (cat !== ThermalCategories.INDUSTRIAL_FLARE && cat !== ThermalCategories.INDUSTRIAL_DISASTER);
       } else {
-        entity.show = (cat === filterKey);
+        show = (cat === filterKey);
       }
+      entity.show = show;
+
+      if (show) {
+        visibleCount++;
+        const frp = Number(entity._sriFireRecord?.frp) || 0;
+        if (frp > maxFrp) {
+          maxFrp = frp;
+          topEntity = entity;
+        }
+      }
+    }
+
+    // Force immediate Cesium render in requestRenderMode
+    if (this.viewer?.scene) {
+      this.viewer.scene.requestRender();
+    }
+
+    // Fly to highest FRP detection in the selected category
+    if (options.flyTo && topEntity && filterKey !== 'ALL' && this.viewer) {
+      const pos = topEntity.position?.getValue(Cesium.JulianDate.now());
+      if (pos) {
+        const carto = Cesium.Cartographic.fromCartesian(pos);
+        const lon = Cesium.Math.toDegrees(carto.longitude);
+        const lat = Cesium.Math.toDegrees(carto.latitude);
+        this.viewer.camera.flyTo({
+          destination: Cesium.Cartesian3.fromDegrees(lon, lat, 240000),
+          duration: 1.4,
+        });
+      }
+    }
+
+    // Surface tactical HUD Toast notification
+    const toast = document.getElementById('toast');
+    if (toast) {
+      const label = filterKey.replace(/_/g, ' ');
+      toast.textContent = `[SEGREGATION] ${label}: ${visibleCount} active detections on 3D Globe`;
+      toast.classList.add('visible');
+      clearTimeout(this._filterToastTimer);
+      this._filterToastTimer = setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 3500);
     }
   }
 
