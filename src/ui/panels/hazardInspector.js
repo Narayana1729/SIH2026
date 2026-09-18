@@ -1407,8 +1407,16 @@ function renderSatelliteContextHtml(h) {
   } else {
     lulcContent = `
       <div style="padding: 8px 10px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.12); border-radius: 5px; font-size: 9.5px; color: #94a3b8; margin-bottom: 8px; line-height: 1.4;">
-        <span style="color: #cbd5e1; font-weight: 600;">ESA WorldCover 10m:</span> <span style="color: #f59e0b; font-weight: 700;">DATA_UNAVAILABLE</span><br/>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <span style="color: #cbd5e1; font-weight: 600;">ESA WorldCover 10m:</span>
+          <span style="color: #f59e0b; font-weight: 700;">DATA_UNAVAILABLE</span>
+        </div>
         Observation coordinate is outside current local high-resolution raster tiles.
+        <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 4px; flex-wrap: wrap;">
+          <button type="button" class="sri-tile-jump-btn" onclick="window.__sriVision?.flyToPilotSector('jamnagar')" style="background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.35); color: #00d4ff; border-radius: 3px; padding: 2px 6px; font-size: 8.5px; font-weight: 700; cursor: pointer;">🚀 View 10m Jamnagar</button>
+          <button type="button" class="sri-tile-jump-btn" onclick="window.__sriVision?.flyToPilotSector('similipal')" style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.35); color: #10b981; border-radius: 3px; padding: 2px 6px; font-size: 8.5px; font-weight: 700; cursor: pointer;">🌲 View 10m Forest</button>
+          <button type="button" class="sri-tile-jump-btn" onclick="window.__sriVision?.flyToPilotSector('karnal')" style="background: rgba(250,204,21,0.15); border: 1px solid rgba(250,204,21,0.35); color: #facc15; border-radius: 3px; padding: 2px 6px; font-size: 8.5px; font-weight: 700; cursor: pointer;">🌾 View 10m Cropland</button>
+        </div>
       </div>
     `;
   }

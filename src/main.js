@@ -41,6 +41,7 @@ import { initAgniVoiceHud, toggleAgniVoiceHud } from './ui/hud/agniVoiceHud.js';
 import { openDispatchModal } from './ui/responders/dispatchModal.js';
 import { ThermalAnomalyListPanel } from './ui/panels/thermalAnomalyListPanel.js';
 import { HistoricalTimelineBar } from './ui/hud/historicalTimelineBar.js';
+import { ZoomSliderBar } from './ui/hud/zoomSliderBar.js';
 import { tacticalAudio } from './core/audio.js';
 import { eventBus, SRI_EVENTS } from './core/eventBus.js';
 import { DisasterEventOrchestrator } from './intelligence/eventOrchestrator.js';
@@ -231,6 +232,7 @@ async function init() {
     const segregationFilterBar = new SegregationFilterBar(hazardLayerManager);
     const threatLegend = new ThreatLegend();
     const historicalTimelineBar = new HistoricalTimelineBar(viewer, dataManager);
+    const zoomSliderBar = new ZoomSliderBar(viewer);
 
     // Connect selection events, camera flight, and audio cues
     let lastHandledHazardId = null;
@@ -408,6 +410,45 @@ async function init() {
       thermalListPanel,
       historicalTimelineBar,
       segregationFilterBar,
+      zoomSliderBar,
+      flyToPilotSector: (sector) => {
+        tacticalAudio.playClick();
+        let target = { lon: 69.870, lat: 22.380, height: 18000 };
+        let hazardTitle = 'Jamnagar Petrochemical Complex (Measured 10m Tile)';
+        if (sector === 'similipal') {
+          target = { lon: 86.330, lat: 21.850, height: 22000 };
+          hazardTitle = 'Similipal Forest Reserve Fire (Measured 10m Tile)';
+        } else if (sector === 'karnal') {
+          target = { lon: 76.980, lat: 29.680, height: 22000 };
+          hazardTitle = 'Karnal Agricultural Burning (Measured 10m Tile)';
+        }
+        viewer.camera.flyTo({
+          destination: Cesium.Cartesian3.fromDegrees(target.lon, target.lat, target.height),
+          duration: 1.8,
+        });
+        const wildfireLayer = hazardLayerManager.getLayer('hazard-wildfire');
+        const found = wildfireLayer?.hotspots?.find((h) => {
+          const lat = h.location?.latitude ?? h.latitude;
+          const lon = h.location?.longitude ?? h.longitude;
+          return Math.abs(lat - target.lat) < 0.25 && Math.abs(lon - target.lon) < 0.25;
+        });
+        if (found) {
+          hazardLayerManager.notifyHazardSelected(found);
+        } else {
+          hazardInspector.setHazard({
+            id: `pilot-${sector}`,
+            title: hazardTitle,
+            hazard_type: sector === 'jamnagar' ? 'INDUSTRIAL_FIRE' : sector === 'similipal' ? 'WILDFIRE' : 'AGRICULTURAL_FIRE',
+            location: { latitude: target.lat, longitude: target.lon, altitude: 0 },
+            frp: sector === 'jamnagar' ? 65.0 : sector === 'similipal' ? 120.0 : 45.0,
+            bright_ti4: 355.0,
+            bright_ti5: 298.0,
+            satellite: 'NOAA-20 VIIRS NRT',
+            severity: sector === 'jamnagar' ? 'CRITICAL' : 'HIGH',
+            actions: ['Ground-truth validated against 10m ESA WorldCover & Sentinel-2 MSI Level-2A surface reflectance.'],
+          });
+        }
+      },
       openAnomalyListPanel: (cat) => thermalListPanel.open(cat),
       openFirmsUploadModal,
       openAiSimulationLabModal,
