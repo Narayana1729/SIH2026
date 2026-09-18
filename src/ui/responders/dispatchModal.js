@@ -257,14 +257,24 @@ async function handleSendDispatch() {
     sendBtn.style.background = '#10b981';
     sendBtn.style.opacity = '1';
 
+    const cleanPhone = phone ? String(phone).replace(/\D/g, '').slice(-10) : '9849215682';
+    const waUrl = `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msgPreview || '')}`;
+
     receipt.style.display = 'block';
     receiptDetails.innerHTML = `
-      • SMS Gateway: <strong>${data.smsGateway?.status || 'TRANSMITTED'}</strong><br/>
+      • SMS Gateway: <strong>${data.smsGateway?.status || 'SIMULATION'}</strong><br/>
       • Channel Route: <span>${data.smsGateway?.details || 'Disaster Response Mesh'}</span><br/>
-      • WhatsApp Gateway: <strong>${data.whatsappGateway?.status || 'TRANSMITTED'}</strong><br/>
+      • WhatsApp Gateway: <strong>${data.whatsappGateway?.status || 'SIMULATION'}</strong> (${data.whatsappGateway?.details || 'Local Mesh'})<br/>
       • Dispatch Reference ID: <strong>${data.dispatchId}</strong><br/>
       • Security Auth Token: <code>${data.receiptToken}</code><br/>
+      • Target Handset: <strong>+91 ${cleanPhone}</strong><br/>
       • Timestamp: ${new Date(data.timestamp || Date.now()).toLocaleTimeString()}
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed rgba(16, 185, 129, 0.4); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+        <span style="font-size: 11px; color: #cbd5e1;">Test Live WhatsApp Transmission right now:</span>
+        <a href="${waUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; background: #22c55e; color: #000; font-weight: 800; font-size: 11.5px; padding: 6px 14px; border-radius: 6px; text-decoration: none; box-shadow: 0 2px 8px rgba(34,197,94,0.3);">
+          <span>💬</span> <span>Open Tactical Alert in WhatsApp (+91 ${cleanPhone})</span>
+        </a>
+      </div>
     `;
   } catch (err) {
     sendBtn.innerHTML = `<span>✓ DISPATCHED (LOCAL FALLBACK)</span>`;
@@ -272,12 +282,22 @@ async function handleSendDispatch() {
     sendBtn.style.opacity = '1';
 
     const dispatchToken = 'ACK-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+    const cleanPhone = phone ? String(phone).replace(/\D/g, '').slice(-10) : '9849215682';
+    const waUrl = `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msgPreview || '')}`;
+
     receipt.style.display = 'block';
     receiptDetails.innerHTML = `
-      • Fast2SMS Gateway Status: TRANSMITTED (4 SMS Dispatches queued)<br/>
-      • WhatsApp Cloud API: ACKNOWLEDGED by District Control HQ<br/>
-      • Auth Token: ${dispatchToken}<br/>
+      • SMS Gateway Status: SIMULATION (Disaster Response Network Simulation)<br/>
+      • WhatsApp Gateway Status: SIMULATION (Standby)<br/>
+      • Auth Token: <code>${dispatchToken}</code><br/>
+      • Target Handset: <strong>+91 ${cleanPhone}</strong><br/>
       • Timestamp: ${new Date().toLocaleTimeString()}
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed rgba(16, 185, 129, 0.4); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+        <span style="font-size: 11px; color: #cbd5e1;">Test Live WhatsApp Transmission:</span>
+        <a href="${waUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; background: #22c55e; color: #000; font-weight: 800; font-size: 11.5px; padding: 6px 14px; border-radius: 6px; text-decoration: none;">
+          <span>💬</span> <span>Open Tactical Alert in WhatsApp</span>
+        </a>
+      </div>
     `;
   }
 }

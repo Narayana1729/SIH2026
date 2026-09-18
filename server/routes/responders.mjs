@@ -90,10 +90,14 @@ export async function handleRespondersRoute(req, res, url) {
       smsDetails = 'Simulated mesh broadcast to emergency units (Enter 10-digit phone for live SMS)';
     }
 
-    if (richautomateKey && richautomateKey.length > 25) {
+    let waDetails = 'Local Emergency Response Mesh Simulation';
+
+    if (process.env.WHATSAPP_ACCESS_TOKEN && process.env.WHATSAPP_PHONE_NUMBER_ID) {
       waStatus = 'TRANSMITTED_LIVE';
+      waDetails = 'Meta WhatsApp Cloud API Live Dispatch';
     } else {
       waStatus = 'SIMULATION';
+      waDetails = 'Automated Gateway in Standby / Simulation (Use 1-Click Direct WhatsApp Dispatch)';
     }
 
     const dispatchId = 'DISP-' + Math.random().toString(36).substring(2, 9).toUpperCase();
@@ -103,7 +107,7 @@ export async function handleRespondersRoute(req, res, url) {
       dispatchId,
       timestamp: new Date().toISOString(),
       smsGateway: { provider: 'Fast2SMS Bulk V2', status: smsStatus, details: smsDetails },
-      whatsappGateway: { provider: 'RichAutomate AI', status: waStatus },
+      whatsappGateway: { provider: 'Meta / RichAutomate AI', status: waStatus, details: waDetails },
       unitsNotified: agencies || ['District Fire 101', 'NDRF Hazmat', 'Trauma ICU 108'],
       receiptToken: 'AUTH-' + Math.random().toString(36).substring(2, 12).toUpperCase(),
     });
