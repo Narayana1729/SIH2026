@@ -12,6 +12,7 @@ import { computeShapAttributions, resolveEventAttributions } from '../../intelli
 import { openDispatchModal } from '../responders/dispatchModal.js';
 import { generatePlumeFootprint, renderPlumeOnCesium, clearPlumeFromCesium } from '../../disasters/dispersion/gaussianPlume.js';
 import { resolveHazmatProfile } from '../../disasters/industrial/hazmatProfiles.js';
+import { computeSatelliteRevisitForecast } from '../../intelligence/revisitPredictor.js';
 import { sriVisionApi } from '../../core/api.js';
 
 export function getCardinal(deg) {
@@ -546,6 +547,87 @@ export class HazardInspector {
       `;
     }
 
+    // ── Satellite Revisit & Temporal Gap-Filling (LEO Blind Window Engine) ──
+    const revisit = computeSatelliteRevisitForecast(h);
+    const isBlindWindow = revisit.isBlindWindowActive;
+    const revisitHtml = `
+      <div class="sri-revisit-card" style="
+        margin-top: 10px;
+        background: ${isBlindWindow ? 'rgba(245, 158, 11, 0.08)' : 'rgba(15, 23, 42, 0.65)'};
+        border: 1px solid ${isBlindWindow ? 'rgba(245, 158, 11, 0.35)' : 'rgba(255, 255, 255, 0.12)'};
+        border-radius: 8px;
+        padding: 9px 11px;
+        font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      ">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 8px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="color: ${isBlindWindow ? '#fbbf24' : '#38bdf8'}; font-size: 12px;">🛰️</span>
+            <span style="font-size: 10px; font-weight: 700; color: #f8fafc; letter-spacing: 0.5px;">SATELLITE REVISIT &amp; GAP-FILLING</span>
+          </div>
+          <span style="
+            font-size: 8px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: ${isBlindWindow ? 'rgba(245, 158, 11, 0.2)' : 'rgba(16, 185, 129, 0.2)'};
+            color: ${isBlindWindow ? '#fbbf24' : '#34d399'};
+            border: 1px solid ${isBlindWindow ? 'rgba(245, 158, 11, 0.4)' : 'rgba(16, 185, 129, 0.4)'};
+          ">
+            ${isBlindWindow ? 'LEO BLIND WINDOW ACTIVE' : 'CURRENT OBSERVATION'}
+          </span>
+        </div>
+
+        <!-- 2-Column Revisit Countdown Timeline -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 7px;">
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.07); border-radius: 5px; padding: 5px 7px;">
+            <div style="font-size: 8.5px; color: #94a3b8;">Time Since Last Pass</div>
+            <div style="font-size: 12px; font-weight: 800; color: #f1f5f9; margin-top: 1px;">${revisit.elapsedMinutesSinceObservation}m ago</div>
+            <div style="font-size: 8px; color: #64748b; margin-top: 1px;">${revisit.lastObservationTimeIso.split('T')[1]?.slice(0, 8)} UTC</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 5px; padding: 5px 7px;">
+            <div style="font-size: 8.5px; color: #38bdf8;">Next LEO Overpass</div>
+            <div style="font-size: 12px; font-weight: 800; color: #38bdf8; margin-top: 1px;">~${revisit.nextLeoPass.minutesUntilPass}m remaining</div>
+            <div style="font-size: 8px; color: #94a3b8; margin-top: 1px;">${revisit.nextLeoPass.platform.replace('_', ' ')} (${revisit.nextLeoPass.sensorResolutionNadirM}m)</div>
+          </div>
+        </div>
+
+        <!-- Geostationary INSAT-3DR Temporal Infill -->
+        <div style="background: rgba(30, 58, 138, 0.2); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 5px; padding: 5px 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 6px #60a5fa;"></span>
+            <div>
+              <span style="font-size: 9px; font-weight: 700; color: #bfdbfe; display: block;">ISRO INSAT-3DR Rapid Infill</span>
+              <span style="font-size: 8px; color: #94a3b8;">Geostationary 15-min cadence</span>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <span style="font-size: 10px; font-weight: 800; color: #38bdf8;">in ${revisit.insatNextScanMinutes}m</span>
+            <span style="font-size: 7.5px; color: #34d399; display: block;">Continuous Gap-Fill</span>
+          </div>
+        </div>
+
+        <!-- Scan Footprint & Bowtie Distortion Geometry -->
+        <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 5px; padding: 5px 8px; font-size: 9px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+            <span style="color: #94a3b8;">True Ground Pixel:</span>
+            <strong style="color: #f1f5f9;">${revisit.sensorFootprint.pixelWidthScanMeters}m × ${revisit.sensorFootprint.pixelLengthTrackMeters}m</strong>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 3px; font-size: 8px; color: #94a3b8;">
+            <div>Scan Angle: <strong style="color: #e2e8f0;">${revisit.sensorFootprint.scanAngleDeg}°</strong></div>
+            <div>Smear Factor: <strong style="color: ${revisit.sensorFootprint.isEdgeOfSwathDistorted ? '#fbbf24' : '#34d399'};">${revisit.sensorFootprint.distortionFactor}× nadir</strong></div>
+            <div>Parallax Jitter: <strong style="color: #e2e8f0;">±${revisit.sensorFootprint.viewingParallaxShiftEstimateMeters}m</strong></div>
+          </div>
+        </div>
+
+        <!-- Operational Guidance if in Blind Window -->
+        ${isBlindWindow ? `
+          <div style="margin-top: 6px; padding: 5px 8px; background: rgba(245, 158, 11, 0.12); border-left: 2px solid #f59e0b; border-radius: 3px; font-size: 8px; line-height: 1.35; color: #fde68a;">
+            <strong>⚠️ OPERATIONAL GAP GUIDANCE:</strong> ${revisit.blindWindowGuidance}
+          </div>
+        ` : ''}
+      </div>
+    `;
+
     // ── Generate 90-Day Baseline Time-Series Data & SVG Area Chart ──
     const baseMean = isIndustrial ? Math.max(12, currentFrpVal * 0.28) : 2.5;
     const peakFrp = Math.max(currentFrpVal, isIndustrial ? baseMean * 3.8 : 35.0);
@@ -926,6 +1008,8 @@ export class HazardInspector {
               </div>
             `;
           })()}
+
+          ${revisitHtml}
 
           <div class="sri-section-title">TACTICAL DIRECTIVES</div>
           <ul class="sri-actions-list">

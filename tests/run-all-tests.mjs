@@ -28,6 +28,7 @@ const testFiles = [
   'tests/ml-worker-resilience.test.mjs',
   'tests/briggs-plume-rise.test.mjs',
   'tests/enhanced-validation.test.mjs',
+  'tests/satellite-revisit.test.mjs',
   'src/firstRunExperience.test.mjs',
 ];
 
