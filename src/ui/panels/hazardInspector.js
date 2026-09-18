@@ -240,6 +240,13 @@ export class HazardInspector {
       return;
     }
 
+    if (!hazardContract.location) {
+      hazardContract.location = {
+        latitude: hazardContract.latitude ?? hazardContract.lat ?? 0,
+        longitude: hazardContract.longitude ?? hazardContract.lon ?? 0,
+      };
+    }
+
     const hazardId = hazardContract.id || `${hazardContract.location?.latitude}_${hazardContract.location?.longitude}`;
     if (this.currentHazard && this._currentHazardId === hazardId) {
       // Same hazard already active, do not re-trigger lifecycle or clear active plume
@@ -369,9 +376,14 @@ export class HazardInspector {
     const targetHazard = hazard || this.currentHazard;
     if (!targetHazard) return;
 
-    const lat = targetHazard.location?.latitude;
-    const lon = targetHazard.location?.longitude;
-    if (lat == null || lon == null) return;
+    const lat = targetHazard.location?.latitude ?? targetHazard.latitude ?? targetHazard.lat;
+    const lon = targetHazard.location?.longitude ?? targetHazard.longitude ?? targetHazard.lon;
+    if (lat == null || lon == null || isNaN(Number(lat)) || isNaN(Number(lon))) {
+      console.warn('[HazardInspector] Plume simulation skipped: invalid coordinates', targetHazard);
+      return;
+    }
+    const numLat = Number(lat);
+    const numLon = Number(lon);
 
     if (this._isPlumeSimulating) return; // Guard against concurrent overlapping runs
     this._isPlumeSimulating = true;
@@ -390,11 +402,13 @@ export class HazardInspector {
         if (dispLayer) dispLayer.clearPlumeEntities();
       }
 
-      // Resolve atmospheric conditions from telemetry or live API
+      // Resolve atmospheric conditions with a fast 1500ms timeout race to prevent hangs
       let weather = targetHazard.weather;
       if (!weather) {
         try {
-          const res = await sriVisionApi.getWeather(lat, lon);
+          const weatherPromise = sriVisionApi.getWeather(numLat, numLon);
+          const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 1500));
+          const res = await Promise.race([weatherPromise, timeoutPromise]);
           if (res?.current) {
             weather = {
               windSpeedKmh: typeof res.current.wind_speed_10m === 'number' ? Math.round(res.current.wind_speed_10m * 10) / 10 : 16.2,
@@ -415,8 +429,8 @@ export class HazardInspector {
       const thresholds = hazmat?.dispersion_thresholds || { advisory: 10.0, evacuation: 50.0, critical: 500.0 };
 
       const plume = generatePlumeFootprint({
-        sourceLat: lat,
-        sourceLon: lon,
+        sourceLat: numLat,
+        sourceLon: numLon,
         windDirectionDeg,
         windSpeedMps,
         emissionRateGps: 650,

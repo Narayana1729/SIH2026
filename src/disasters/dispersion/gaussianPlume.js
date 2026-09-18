@@ -421,7 +421,68 @@ export function generatePlumeFootprint({
 let activePlumeDataSource = null;
 
 /**
+ * Generate glowing circular flame badge canvas matching tactical HUD reference.
+ */
+function createFlamePinCanvas() {
+  if (typeof document === 'undefined') return null;
+  const canvas = document.createElement('canvas');
+  canvas.width = 72;
+  canvas.height = 72;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  // Outer radial emerald glow
+  const gradient = ctx.createRadialGradient(36, 36, 10, 36, 36, 34);
+  gradient.addColorStop(0, 'rgba(52, 211, 153, 0.95)');
+  gradient.addColorStop(0.5, 'rgba(16, 185, 129, 0.55)');
+  gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.arc(36, 36, 34, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Vibrant mint outline ring
+  ctx.strokeStyle = '#34d399';
+  ctx.lineWidth = 3.5;
+  ctx.beginPath();
+  ctx.arc(36, 36, 20, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Dark core circular disk
+  ctx.fillStyle = '#030712';
+  ctx.beginPath();
+  ctx.arc(36, 36, 17, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Center Flame icon
+  ctx.font = '18px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🔥', 36, 37);
+
+  return canvas;
+}
+
+/**
+ * Helper to generate closed circular positions on WGS84 ellipsoid.
+ */
+function generateCirclePositions(centerLon, centerLat, radiusMeters, segments = 72) {
+  const positions = [];
+  const latMPerDeg = 111132.954;
+  const lonMPerDeg = 111132.954 * Math.cos((centerLat * Math.PI) / 180);
+  for (let i = 0; i <= segments; i++) {
+    const theta = (i / segments) * 2 * Math.PI;
+    const dx = radiusMeters * Math.sin(theta);
+    const dy = radiusMeters * Math.cos(theta);
+    positions.push(Cesium.Cartesian3.fromDegrees(centerLon + dx / lonMPerDeg, centerLat + dy / latMPerDeg));
+  }
+  return positions;
+}
+
+/**
  * Render dynamic 3D Gaussian dispersion plume footprint and wind vector on Cesium globe.
+ * Implements tactical concentric cordon rings (1km, 2.5km, 5km), glowing flame beacon,
+ * and terrain-clamped downwind dispersion cone matching operational disaster maps.
  * @param {Cesium.Viewer} viewer
  * @param {Object} plumeData
  */
@@ -435,64 +496,163 @@ export function renderPlumeOnCesium(viewer, plumeData) {
     activePlumeDataSource.entities.removeAll();
   }
 
-  const features = plumeData.geojson_footprint?.features || [];
-  for (const ft of features) {
-    const coords = ft.geometry?.coordinates?.[0] || [];
-    if (coords.length < 3) continue;
+  const sourceLat = plumeData.release_origin?.latitude ?? plumeData.source?.lat ?? plumeData.lat;
+  const sourceLon = plumeData.release_origin?.longitude ?? plumeData.source?.lon ?? plumeData.lon;
+  if (sourceLat == null || sourceLon == null || isNaN(sourceLat) || isNaN(sourceLon)) return;
 
-    const hierarchy = coords.map(([lon, lat]) => Cesium.Cartesian3.fromDegrees(lon, lat, 10));
-    const level = ft.properties?.level || 'ADVISORY';
+  const latMetersPerDeg = 111132.954;
+  const lonMetersPerDeg = 111132.954 * Math.cos((sourceLat * Math.PI) / 180);
+  const headingRad = ((plumeData.plume_heading_deg ?? 225) * Math.PI) / 180;
+  const windMps = plumeData.wind_speed_mps ?? 4.5;
+  const windDirDeg = plumeData.wind_direction_degrees ?? 225;
 
-    let fillColor = Cesium.Color.fromCssColorString('rgba(234, 179, 8, 0.22)');
-    let outlineColor = Cesium.Color.fromCssColorString('rgba(234, 179, 8, 0.85)');
+  // ── 1. Concentric Safety Cordon Rings (1km Red, 2.5km Orange, 5km Blue) ──
+  const rings = [
+    {
+      name: 'Initial Isolation Zone (1.0 km)',
+      radiusM: 1000,
+      colorHex: '#ef4444',
+      fillCss: 'rgba(239, 68, 68, 0.08)',
+      dashLength: 14.0,
+      width: 2.2,
+    },
+    {
+      name: 'Protective Action Evacuation Zone (2.5 km)',
+      radiusM: 2500,
+      colorHex: '#f97316',
+      fillCss: 'rgba(249, 115, 22, 0.05)',
+      dashLength: 18.0,
+      width: 2.2,
+    },
+    {
+      name: 'Downwind Dispersion Buffer Zone (5.0 km)',
+      radiusM: 5000,
+      colorHex: '#38bdf8',
+      fillCss: 'rgba(56, 189, 248, 0.03)',
+      dashLength: 22.0,
+      width: 2.0,
+    },
+  ];
 
-    if (level === 'CRITICAL') {
-      fillColor = Cesium.Color.fromCssColorString('rgba(239, 68, 68, 0.35)');
-      outlineColor = Cesium.Color.fromCssColorString('rgba(239, 68, 68, 0.95)');
-    } else if (level === 'EVACUATE') {
-      fillColor = Cesium.Color.fromCssColorString('rgba(249, 115, 22, 0.28)');
-      outlineColor = Cesium.Color.fromCssColorString('rgba(249, 115, 22, 0.90)');
-    }
-
+  for (const ring of rings) {
+    // Subtle clamped fill ellipse
     activePlumeDataSource.entities.add({
-      name: ft.properties?.title || 'Dispersion Isopleth',
-      polygon: {
-        hierarchy,
-        material: fillColor,
-        outline: true,
-        outlineColor,
-        outlineWidth: 2,
-        height: 5,
+      name: ring.name,
+      position: Cesium.Cartesian3.fromDegrees(sourceLon, sourceLat),
+      ellipse: {
+        semiMajorAxis: ring.radiusM,
+        semiMinorAxis: ring.radiusM,
+        material: Cesium.Color.fromCssColorString(ring.fillCss),
+        classificationType: Cesium.ClassificationType.BOTH,
+      },
+    });
+
+    // Sharp clamped dashed boundary polyline
+    const circlePos = generateCirclePositions(sourceLon, sourceLat, ring.radiusM, 72);
+    activePlumeDataSource.entities.add({
+      name: `${ring.name} Boundary`,
+      polyline: {
+        positions: circlePos,
+        width: ring.width,
+        clampToGround: true,
+        material: new Cesium.PolylineDashMaterialProperty({
+          color: Cesium.Color.fromCssColorString(ring.colorHex),
+          dashLength: ring.dashLength,
+        }),
       },
     });
   }
 
-  // Add centerline wind vector line
-  const sourceLat = plumeData.release_origin?.latitude || plumeData.source?.lat;
-  const sourceLon = plumeData.release_origin?.longitude || plumeData.source?.lon;
-  const headingRad = (plumeData.plume_heading_deg * Math.PI) / 180;
-  const maxMeters = (plumeData.max_downwind_km || 15) * 1000;
+  // ── 2. Tactical Downwind Dispersion Plume Cone (Orange Dashed + Amber Fill) ──
+  const coneLengthM = Math.min(5200, Math.max(2600, (plumeData.max_downwind_km || 4) * 1000 * 0.75));
+  const halfSpreadRad = 0.33; // ~19 degrees physical lateral expansion
 
-  const latMetersPerDeg = 111132.954;
-  const lonMetersPerDeg = 111132.954 * Math.cos((sourceLat * Math.PI) / 180);
+  const coneBoundary = [Cesium.Cartesian3.fromDegrees(sourceLon, sourceLat)];
+  const arcSteps = 16;
+  for (let s = 0; s <= arcSteps; s++) {
+    const fraction = s / arcSteps;
+    const currentAngle = (headingRad - halfSpreadRad) + fraction * (2 * halfSpreadRad);
+    const arcDist = coneLengthM * (1 - 0.08 * Math.pow((fraction - 0.5) * 2, 2)); // slight parabolic curvature
+    const dx = arcDist * Math.sin(currentAngle);
+    const dy = arcDist * Math.cos(currentAngle);
+    coneBoundary.push(Cesium.Cartesian3.fromDegrees(sourceLon + dx / lonMetersPerDeg, sourceLat + dy / latMetersPerDeg));
+  }
+  coneBoundary.push(Cesium.Cartesian3.fromDegrees(sourceLon, sourceLat));
 
-  const endLat = sourceLat + (maxMeters * Math.cos(headingRad)) / latMetersPerDeg;
-  const endLon = sourceLon + (maxMeters * Math.sin(headingRad)) / lonMetersPerDeg;
-
+  // Clamped amber/orange polygon fill
   activePlumeDataSource.entities.add({
-    name: `Live Wind Vector (${plumeData.wind_speed_mps} m/s @ ${plumeData.wind_direction_degrees}°)`,
+    name: 'Toxic Plume Downwind Dispersion Footprint',
+    polygon: {
+      hierarchy: coneBoundary,
+      material: Cesium.Color.fromCssColorString('rgba(249, 115, 22, 0.32)'),
+      classificationType: Cesium.ClassificationType.BOTH,
+    },
+  });
+
+  // Clamped dashed perimeter outline
+  activePlumeDataSource.entities.add({
+    name: 'Plume Dispersion Cone Perimeter',
     polyline: {
-      positions: [
-        Cesium.Cartesian3.fromDegrees(sourceLon, sourceLat, 15),
-        Cesium.Cartesian3.fromDegrees(endLon, endLat, 15),
-      ],
-      width: 3,
+      positions: coneBoundary,
+      width: 2.6,
+      clampToGround: true,
       material: new Cesium.PolylineDashMaterialProperty({
-        color: Cesium.Color.CYAN,
-        dashLength: 16,
+        color: Cesium.Color.fromCssColorString('#f97316'),
+        dashLength: 14.0,
       }),
     },
   });
+
+  // ── 3. Downwind Centerline Wind Vector Arrow (Cyan Dashed Ray) ──
+  const tipLengthM = coneLengthM * 1.1;
+  const tipDx = tipLengthM * Math.sin(headingRad);
+  const tipDy = tipLengthM * Math.cos(headingRad);
+  const tipLat = sourceLat + tipDy / latMetersPerDeg;
+  const tipLon = sourceLon + tipDx / lonMetersPerDeg;
+
+  activePlumeDataSource.entities.add({
+    name: `Live Wind Vector (${windMps.toFixed(1)} m/s @ ${windDirDeg}°)`,
+    polyline: {
+      positions: [
+        Cesium.Cartesian3.fromDegrees(sourceLon, sourceLat),
+        Cesium.Cartesian3.fromDegrees(tipLon, tipLat),
+      ],
+      width: 3.5,
+      clampToGround: true,
+      material: new Cesium.PolylineDashMaterialProperty({
+        color: Cesium.Color.fromCssColorString('#00e5ff'),
+        dashLength: 16.0,
+      }),
+    },
+  });
+
+  // ── 4. Glowing Center Flame Pin Marker ──
+  const flamePin = createFlamePinCanvas();
+  if (flamePin) {
+    activePlumeDataSource.entities.add({
+      name: 'Incident Flame Origin',
+      position: Cesium.Cartesian3.fromDegrees(sourceLon, sourceLat),
+      billboard: {
+        image: flamePin,
+        width: 48,
+        height: 48,
+        verticalOrigin: Cesium.VerticalOrigin.CENTER,
+        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+      },
+    });
+  }
+
+  // ── 5. Auto-Frame Camera to Tactical Overview ──
+  try {
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(sourceLon, sourceLat, 15000),
+      duration: 1.2,
+    });
+  } catch {
+    // Graceful camera fallback
+  }
 
   showPlumeActiveBanner(viewer);
 }
