@@ -1074,6 +1074,7 @@ CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
           lon: this.currentHazard.location?.longitude,
           frp: this.currentHazard.frp || (this.currentHazard.metrics?.find(m => m.label?.includes('FRP') || m.label?.includes('Power'))?.value) || 25.4,
           category: this.currentHazard.title || 'Thermal Incident',
+          facilityName: this.currentHazard.facility?.name || this.currentHazard.subtitle || 'Active Sector',
           flameTempC: this.currentHazard.flameTempC,
           flameTempK: this.currentHazard.flameTempK,
         });

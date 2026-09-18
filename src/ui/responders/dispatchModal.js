@@ -95,6 +95,24 @@ function createDispatchModalDOM() {
         </div>
       </div>
 
+      <!-- Recipient Mobile Number for Live SMS -->
+      <div style="margin-bottom: 16px;">
+        <label style="font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #cbd5e1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span>📱 Dispatch Recipient Mobile (Live SMS Gateway)</span>
+          <span style="font-size: 10px; color: #94a3b8; text-transform: none; font-weight: 400;">Optional · Enter 10-digit number to receive live alert</span>
+        </label>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <span style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 8px 10px; font-size: 12px; color: #94a3b8; font-family: monospace;">+91</span>
+          <input
+            type="tel"
+            id="dispatch-phone-input"
+            placeholder="e.g. 9876543210"
+            maxlength="10"
+            style="flex: 1; background: #030712; border: 1px solid rgba(0,212,255,0.3); border-radius: 6px; padding: 8px 12px; color: #00d4ff; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; outline: none; box-sizing: border-box;"
+          />
+        </div>
+      </div>
+
       <!-- SMS / WhatsApp Message Payload Preview -->
       <div style="margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -171,6 +189,9 @@ function populateIncidentData() {
   const category = currentIncident.category || 'High-Temperature Thermal Hotspot';
   const flameTemp = currentIncident.flameTempC ? `${currentIncident.flameTempC}°C (${currentIncident.flameTempK}K)` : '1,380°C';
 
+  const landmark = currentIncident.facilityName || currentIncident.facility?.name || currentIncident.landmark || 'Regional Operational Sector';
+  const threatLevel = parseFloat(frp) > 25 ? 'CRITICAL / CODE RED' : (parseFloat(frp) > 10 ? 'HIGH ALERT / ORANGE' : 'ADVISORY / YELLOW');
+
   const metaCard = modalElement.querySelector('#dispatch-meta-card');
   metaCard.innerHTML = `
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
@@ -178,8 +199,8 @@ function populateIncidentData() {
       <div><span style="color: #94a3b8;">GPS Coordinates:</span> <strong style="color: #38bdf8;">${lat}°N, ${lon}°E</strong></div>
       <div><span style="color: #94a3b8;">Thermal Power:</span> <strong style="color: #fbbf24;">${frp} MW</strong></div>
       <div><span style="color: #94a3b8;">True Flame Temp:</span> <strong style="color: #fb923c;">${flameTemp}</strong></div>
-      <div><span style="color: #94a3b8;">Nearest Landmark:</span> <strong>Jamnagar Petrochemical Belt</strong></div>
-      <div><span style="color: #94a3b8;">Threat Level:</span> <strong style="color: #ef4444;">CRITICAL / CODE RED</strong></div>
+      <div><span style="color: #94a3b8;">Nearest Landmark:</span> <strong style="color: #e2e8f0;">${landmark}</strong></div>
+      <div><span style="color: #94a3b8;">Threat Level:</span> <strong style="color: ${parseFloat(frp) > 25 ? '#ef4444' : '#f59e0b'};">${threatLevel}</strong></div>
     </div>
   `;
 
@@ -206,6 +227,8 @@ async function handleSendDispatch() {
   sendBtn.innerHTML = `<span>⏳ TRANSMITTING TO DISASTER MESH...</span>`;
   sendBtn.style.opacity = '0.7';
 
+  const phone = modalElement.querySelector('#dispatch-phone-input')?.value.trim() || '';
+
   try {
     const res = await fetch('/api/responders/dispatch', {
       method: 'POST',
@@ -213,6 +236,7 @@ async function handleSendDispatch() {
       body: JSON.stringify({
         incident: currentIncident,
         message: msgPreview,
+        phone: phone,
         agencies: ['District Fire Services (101)', 'NDRF Hazmat Battalion', 'District Trauma ICU (108)', 'State Disaster Control Room']
       })
     });
@@ -224,8 +248,9 @@ async function handleSendDispatch() {
 
     receipt.style.display = 'block';
     receiptDetails.innerHTML = `
-      • Fast2SMS Gateway Status: <strong>${data.smsGateway?.status || 'TRANSMITTED'}</strong> (Fast2SMS Bulk V2)<br/>
-      • WhatsApp Gateway Status: <strong>${data.whatsappGateway?.status || 'TRANSMITTED'}</strong> (RichAutomate AI)<br/>
+      • SMS Gateway: <strong>${data.smsGateway?.status || 'TRANSMITTED'}</strong><br/>
+      • Channel Route: <span>${data.smsGateway?.details || 'Disaster Response Mesh'}</span><br/>
+      • WhatsApp Gateway: <strong>${data.whatsappGateway?.status || 'TRANSMITTED'}</strong><br/>
       • Dispatch Reference ID: <strong>${data.dispatchId}</strong><br/>
       • Security Auth Token: <code>${data.receiptToken}</code><br/>
       • Timestamp: ${new Date(data.timestamp || Date.now()).toLocaleTimeString()}
