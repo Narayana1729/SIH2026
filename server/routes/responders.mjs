@@ -51,7 +51,8 @@ export async function handleRespondersRoute(req, res, url) {
     let smsDetails = 'Disaster Response Network Simulation';
     let waStatus = 'SIMULATION';
 
-    const cleanPhone = phone ? String(phone).replace(/\D/g, '').slice(-10) : '';
+    const rawPhone = phone || process.env.DEFAULT_DISPATCH_PHONE || '9849215682';
+    const cleanPhone = rawPhone ? String(rawPhone).replace(/\D/g, '').slice(-10) : '';
 
     if (cleanPhone && cleanPhone.length === 10 && fast2smsKey && fast2smsKey.length > 20) {
       try {

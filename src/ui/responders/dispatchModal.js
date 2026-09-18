@@ -213,6 +213,13 @@ GAUSSIAN PLUME BUFFER: 3.5 KM DOWNWIND (HAZMAT RISK)
 ACTION REQUIRED: Deploy immediate thermal containment and establish 2.5km cordon.
 DISPATCH ID: PYRO-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
 
+  // Load persistent phone if previously entered or configured
+  const phoneInput = modalElement.querySelector('#dispatch-phone-input');
+  if (phoneInput) {
+    const configuredPhone = localStorage.getItem('pyrosat_dispatch_phone') || (typeof import.meta !== 'undefined' && import.meta.env?.DEFAULT_DISPATCH_PHONE) || '9849215682';
+    phoneInput.value = configuredPhone;
+  }
+
   // Hide receipt box
   const receipt = modalElement.querySelector('#dispatch-receipt-box');
   receipt.style.display = 'none';
@@ -227,7 +234,11 @@ async function handleSendDispatch() {
   sendBtn.innerHTML = `<span>⏳ TRANSMITTING TO DISASTER MESH...</span>`;
   sendBtn.style.opacity = '0.7';
 
-  const phone = modalElement.querySelector('#dispatch-phone-input')?.value.trim() || '';
+  const phoneInput = modalElement.querySelector('#dispatch-phone-input');
+  const phone = phoneInput?.value.trim() || '';
+  if (phone) {
+    localStorage.setItem('pyrosat_dispatch_phone', phone);
+  }
 
   try {
     const res = await fetch('/api/responders/dispatch', {

@@ -41,6 +41,7 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.GOOGLE_MAPS_API_KEY': JSON.stringify(env.GOOGLE_MAPS_API_KEY || ''),
       'import.meta.env.CESIUM_ION_TOKEN': JSON.stringify(env.CESIUM_ION_TOKEN || ''),
       'import.meta.env.FIRMS_MAP_KEY': JSON.stringify(env.FIRMS_MAP_KEY || ''),
+      'import.meta.env.DEFAULT_DISPATCH_PHONE': JSON.stringify(env.DEFAULT_DISPATCH_PHONE || '9849215682'),
     },
     server: {
       port: parseInt(env.PORT || '8080', 10),
