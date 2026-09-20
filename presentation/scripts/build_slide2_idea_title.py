@@ -33,7 +33,6 @@ def find_ppt(name):
     return name
 
 def build_slide2_idea_title():
-    # Color Palette: Professional ATS-Clean Enterprise Palette
     DARK_NAVY = RGBColor(15, 23, 42)        # #0F172A
     CARD_DARK = RGBColor(30, 41, 59)        # #1E293B
     BORDER_DARK = RGBColor(51, 65, 85)      # #334155
@@ -41,19 +40,19 @@ def build_slide2_idea_title():
     CYAN_BLUE = RGBColor(56, 189, 248)      # #38BDF8
     WHITE = RGBColor(248, 250, 252)         # #F8FAFC
     HEADER_LINE = RGBColor(70, 130, 180)    # Steel blue
-    LINE_GRAY = RGBColor(226, 232, 240)     # #E2E8F0
     TEXT_MUTED = RGBColor(100, 116, 139)    # #64748B
     TEXT_CHARCOAL = RGBColor(51, 65, 85)    # #334155
-    LINK_BLUE = RGBColor(2, 132, 199)       # #0284C7
 
-    # Risk vs Solution Colors
-    RED_BG = RGBColor(254, 226, 226)        # #FEE2E2
-    RED_BORDER = RGBColor(239, 68, 68)      # #EF4444
-    RED_TEXT = RGBColor(185, 28, 28)        # #B91C1C
+    # Rich Risk vs Solution Colors (Matching Image 2)
+    RED_BG = RGBColor(254, 242, 242)        # #FEF2F2
+    RED_BORDER = RGBColor(254, 205, 211)    # #FECDD3
+    RED_TITLE = RGBColor(153, 27, 27)       # #991B1B
+    RED_BADGE = RGBColor(225, 29, 72)       # #E11D48
 
-    GREEN_BG = RGBColor(220, 252, 231)      # #DCFCE7
-    GREEN_BORDER = RGBColor(34, 197, 94)    # #22C55E
-    GREEN_TEXT = RGBColor(21, 128, 61)      # #15803D
+    GREEN_BG = RGBColor(240, 253, 244)      # #F0FDF4
+    GREEN_BORDER = RGBColor(187, 247, 208)  # #BBF7D0
+    GREEN_TITLE = RGBColor(22, 101, 52)     # #166534
+    GREEN_BADGE = RGBColor(22, 163, 74)     # #16A34A
 
     for ppt_base in ['SIH2026_PyroSat_Submission.pptx', 'SIH2026-IDEA-Presentation-Format.pptx']:
         ppt_path = find_ppt(ppt_base)
@@ -130,7 +129,6 @@ def build_slide2_idea_title():
 
         curr_y = card_start_y
         for c in left_cards_data:
-            # Rounded card background
             card_bg = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left_x, curr_y, left_w, c["h"])
             card_bg.fill.solid(); card_bg.fill.fore_color.rgb = CARD_DARK
             card_bg.line.color.rgb = BORDER_DARK
@@ -201,7 +199,6 @@ def build_slide2_idea_title():
         center_x = Inches(4.22)
         center_w = Inches(4.88)
 
-        # Title for center column
         tb_ctitle = slide2.shapes.add_textbox(center_x, Inches(1.22), center_w, Inches(0.26))
         tf_ctitle = tb_ctitle.text_frame
         tf_ctitle.margin_left = tf_ctitle.margin_right = tf_ctitle.margin_top = tf_ctitle.margin_bottom = 0
@@ -213,16 +210,14 @@ def build_slide2_idea_title():
         p_ct.font.bold = True
         p_ct.font.color.rgb = RGBColor(30, 58, 138)
 
-        # Insert Hero 3D 4-Layer Diagram
         hero_img = find_asset("orbital_to_ground_4layers.jpg")
         img_top = Inches(1.48)
         img_w = Inches(4.88)
-        img_h = Inches(4.23)  # Aspect ratio ~1.153
+        img_h = Inches(4.23)
 
         if os.path.exists(hero_img):
             slide2.shapes.add_picture(hero_img, center_x, img_top, width=img_w, height=img_h)
 
-        # Caption / Technical Summary strip under image
         cap_y = img_top + img_h + Inches(0.06)
         cap_h = Inches(0.96)
         cap_bg = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, center_x, cap_y, center_w, cap_h)
@@ -250,7 +245,7 @@ def build_slide2_idea_title():
         p_cp2.font.color.rgb = TEXT_CHARCOAL
 
         # ---------------------------------------------------------------------
-        # 5. RIGHT COLUMN: Risk vs Solution Matrix + Tactical Output Callout
+        # 5. RIGHT COLUMN: Rich Illustrated Risk vs Solution Cards (Matching Image 2)
         # ---------------------------------------------------------------------
         right_x = Inches(9.26)
         right_w = Inches(3.70)
@@ -267,96 +262,126 @@ def build_slide2_idea_title():
         p_rt.font.bold = True
         p_rt.font.color.rgb = RGBColor(153, 27, 27)
 
-        pairs_data = [
-            ("Coarse 375m Satellite Pixels", "Sub-Pixel Planck Pyrometry (Tf, Af)"),
-            ("Routine Flares Mistaken as Fires", "2-Stage Hierarchical ML Shield"),
-            ("Blind Toxic Gas Cloud Inhalation", "3D Gaussian Plume Standoff Rings"),
-            ("Delayed Multi-Agency Dispatch", "1-Click Automated NDRF Action Plan")
+        # 4 Illustrated Comparison Rows
+        cards_pairs = [
+            {
+                "num": "01",
+                "risk_title": "Coarse 375m Pixels",
+                "risk_desc": "Thermal hotspots blurred over large areas, hiding true fire temp & size.",
+                "risk_img": find_asset("thumb_risk_1.png"),
+                "sol_title": "Sub-Pixel Planck (Tf, Af)",
+                "sol_desc": "Dual-band IR physics extracts flame temp (Tf > 1100 K) & exact burning area.",
+                "sol_img": find_asset("thumb_sol_1.png"),
+            },
+            {
+                "num": "02",
+                "risk_title": "Routine Flares False Alarms",
+                "risk_desc": "Normal industrial flaring and persistent heat sources trigger false alarms.",
+                "risk_img": find_asset("thumb_risk_2.png"),
+                "sol_title": "2-Stage ML Shield",
+                "sol_desc": "10m ESA Sentinel-1/2 & 2,000+ plant database filter routine flaring.",
+                "sol_img": find_asset("thumb_sol_2.png"),
+            },
+            {
+                "num": "03",
+                "risk_title": "Blind Toxic Gas Spread",
+                "risk_desc": "No prediction of how poisonous gas drifts, putting communities in path of cloud.",
+                "risk_img": find_asset("thumb_risk_3.png"),
+                "sol_title": "3D Gaussian Plume Rings",
+                "sol_desc": "Live wind vectors & dispersion equations project 3D Red/Yellow/Green hazard zones.",
+                "sol_img": find_asset("thumb_sol_3.png"),
+            },
+            {
+                "num": "04",
+                "risk_title": "Delayed Agency Response",
+                "risk_desc": "Information shared late via calls, slowing down response & increasing impact.",
+                "risk_img": find_asset("thumb_risk_4.png"),
+                "sol_title": "1-Click Automated IAP",
+                "sol_desc": "Automated Incident Action Plan with location alerts & WhatsApp dispatch.",
+                "sol_img": find_asset("thumb_sol_4.png"),
+            }
         ]
 
-        curr_pair_y = Inches(1.50)
-        pair_h = Inches(0.68)
-        pill_w = (right_w - Inches(0.32)) / 2.0  # ~1.69 in each
+        curr_card_y = Inches(1.50)
+        card_h = Inches(1.23)
+        col_w = Inches(1.72)
+        arrow_w = Inches(0.24)
 
-        for risk, sol in pairs_data:
-            # Red Risk Pill
-            p_red = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, right_x, curr_pair_y, pill_w, pair_h)
-            p_red.fill.solid(); p_red.fill.fore_color.rgb = RED_BG
-            p_red.line.color.rgb = RED_BORDER
-            p_red.line.width = Pt(1)
-            tf_r = p_red.text_frame
-            tf_r.word_wrap = True
-            tf_r.margin_left = tf_r.margin_right = tf_r.margin_top = tf_r.margin_bottom = Inches(0.04)
-            p_rtxt = tf_r.paragraphs[0]
-            p_rtxt.text = f"🔴 {risk}"
-            p_rtxt.alignment = PP_ALIGN.CENTER
-            p_rtxt.font.name = "Arial"
-            p_rtxt.font.size = Pt(7.5)
-            p_rtxt.font.bold = True
-            p_rtxt.font.color.rgb = RED_TEXT
+        for pair in cards_pairs:
+            # === LEFT: RED RISK CARD ===
+            r_box = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, right_x, curr_card_y, col_w, card_h)
+            r_box.fill.solid(); r_box.fill.fore_color.rgb = RED_BG
+            r_box.line.color.rgb = RED_BORDER
+            r_box.line.width = Pt(1)
 
-            # Connector icon ⇄
-            tb_mid = slide2.shapes.add_textbox(right_x + pill_w, curr_pair_y + Inches(0.16), Inches(0.32), Inches(0.36))
-            tf_mid = tb_mid.text_frame; tf_mid.margin_left = tf_mid.margin_right = tf_mid.margin_top = tf_mid.margin_bottom = 0
-            p_mtxt = tf_mid.paragraphs[0]
-            p_mtxt.text = "⇄"
-            p_mtxt.alignment = PP_ALIGN.CENTER
-            p_mtxt.font.name = "Arial"
-            p_mtxt.font.size = Pt(12)
-            p_mtxt.font.bold = True
-            p_mtxt.font.color.rgb = TEXT_MUTED
+            # Risk Thumbnail
+            if os.path.exists(pair["risk_img"]):
+                slide2.shapes.add_picture(pair["risk_img"], right_x + Inches(0.06), curr_card_y + Inches(0.06), width=Inches(0.44), height=Inches(0.32))
 
-            # Green Solution Pill
-            p_green = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, right_x + pill_w + Inches(0.32), curr_pair_y, pill_w, pair_h)
-            p_green.fill.solid(); p_green.fill.fore_color.rgb = GREEN_BG
-            p_green.line.color.rgb = GREEN_BORDER
-            p_green.line.width = Pt(1)
-            tf_g = p_green.text_frame
-            tf_g.word_wrap = True
-            tf_g.margin_left = tf_g.margin_right = tf_g.margin_top = tf_g.margin_bottom = Inches(0.04)
-            p_gtxt = tf_g.paragraphs[0]
-            p_gtxt.text = f"🟢 {sol}"
-            p_gtxt.alignment = PP_ALIGN.CENTER
-            p_gtxt.font.name = "Arial"
-            p_gtxt.font.size = Pt(7.5)
-            p_gtxt.font.bold = True
-            p_gtxt.font.color.rgb = GREEN_TEXT
+            # Risk Header with Badge
+            tb_rh = slide2.shapes.add_textbox(right_x + Inches(0.53), curr_card_y + Inches(0.04), col_w - Inches(0.56), Inches(0.38))
+            tf_rh = tb_rh.text_frame; tf_rh.word_wrap = True; tf_rh.margin_left = tf_rh.margin_right = tf_rh.margin_top = tf_rh.margin_bottom = 0
+            p_rh = tf_rh.paragraphs[0]
+            p_rh.text = f"{pair['num']}  {pair['risk_title']}"
+            p_rh.font.name = "Arial"
+            p_rh.font.size = Pt(7.2)
+            p_rh.font.bold = True
+            p_rh.font.color.rgb = RED_TITLE
 
-            curr_pair_y += pair_h + Inches(0.12)
+            # Risk Description
+            tb_rd = slide2.shapes.add_textbox(right_x + Inches(0.06), curr_card_y + Inches(0.42), col_w - Inches(0.12), card_h - Inches(0.46))
+            tf_rd = tb_rd.text_frame; tf_rd.word_wrap = True; tf_rd.margin_left = tf_rd.margin_right = tf_rd.margin_top = tf_rd.margin_bottom = 0
+            p_rd = tf_rd.paragraphs[0]
+            p_rd.text = pair["risk_desc"]
+            p_rd.font.name = "Arial"
+            p_rd.font.size = Pt(6.4)
+            p_rd.font.color.rgb = RGBColor(75, 85, 99)
 
-        # Tactical Visual Callout Box at bottom right
-        callout_y = curr_pair_y + Inches(0.04)
-        callout_h = Inches(1.95)
-        
-        # Check if prototype screenshot exists to insert
-        plume_img = find_asset("gaussian_plume_hazard_rings.jpg")
-        if os.path.exists(plume_img):
-            img_w = Inches(1.68)
-            img_h = Inches(1.85)
-            slide2.shapes.add_picture(plume_img, right_x, callout_y, width=img_w, height=img_h)
+            # === MIDDLE: CONNECTING ARROW ===
+            tb_arr = slide2.shapes.add_textbox(right_x + col_w, curr_card_y + Inches(0.42), arrow_w, Inches(0.30))
+            tf_arr = tb_arr.text_frame; tf_arr.margin_left = tf_arr.margin_right = tf_arr.margin_top = tf_arr.margin_bottom = 0
+            p_arr = tf_arr.paragraphs[0]
+            p_arr.text = "➔"
+            p_arr.alignment = PP_ALIGN.CENTER
+            p_arr.font.name = "Arial"
+            p_arr.font.size = Pt(11)
+            p_arr.font.bold = True
+            p_arr.font.color.rgb = TEXT_MUTED
 
-            # Caption beside image
-            tb_vcap = slide2.shapes.add_textbox(right_x + img_w + Inches(0.10), callout_y, right_w - img_w - Inches(0.10), callout_h)
-            tf_vcap = tb_vcap.text_frame
-            tf_vcap.word_wrap = True
-            tf_vcap.margin_left = tf_vcap.margin_right = tf_vcap.margin_top = tf_vcap.margin_bottom = 0
-            
-            p_vc1 = tf_vcap.paragraphs[0]
-            p_vc1.text = "Tactical Validation:"
-            p_vc1.font.name = "Arial"
-            p_vc1.font.size = Pt(8.5)
-            p_vc1.font.bold = True
-            p_vc1.font.color.rgb = DARK_NAVY
-            p_vc1.space_after = Pt(2)
+            # === RIGHT: GREEN SOLUTION CARD ===
+            sol_x = right_x + col_w + arrow_w
+            s_box = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, sol_x, curr_card_y, col_w, card_h)
+            s_box.fill.solid(); s_box.fill.fore_color.rgb = GREEN_BG
+            s_box.line.color.rgb = GREEN_BORDER
+            s_box.line.width = Pt(1)
 
-            p_vc2 = tf_vcap.add_paragraph()
-            p_vc2.text = "Real-time 3D Gaussian toxic plume calculated using live Open-Meteo wind vectors with automated ERPG/IDLH evacuation rings."
-            p_vc2.font.name = "Arial"
-            p_vc2.font.size = Pt(7.2)
-            p_vc2.font.color.rgb = TEXT_CHARCOAL
+            # Solution Thumbnail
+            if os.path.exists(pair["sol_img"]):
+                slide2.shapes.add_picture(pair["sol_img"], sol_x + Inches(0.06), curr_card_y + Inches(0.06), width=Inches(0.44), height=Inches(0.32))
+
+            # Solution Header with Badge
+            tb_sh = slide2.shapes.add_textbox(sol_x + Inches(0.53), curr_card_y + Inches(0.04), col_w - Inches(0.56), Inches(0.38))
+            tf_sh = tb_sh.text_frame; tf_sh.word_wrap = True; tf_sh.margin_left = tf_sh.margin_right = tf_sh.margin_top = tf_sh.margin_bottom = 0
+            p_sh = tf_sh.paragraphs[0]
+            p_sh.text = f"{pair['num']}  {pair['sol_title']}"
+            p_sh.font.name = "Arial"
+            p_sh.font.size = Pt(7.2)
+            p_sh.font.bold = True
+            p_sh.font.color.rgb = GREEN_TITLE
+
+            # Solution Description
+            tb_sd = slide2.shapes.add_textbox(sol_x + Inches(0.06), curr_card_y + Inches(0.42), col_w - Inches(0.12), card_h - Inches(0.46))
+            tf_sd = tb_sd.text_frame; tf_sd.word_wrap = True; tf_sd.margin_left = tf_sd.margin_right = tf_sd.margin_top = tf_sd.margin_bottom = 0
+            p_sd = tf_sd.paragraphs[0]
+            p_sd.text = pair["sol_desc"]
+            p_sd.font.name = "Arial"
+            p_sd.font.size = Pt(6.4)
+            p_sd.font.color.rgb = RGBColor(55, 65, 81)
+
+            curr_card_y += card_h + Inches(0.08)
 
         prs.save(ppt_path)
-        print(f"Successfully updated Slide 2 in {ppt_path} with 3D 4-Layer Hero Image!")
+        print(f"Successfully updated Slide 2 in {ppt_path} with Illustrated Risk vs Solution Cards!")
 
 if __name__ == '__main__':
     build_slide2_idea_title()
