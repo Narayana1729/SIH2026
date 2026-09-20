@@ -179,8 +179,8 @@ def build_slide2_idea_title():
 
         p_pl1 = tf_proto.add_paragraph()
         r_pl1 = p_pl1.add_run()
-        r_pl1.text = "🔗 Live Cloud Platform: pyrosat-intelligence.onrender.com"
-        r_pl1.hyperlink.address = "https://pyrosat-intelligence.onrender.com"
+        r_pl1.text = "🔗 Live Cloud Platform: sri-pyrosat.onrender.com"
+        r_pl1.hyperlink.address = "https://sri-pyrosat.onrender.com"
         r_pl1.font.name = "Arial"
         r_pl1.font.size = Pt(7.8)
         r_pl1.font.bold = True

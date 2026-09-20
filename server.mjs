@@ -16,6 +16,7 @@ try {
     preview: {
       port,
       host,
+      allowedHosts: true,
     },
   });
 

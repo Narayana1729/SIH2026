@@ -46,10 +46,12 @@ export default defineConfig(({ mode }) => {
     server: {
       port: parseInt(env.PORT || '8080', 10),
       host: env.HOST || '0.0.0.0',
+      allowedHosts: true,
     },
     preview: {
       port: parseInt(env.PORT || '8080', 10),
       host: env.HOST || '0.0.0.0',
+      allowedHosts: true,
     },
     build: {
       target: 'esnext',
