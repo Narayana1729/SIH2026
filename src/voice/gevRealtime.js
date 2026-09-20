@@ -1447,12 +1447,13 @@ export class GevRealtimeController {
     this.ui.root.dataset.status = status;
     this.ui.root.classList.add('error-dismissed');
     this.updateVoiceButtonLabel();
-    this.ui.status.textContent = STATUS[status] || STATUS.idle;
+    const isUnavail = detail?.toLowerCase().includes('unavailable') || detail?.toLowerCase().includes('support');
+    this.ui.status.textContent = isUnavail ? 'STANDBY' : (STATUS[status] || STATUS.idle);
     const resolvedDetail = status === 'listening' && this.pushToTalkMode
       ? (this.pushToTalkKeyHeld ? 'Release Space to send' : 'Hold Space to talk')
       : detail;
     const primaryDetail = status === 'error'
-      ? 'VOICE UNAVAILABLE'
+      ? (isUnavail ? 'MIC STANDBY' : 'VOICE UNAVAILABLE')
       : (resolvedDetail || (status === 'idle' ? 'VOICE STANDBY' : 'VOICE ACTIVE'));
     this.ui.detail.textContent = primaryDetail;
     this.ui.detail.title = primaryDetail;

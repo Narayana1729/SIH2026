@@ -2046,6 +2046,8 @@ export class DataLayerManager {
       toggle.className = `data-toggle-btn${layer.enabled ? ' active' : ''}`;
       this._syncToggleButton(toggle, layer);
       toggle.addEventListener('click', async () => {
+        const container = this._toggleContainer;
+        const savedScroll = container?.scrollTop ?? 0;
         toggle.disabled = true;
         try {
           const nextState = !this.isEnabled(layer.id);
@@ -2059,6 +2061,9 @@ export class DataLayerManager {
           console.warn(`[Data] ${layer.id} toggle error:`, error);
         } finally {
           toggle.disabled = false;
+          if (container && Math.abs(container.scrollTop - savedScroll) > 1) {
+            container.scrollTop = savedScroll;
+          }
         }
       });
 
@@ -2184,6 +2189,7 @@ export class DataLayerManager {
 
   _refreshTogglePanel() {
     if (!this._toggleContainer) return;
+    const prevScrollTop = this._toggleContainer.scrollTop;
     // Skip DOM churn while hidden; visibilitychange (main.js) triggers one
     // refresh on return. (perf wave 2)
     if (typeof document !== 'undefined' && document.hidden) {
@@ -2210,6 +2216,9 @@ export class DataLayerManager {
       }
 
       this._syncRowControls(row.querySelector('.data-toggle-controls'), layer);
+    }
+    if (this._toggleContainer && Math.abs(this._toggleContainer.scrollTop - prevScrollTop) > 1) {
+      this._toggleContainer.scrollTop = prevScrollTop;
     }
   }
 

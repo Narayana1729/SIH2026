@@ -18,7 +18,7 @@ export class WildfireLayer extends BaseHazardLayer {
     this.hotspots = [];
     this.selectedSpreadEntities = [];
     this.currentDate = null;
-    this.activeCategoryFilter = 'ALL';
+    this.activeCategoryFilter = 'INDUSTRIAL';
   }
 
   async initialize(viewer, layerManager) {
@@ -37,11 +37,11 @@ export class WildfireLayer extends BaseHazardLayer {
 
     // Listen to live category segregation filter changes (default flyTo: false to maintain user viewport)
     eventBus.on(SRI_EVENTS.CATEGORY_FILTER_CHANGED, (evt) => {
-      this.applyCategoryFilter(evt?.category || 'ALL', { flyTo: Boolean(evt?.flyTo) });
+      this.applyCategoryFilter(evt?.category || 'INDUSTRIAL', { flyTo: Boolean(evt?.flyTo) });
     });
   }
 
-  applyCategoryFilter(filterKey = 'ALL', options = {}) {
+  applyCategoryFilter(filterKey = 'INDUSTRIAL', options = {}) {
     this.activeCategoryFilter = filterKey;
     if (!this.dataSource) return;
 
@@ -65,6 +65,16 @@ export class WildfireLayer extends BaseHazardLayer {
         show = (cat !== ThermalCategories.INDUSTRIAL_FLARE &&
                 cat !== ThermalCategories.INDUSTRIAL_PROCESS &&
                 cat !== ThermalCategories.INDUSTRIAL_DISASTER);
+      } else if (filterKey === 'FLARES' || filterKey === ThermalCategories.INDUSTRIAL_FLARE) {
+        show = (cat === ThermalCategories.INDUSTRIAL_FLARE);
+      } else if (filterKey === 'DISASTER' || filterKey === ThermalCategories.INDUSTRIAL_DISASTER) {
+        show = (cat === ThermalCategories.INDUSTRIAL_DISASTER);
+      } else if (filterKey === 'WILDFIRE' || filterKey === ThermalCategories.FOREST_WILDFIRE) {
+        show = (cat === ThermalCategories.FOREST_WILDFIRE);
+      } else if (filterKey === 'AGRI' || filterKey === ThermalCategories.AGRICULTURAL_BURNING) {
+        show = (cat === ThermalCategories.AGRICULTURAL_BURNING);
+      } else if (filterKey === 'MINING' || filterKey === ThermalCategories.MINING_SMELTING) {
+        show = (cat === ThermalCategories.MINING_SMELTING);
       } else {
         show = (cat === filterKey);
       }
@@ -120,7 +130,7 @@ export class WildfireLayer extends BaseHazardLayer {
 
     try {
       // Fetch South Asia / Sri Lanka / India Bounding Box FIRMS fires (for specific date if provided)
-      const data = await sriVisionApi.getFirmsHotspots('65,5,100,38', 1, this.currentDate);
+      const data = await sriVisionApi.getFirmsHotspots('65,5,100,38', 2, this.currentDate);
       const rows = data.fires || data.records || data.data || [];
       this.hotspots = rows.slice(0, 400); // Guarded batch
 
@@ -161,8 +171,8 @@ export class WildfireLayer extends BaseHazardLayer {
         let customColor = getSeverityCesiumColor(hazard.severity);
 
         if (category === ThermalCategories.INDUSTRIAL_DISASTER) {
-          categoryIcon = '💥';
-          customColor = Cesium.Color.fromCssColorString('#ef4444'); // Crimson Red
+          categoryIcon = '🏭';
+          customColor = Cesium.Color.fromCssColorString('#ef4444'); // Crimson Red Industrial
         } else if (category === ThermalCategories.INDUSTRIAL_FLARE) {
           categoryIcon = '⚡';
           customColor = Cesium.Color.fromCssColorString('#a855f7'); // Electric Violet Flare

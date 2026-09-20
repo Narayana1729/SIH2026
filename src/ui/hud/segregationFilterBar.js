@@ -12,6 +12,7 @@
  *   - MINING & COAL SEAMS (Smelting & open-cast coal fires)
  */
 
+import * as Cesium from 'cesium';
 import { tacticalAudio } from '../../core/audio.js';
 import { eventBus, SRI_EVENTS } from '../../core/eventBus.js';
 
@@ -19,15 +20,15 @@ export const FILTER_CATEGORIES = Object.freeze([
   { id: 'ALL', label: 'ALL', icon: '🌐', color: '#00d4ff' },
   { id: 'INDUSTRIAL', label: 'INDUSTRIAL', icon: '🏭', color: '#38bdf8' },
   { id: 'INDUSTRIAL_FLARE', label: 'FLARES', icon: '⚡', color: '#a855f7' },
-  { id: 'INDUSTRIAL_DISASTER', label: 'DISASTER', icon: '💥', color: '#ef4444' },
   { id: 'FOREST_WILDFIRE', label: 'WILDFIRE', icon: '🌲', color: '#ea580c' },
   { id: 'AGRICULTURAL_BURNING', label: 'AGRI', icon: '🌾', color: '#facc15' },
   { id: 'MINING_SMELTING', label: 'MINING', icon: '⛏️', color: '#fb923c' },
 ]);
 
 export class SegregationFilterBar {
-  constructor(hazardLayerManager) {
+  constructor(hazardLayerManager, viewer = null) {
     this.hazardLayerManager = hazardLayerManager;
+    this.viewer = viewer || (typeof window !== 'undefined' ? window.viewer : null);
     this.container = document.createElement('div');
     this.container.id = 'sri-segregation-bar';
     this.container.className = 'sri-segregation-bar';
@@ -38,7 +39,6 @@ export class SegregationFilterBar {
       ALL: 0,
       INDUSTRIAL: 0,
       INDUSTRIAL_FLARE: 0,
-      INDUSTRIAL_DISASTER: 0,
       FOREST_WILDFIRE: 0,
       AGRICULTURAL_BURNING: 0,
       MINING_SMELTING: 0,
@@ -56,10 +56,14 @@ export class SegregationFilterBar {
     });
   }
 
-  setFilter(categoryKey) {
-    if (this.activeFilter === categoryKey) return;
+  setFilter(categoryKey, options = {}) {
+    if (options.zoomOut !== false) {
+      this._zoomToIndia();
+    }
     this.activeFilter = categoryKey;
-    tacticalAudio.playClick();
+    if (options.silent !== true) {
+      tacticalAudio.playClick();
+    }
 
     // Update active class on DOM buttons
     this.container.querySelectorAll('.sri-filter-chip').forEach((btn) => {
@@ -71,13 +75,31 @@ export class SegregationFilterBar {
       }
     });
 
-    // Broadcast filter change across the application (no zoom, retain user view)
+    // Broadcast filter change across the application
     eventBus.emit(SRI_EVENTS.CATEGORY_FILTER_CHANGED, { category: categoryKey, flyTo: false });
 
     // Directly trigger WildfireLayer if accessible
     const wildfireLayer = this.hazardLayerManager?.getLayer('hazard-wildfire');
     if (wildfireLayer?.applyCategoryFilter) {
       wildfireLayer.applyCategoryFilter(categoryKey, { flyTo: false });
+    }
+  }
+
+  _zoomToIndia() {
+    const v = this.viewer || (typeof window !== 'undefined' ? window.viewer : null);
+    if (!v?.camera) return;
+    try {
+      v.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(78.9629, 21.5000, 3600000),
+        orientation: {
+          heading: Cesium.Math.toRadians(0),
+          pitch: Cesium.Math.toRadians(-88),
+          roll: 0.0,
+        },
+        duration: 1.5,
+      });
+    } catch {
+      // Fallback if Cesium camera is unavailable
     }
   }
 
@@ -138,52 +160,54 @@ export class SegregationFilterBar {
     style.textContent = `
       #sri-segregation-bar {
         position: fixed;
-        top: 16px;
+        top: 14px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 995;
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
         pointer-events: auto;
         user-select: none;
+        max-width: calc(100vw - 520px);
       }
       .sri-segregation-inner {
         display: flex;
         align-items: center;
-        gap: 8px;
-        background: rgba(10, 14, 24, 0.88);
+        gap: 5px;
+        background: rgba(10, 14, 24, 0.92);
         backdrop-filter: blur(20px) saturate(1.4);
         -webkit-backdrop-filter: blur(20px) saturate(1.4);
         border: 1px solid rgba(0, 212, 255, 0.22);
         border-radius: 999px;
-        padding: 4px 10px;
+        padding: 3px 8px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65), 0 0 16px rgba(0, 212, 255, 0.1) inset;
+        white-space: nowrap;
         transition: all 200ms ease;
       }
       .sri-segregation-kicker {
-        font-size: 9px;
+        font-size: 8px;
         font-weight: 800;
-        letter-spacing: 1.5px;
+        letter-spacing: 1.2px;
         color: #00d4ff;
         text-transform: uppercase;
-        margin-right: 4px;
+        margin-right: 2px;
       }
       .sri-filter-list {
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 4px;
       }
       .sri-filter-chip {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
+        gap: 4px;
         background: rgba(255, 255, 255, 0.04);
         border: 1px solid rgba(255, 255, 255, 0.08);
         color: #cbd5e1;
         border-radius: 999px;
-        padding: 3px 9px;
-        font-size: 10px;
+        padding: 2px 7px;
+        font-size: 9.5px;
         font-weight: 600;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.4px;
         cursor: pointer;
         transition: all 180ms ease;
       }
@@ -197,27 +221,33 @@ export class SegregationFilterBar {
         background: rgba(0, 212, 255, 0.15);
         border-color: var(--chip-accent, #00d4ff);
         color: #ffffff;
-        box-shadow: 0 0 12px var(--chip-accent, #00d4ff), 0 0 4px var(--chip-accent, #00d4ff) inset;
+        box-shadow: 0 0 10px var(--chip-accent, #00d4ff), 0 0 3px var(--chip-accent, #00d4ff) inset;
       }
       .sri-filter-icon {
-        font-size: 11px;
+        font-size: 10px;
       }
       .sri-filter-count {
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.55);
         border: 1px solid var(--chip-accent, rgba(255, 255, 255, 0.2));
         border-radius: 999px;
-        padding: 1px 5px;
-        font-size: 9px;
+        padding: 0 4px;
+        font-size: 8.5px;
         font-weight: 700;
         color: var(--chip-accent, #00d4ff);
         margin-left: 2px;
       }
-      @media (max-width: 900px) {
-        #sri-segregation-bar {
-          top: 68px;
-          scale: 0.85;
+      @media (max-width: 1250px) {
+        .sri-segregation-kicker {
+          display: none;
         }
       }
+      @media (max-width: 1050px) {
+        #sri-segregation-bar {
+          top: 56px;
+          left: 50%;
+          transform: translateX(-50%);
+          max-width: 90vw;
+        }
     `;
     document.head.appendChild(style);
   }

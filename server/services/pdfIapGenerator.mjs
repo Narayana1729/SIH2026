@@ -14,6 +14,7 @@ import { evaluateProtectedAreaThreat } from '../../src/services/protectedAreasSe
 import { infrastructureRegistry } from '../../src/gis/infrastructureRegistry.js';
 import { cameoHazmatRegistry } from '../../src/hazmat/cameoHazmatRegistry.js';
 import { findCategorizedRespondersNearby } from '../../src/disasters/responders/emergencyResponders.js';
+import { estimateCivilianExposure } from '../../src/analytics/worldpopExposureEstimator.js';
 
 /**
  * Generate official 6-Page Incident Action Plan PDF as a Buffer.
@@ -67,6 +68,16 @@ export async function generateIncidentActionPlanPdf(incident = {}) {
       const chemicals = cameoHazmatRegistry.getChemicalsForSector(sector);
       const primaryChem = chemicals[0] || cameoHazmatRegistry.chemicals[0];
       const responders = findCategorizedRespondersNearby(lat, lon, 60.0);
+      const civilianExposure = estimateCivilianExposure({
+        latitude: lat,
+        longitude: lon,
+        zone1RadiusKm: (primaryChem.initial_isolation_m || 800) / 1000,
+        zone2DistanceKm: (primaryChem.downwind_evac_day_m || 1600) / 1000,
+        zone3DistanceKm: 4.5,
+        windSpeedMps: Number(windSpeedMps) || 4.0,
+        stabilityClass: 'C',
+        landCover: incident.facility?.sector ? 'industrial' : (incident.is_industrial ? 'industrial' : 'forest'),
+      });
 
       // Palettes & Styling Helpers
       const primaryColor = '#991B1B'; // Crimson Red
@@ -390,6 +401,20 @@ export async function generateIncidentActionPlanPdf(incident = {}) {
         'SIMULATED SCENARIO PROJECTION (HYPOTHETICAL OPERATOR RUN):\n' +
         'Under a secondary surge condition (+15 m/s wind gusts and 2.5x emission release), toxic concentration thresholds expand to 4.2 km downwind, intersecting the regional rail corridor and agricultural settlements. Immediate preparation of mutual aid backup is mandatory.',
         48, y + 10, { width: 495, lineGap: 3 }
+      );
+
+      // WorldPop Civilian Exposure Section
+      y += 75;
+      doc.fontSize(9.5).font('Helvetica-Bold').fillColor(secondaryColor).text('WORLDPOP CIVILIAN EXPOSURE & AT-RISK POPULATION HEADCOUNTS [CALCULATED]', 40, y);
+      y += 15;
+      doc.rect(40, y, 515, 65).fill(lightBg).stroke(borderColor);
+      doc.font('Helvetica-Bold').fontSize(8).fillColor(primaryColor).text(`POPULATION PROFILE: ${civilianExposure.populationProfile.regionName} (${civilianExposure.populationProfile.densityPerKm2} people/km²)`, 48, y + 8);
+      doc.font('Helvetica').fontSize(7.5).fillColor(darkText).text(
+        `• Zone 1 Immediate Danger (0 to ${((primaryChem.initial_isolation_m || 800) / 1000).toFixed(1)} km): ${civilianExposure.zones.zone1_immediate_danger.formattedHeadcount} — Mandatory Evacuation & Cordon\n` +
+        `• Zone 2 Downwind Plume (${((primaryChem.initial_isolation_m || 800) / 1000).toFixed(1)} to ${((primaryChem.downwind_evac_day_m || 1600) / 1000).toFixed(1)} km): ${civilianExposure.zones.zone2_downwind_evacuation.formattedHeadcount} — Perpendicular Evacuation Axis\n` +
+        `• Zone 3 Advisory (to 4.5 km): ${civilianExposure.zones.zone3_air_quality_advisory.formattedHeadcount} — Shelter-in-Place & Air Filtration\n` +
+        `• Vulnerable Groups: ~${civilianExposure.vulnerableDemographics.childrenUnderFive.toLocaleString()} Children (<5 yrs) | ~${civilianExposure.vulnerableDemographics.elderlyOverSixty.toLocaleString()} Elderly (>60 yrs) | ~${civilianExposure.vulnerableDemographics.estimatedSchoolsInCorridor} Educational Facilities`,
+        48, y + 22, { width: 495, lineGap: 2.5 }
       );
 
       drawFooter(4);

@@ -48,10 +48,10 @@ const REFRESH_INTERVAL_MS = 600_000;
  * (hard cap MAX_AMBIENT_LABELS) — there are no per-band label knobs.
  */
 const LOD_LEVELS = [
-  { id: 'global', minHeight: 9000000, mode: 'cells', gridDegrees: 2.0, maxCells: 1800, labelDistance: 12000000 },
-  { id: 'regional', minHeight: 3000000, mode: 'cells', gridDegrees: 1.0, maxCells: 3600, labelDistance: 8500000 },
-  { id: 'local', minHeight: 750000, mode: 'detections', maxDetections: 2500, labelDistance: 4500000 },
-  { id: 'close', minHeight: 0, mode: 'detections', maxDetections: 3000, labelDistance: 1800000 },
+  { id: 'global', minHeight: 12000000, mode: 'cells', gridDegrees: 2.0, maxCells: 1800, labelDistance: 14000000 },
+  { id: 'regional', minHeight: 2500000, mode: 'detections', maxDetections: 3500, labelDistance: 7500000 },
+  { id: 'local', minHeight: 750000, mode: 'detections', maxDetections: 3500, labelDistance: 4500000 },
+  { id: 'close', minHeight: 0, mode: 'detections', maxDetections: 4000, labelDistance: 1800000 },
 ];
 const LOD_CHECK_MS = 650;
 /** +/-10% hysteresis on LOD band edges so slow zooms don't thrash rebuilds. */

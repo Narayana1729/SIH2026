@@ -35,7 +35,7 @@ import {
 } from '../overlays/worldOverlay.js';
 import { requestWorldFocus } from '../worldFocus.js';
 import { eventBus, SRI_EVENTS } from '../core/eventBus.js';
-import { classifyThermalIncident } from '../intelligence/thermalClassifier.js';
+import { classifyThermalIncident, ThermalCategories } from '../intelligence/thermalClassifier.js';
 
 /** Same-origin live-fires proxy (vite.config.js firmsProxy — key stays server-side). */
 const FIRMS_API_URL = '/api/firms';
@@ -50,10 +50,10 @@ const REFRESH_INTERVAL_MS = 600_000;
  * (hard cap MAX_AMBIENT_LABELS) — there are no per-band label knobs.
  */
 const LOD_LEVELS = [
-  { id: 'global', minHeight: 9000000, mode: 'cells', gridDegrees: 2.0, maxCells: 1800, labelDistance: 12000000 },
-  { id: 'regional', minHeight: 3000000, mode: 'cells', gridDegrees: 1.0, maxCells: 3600, labelDistance: 8500000 },
-  { id: 'local', minHeight: 750000, mode: 'detections', maxDetections: 2500, labelDistance: 4500000 },
-  { id: 'close', minHeight: 0, mode: 'detections', maxDetections: 3000, labelDistance: 1800000 },
+  { id: 'global', minHeight: 12000000, mode: 'cells', gridDegrees: 2.0, maxCells: 1800, labelDistance: 14000000 },
+  { id: 'regional', minHeight: 2500000, mode: 'detections', maxDetections: 3500, labelDistance: 7500000 },
+  { id: 'local', minHeight: 750000, mode: 'detections', maxDetections: 3500, labelDistance: 4500000 },
+  { id: 'close', minHeight: 0, mode: 'detections', maxDetections: 4000, labelDistance: 1800000 },
 ];
 const LOD_CHECK_MS = 650;
 /** +/-10% hysteresis on LOD band edges so slow zooms don't thrash rebuilds. */
@@ -118,6 +118,53 @@ export function mapAnalystRecord(fire) {
     satellite: text(fire?.satellite) || text(fire?.sensor),
     acqTime: Number.isFinite(fire?.acqMs) && fire.acqMs > 0 ? fire.acqMs : null, // epoch ms; 0 = unparseable → null
   };
+}
+
+export function matchesCategoryFilter(fire, filterKey) {
+  if (!filterKey || filterKey === 'ALL') return true;
+  if (!fire) return false;
+  if (!fire._category) {
+    const classification = classifyThermalIncident({
+      latitude: fire.lat,
+      longitude: fire.lon,
+      frp: fire.frp,
+      brightness: fire.brightness,
+      daynight: fire.night ? 'N' : 'D',
+      confidence: (fire.confidence ?? 0.8) > 0.7 ? 'h' : 'n',
+    });
+    fire._category = classification?.category || ThermalCategories.FOREST_WILDFIRE;
+  }
+  const cat = fire._category;
+  if (filterKey === 'INDUSTRIAL') {
+    return (
+      cat === ThermalCategories.INDUSTRIAL_FLARE ||
+      cat === ThermalCategories.INDUSTRIAL_PROCESS ||
+      cat === ThermalCategories.INDUSTRIAL_DISASTER
+    );
+  }
+  if (filterKey === 'NON_INDUSTRIAL') {
+    return (
+      cat !== ThermalCategories.INDUSTRIAL_FLARE &&
+      cat !== ThermalCategories.INDUSTRIAL_PROCESS &&
+      cat !== ThermalCategories.INDUSTRIAL_DISASTER
+    );
+  }
+  if (filterKey === 'FLARES' || filterKey === ThermalCategories.INDUSTRIAL_FLARE) {
+    return cat === ThermalCategories.INDUSTRIAL_FLARE;
+  }
+  if (filterKey === 'DISASTER' || filterKey === ThermalCategories.INDUSTRIAL_DISASTER) {
+    return cat === ThermalCategories.INDUSTRIAL_DISASTER;
+  }
+  if (filterKey === 'WILDFIRE' || filterKey === ThermalCategories.FOREST_WILDFIRE) {
+    return cat === ThermalCategories.FOREST_WILDFIRE;
+  }
+  if (filterKey === 'AGRI' || filterKey === ThermalCategories.AGRICULTURAL_BURNING) {
+    return cat === ThermalCategories.AGRICULTURAL_BURNING;
+  }
+  if (filterKey === 'MINING' || filterKey === ThermalCategories.MINING_SMELTING) {
+    return cat === ThermalCategories.MINING_SMELTING;
+  }
+  return cat === filterKey;
 }
 
 export function createFirmsHeatmapLayer({
@@ -191,6 +238,22 @@ export function createFirmsHeatmapLayer({
   let _camSnapValid = false;
   const _camPos = new Cesium.Cartesian3();
   const _camDir = new Cesium.Cartesian3();
+
+  let _activeCategoryFilter = 'INDUSTRIAL';
+
+  // Listen to live category segregation filter changes
+  eventBus.on(SRI_EVENTS.CATEGORY_FILTER_CHANGED, (evt) => {
+    const newFilter = evt?.category || 'ALL';
+    if (_activeCategoryFilter === newFilter) return;
+    _activeCategoryFilter = newFilter;
+    _cellCacheByGrid.clear();
+    if (_enabled) {
+      renderCurrentLod(true);
+      if (_viewer?.scene) {
+        _viewer.scene.requestRender();
+      }
+    }
+  });
 
   // Listen to timeline date scrubbing
   eventBus.on(SRI_EVENTS.TIMELINE_DATE_CHANGED, (evt) => {
@@ -586,6 +649,7 @@ export function createFirmsHeatmapLayer({
     if (!sorted) {
       const cells = new Map();
       for (const fire of _fires) {
+        if (!matchesCategoryFilter(fire, _activeCategoryFilter)) continue;
         const latCell = Math.floor(fire.lat / gridDegrees) * gridDegrees;
         const lonCell = Math.floor(fire.lon / gridDegrees) * gridDegrees;
         const key = `${latCell.toFixed(3)}:${lonCell.toFixed(3)}`;
@@ -652,18 +716,17 @@ export function createFirmsHeatmapLayer({
       const centerLat = cell.latCell + lod.gridDegrees / 2;
       const position = Cesium.Cartesian3.fromDegrees(centerLon, centerLat, 0);
 
+      const semiMajor = (lod.gridDegrees * 111319.5) * 0.65;
+      const semiMinor = semiMajor * Math.max(0.2, Math.cos(centerLat * Math.PI / 180));
+
       _dataSource.entities.add({
-        rectangle: {
-          coordinates: Cesium.Rectangle.fromDegrees(
-            cell.lonCell,
-            cell.latCell,
-            cell.lonCell + lod.gridDegrees,
-            cell.latCell + lod.gridDegrees
-          ),
-          material: new Cesium.ColorMaterialProperty(color),
+        position,
+        ellipse: {
+          semiMajorAxis: semiMajor,
+          semiMinorAxis: semiMinor,
+          material: new Cesium.ColorMaterialProperty(color.withAlpha(Math.min(0.32, alpha * 0.5))),
           heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
         },
-        position,
         properties: {
           count: cell.count,
           intensity: score,
@@ -716,13 +779,19 @@ export function createFirmsHeatmapLayer({
       // rebuild (tens of thousands mid-zoom; field-test round 1 chug).
       candidates = [];
       for (const fire of _firesByFrp) {
+        if (!matchesCategoryFilter(fire, _activeCategoryFilter)) continue;
         if (!boundsContainPoint(bounds, fire.lat, fire.lon)) continue;
         candidates.push(fire);
         if (candidates.length >= lod.maxDetections) break;
       }
     } else {
       // Sky/horizon view: fall back to the globally strongest detections.
-      candidates = _firesByFrp.slice(0, lod.maxDetections);
+      candidates = [];
+      for (const fire of _firesByFrp) {
+        if (!matchesCategoryFilter(fire, _activeCategoryFilter)) continue;
+        candidates.push(fire);
+        if (candidates.length >= lod.maxDetections) break;
+      }
     }
 
     _cellCount = candidates.length;
@@ -837,6 +906,9 @@ export function createFirmsHeatmapLayer({
       if (!screen) continue; // projection failed (e.g. behind camera) — drop silently
       if (screen.x < -LABEL_VIEW_MARGIN_PX || screen.x > width + LABEL_VIEW_MARGIN_PX
         || screen.y < -LABEL_VIEW_MARGIN_PX || screen.y > height + LABEL_VIEW_MARGIN_PX) continue;
+      // Protect bottom command dock and top-left tactical HUD from ambient card clutter
+      if (screen.y > height - 110) continue;
+      if (screen.x < 460 && screen.y < 320) continue;
       if (!screenSeparated(accepted, screen)) continue;
       accepted.push({ x: screen.x, y: screen.y });
       ambientCount += 1;
@@ -880,6 +952,40 @@ export function createFirmsHeatmapLayer({
   function installClickHandler() {
     if (_clickHandler || !_viewer) return;
     _clickHandler = screenSpaceEventHandlerFactory(_viewer);
+
+    // LEFT CLICK: Select fire and open AI panel ONLY (no camera flight / zoom)
+    _clickHandler.setInputAction((click) => {
+      let picked = _viewer.scene.pick(click.position);
+      let fire = pickedFire(picked);
+      if (!fire && _viewer.scene.drillPick) {
+        const drilled = _viewer.scene.drillPick(click.position, 10);
+        for (const p of drilled) {
+          fire = pickedFire(p);
+          if (fire) break;
+        }
+      }
+      if (fire) {
+        selectFire(fire, { flyTo: false });
+        return;
+      }
+      // A pick that belongs to a sibling layer (e.g. an aircraft) is not
+      // "empty space" — leave the selection alone and let that layer handle it.
+      if (picked) {
+        const pickedId = resolvePickId(picked);
+        if (pickedId && isOwnedByOtherLayer(id, pickedId)) return;
+      }
+      const cardHit = overlayHost.hitTest?.(click.position?.x, click.position?.y, {
+        sourceId: FIRMS_OVERLAY_SOURCE_ID,
+      });
+      if (cardHit) {
+        const carded = _fireByCardId.get(cardHit.entryId);
+        if (carded) selectFire(carded, { flyTo: false });
+        return;
+      }
+      clearFireSelection();
+    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+    // RIGHT CLICK: Select fire AND fly camera to its location
     _clickHandler.setInputAction((click) => {
       let picked = _viewer.scene.pick(click.position);
       let fire = pickedFire(picked);
@@ -894,22 +1000,14 @@ export function createFirmsHeatmapLayer({
         selectAndFocusFire(fire);
         return;
       }
-      // A pick that belongs to a sibling layer (e.g. an aircraft) is not
-      // "empty space" — leave the selection alone and let that layer handle it.
-      if (picked) {
-        const pickedId = resolvePickId(picked);
-        if (pickedId && isOwnedByOtherLayer(id, pickedId)) return;
-      }
       const cardHit = overlayHost.hitTest?.(click.position?.x, click.position?.y, {
         sourceId: FIRMS_OVERLAY_SOURCE_ID,
       });
       if (cardHit) {
         const carded = _fireByCardId.get(cardHit.entryId);
         if (carded) selectAndFocusFire(carded);
-        return;
       }
-      clearFireSelection();
-    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+    }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
   }
 
   function removeClickHandler() {
@@ -921,7 +1019,7 @@ export function createFirmsHeatmapLayer({
 
   /** Select one stable detection and request one UI-owned camera transfer. */
   function selectAndFocusFire(fire) {
-    selectFire(fire);
+    selectFire(fire, { flyTo: true });
     requestWorldFocus({
       kind: 'fire',
       id: fireDetectionKey(fire),
@@ -961,8 +1059,9 @@ export function createFirmsHeatmapLayer({
    * Select a fire: show its detail label and mark it selected in the shared
    * context store so voice "what's selected" resolves to it.
    * @param {Object} fire - Detection record.
+   * @param {Object} [options] - Selection options (e.g. { flyTo: false })
    */
-  function selectFire(fire) {
+  function selectFire(fire, options = {}) {
     _selectedFire = fire;
     try {
       registerFireContext(fire);
@@ -986,6 +1085,7 @@ export function createFirmsHeatmapLayer({
 
       eventBus.emit(SRI_EVENTS.HAZARD_SELECTED, {
         id: `firms-sel-${fire.lat.toFixed(4)}-${fire.lon.toFixed(4)}`,
+        _flyTo: Boolean(options?.flyTo),
         hazard_type: classification.category === 'INDUSTRIAL_FLARE' || classification.category === 'INDUSTRIAL_DISASTER' ? 'INDUSTRIAL_FIRE' : 'WILDFIRE',
         title: `🛰️ ${categoryClean}`,
         subtitle: `Lat: ${fire.lat.toFixed(4)}°N, Lon: ${fire.lon.toFixed(4)}°E · FRP: ${fire.frp.toFixed(1)} MW`,
@@ -1146,9 +1246,18 @@ export function createFirmsHeatmapLayer({
    * @returns {Array<Object>}
    */
   function topFiresWithinBounds(bounds, limit = CONTEXT_TOP_N) {
-    if (!bounds) return _firesByFrp.slice(0, limit);
+    if (!bounds) {
+      const top = [];
+      for (const fire of _firesByFrp) {
+        if (!matchesCategoryFilter(fire, _activeCategoryFilter)) continue;
+        top.push(fire);
+        if (top.length >= limit) break;
+      }
+      return top;
+    }
     const top = [];
     for (const fire of _firesByFrp) {
+      if (!matchesCategoryFilter(fire, _activeCategoryFilter)) continue;
       if (!boundsContainPoint(bounds, fire.lat, fire.lon)) continue;
       top.push(fire);
       if (top.length >= limit) break;

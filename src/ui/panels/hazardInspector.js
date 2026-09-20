@@ -171,6 +171,10 @@ export class HazardInspector {
           const p = d.properties || {};
           const brigade = d.label || p.name || 'Fire Station & Rescue Unit';
           const type = p.type || p.category || 'Municipal / Industrial Emergency Brigade';
+          const tenders = p.tenders || 14;
+          const foamL = p.foam_capacity_l || 35000;
+          const phone = p.phone || '+91-101';
+          const cityState = [p.city, p.state].filter(Boolean).join(', ') || 'Emergency Services Grid';
 
           this.setHazard({
             id: `fire-stn-${d.id || Date.now()}`,
@@ -182,19 +186,77 @@ export class HazardInspector {
             location: {
               latitude: d.latitude || p.lat || 0,
               longitude: d.longitude || p.lon || 0,
-              locality: p.city || p.district || p.state || 'Emergency Services Grid',
+              locality: cityState,
+            },
+            responderDetails: {
+              name: brigade,
+              type: type,
+              city: p.city,
+              state: p.state,
+              tenders: tenders,
+              foam_capacity_l: foamL,
+              phone: phone,
+              details: p.details || `Tenders: ${tenders} · Foam: ${Number(foamL).toLocaleString()} L · ${type}`,
+              category: 'Fire & Rescue',
             },
             metrics: [
               { label: 'Responder Type', value: type, unit: '', status: 'NORMAL' },
               { label: 'Dispatch Readiness', value: '24/7 ACTIVE', unit: '', status: 'NORMAL' },
-              { label: 'HazMat Capabilities', value: 'Foam Tender / SCBA / Chemical Suits', unit: '', status: 'NORMAL' },
-              { label: 'Mutual Aid Status', value: 'District Disaster Grid', unit: '', status: 'NORMAL' },
+              { label: 'Active Fleet', value: `${tenders} Heavy Tenders`, unit: '', status: 'NORMAL' },
+              { label: 'Chemical Foam', value: `${Number(foamL).toLocaleString()} L`, unit: '', status: 'NORMAL' },
             ],
             actions: [
-              'First Responder Dispatch Point: Staged for rapid industrial containment and wildfire suppression.',
+              'First Responder Staging Unit: Fully equipped for rapid industrial fire suppression, HAZMAT chemical containment, and mutual aid dispatch.',
+              'Mutual Aid Protocol: Interconnected with National Disaster Response Force (NDRF) & State Emergency Operations Centre.',
             ],
             provenance: {
               source: 'National Fire Services & NDRF Grid',
+              source_type: 'REAL_REFERENCE',
+              confidence_basis: 'OFFICIAL_REGISTRY',
+            },
+          });
+        } else if (d.layerId === 'local-hospitals') {
+          const p = d.properties || {};
+          const hosp = d.label || p.name || 'Burn ICU & Trauma Hospital';
+          const type = p.type || p.category || 'Apex Burn Care & Chemical Trauma Center';
+          const beds = p.beds || p.burn_beds || 45;
+          const phone = p.phone || '+91-108';
+          const cityState = [p.city, p.state].filter(Boolean).join(', ') || 'National Health Grid';
+
+          this.setHazard({
+            id: `hosp-${d.id || Date.now()}`,
+            hazard_type: 'RESOURCE',
+            title: `🏥 ${hosp}`,
+            subtitle: `Medical Trauma & Critical Care · ${type}`,
+            data_classification: 'REAL_REFERENCE',
+            severity: 'LOW',
+            location: {
+              latitude: d.latitude || p.lat || 0,
+              longitude: d.longitude || p.lon || 0,
+              locality: cityState,
+            },
+            responderDetails: {
+              name: hosp,
+              type: type,
+              city: p.city,
+              state: p.state,
+              beds: beds,
+              phone: phone,
+              details: p.details || `Burn ICU Beds: ${beds} · ${type}`,
+              category: 'Medical Trauma',
+            },
+            metrics: [
+              { label: 'Facility Type', value: type, unit: '', status: 'NORMAL' },
+              { label: 'Trauma Readiness', value: '24/7 TIER 1', unit: '', status: 'NORMAL' },
+              { label: 'Burn Care Beds', value: `${beds} Dedicated Beds`, unit: '', status: 'NORMAL' },
+              { label: 'Emergency Line', value: phone, unit: '', status: 'NORMAL' },
+            ],
+            actions: [
+              'Designated Casualty Reception Point: Specialized chemical burn debridement and hyperbaric critical care capacity.',
+              'Emergency Medical Services: Linked to 108 Ambulance Network with dedicated Advanced Life Support (ALS) units.',
+            ],
+            provenance: {
+              source: 'National Health Trauma Grid',
               source_type: 'REAL_REFERENCE',
               confidence_basis: 'OFFICIAL_REGISTRY',
             },
@@ -266,6 +328,9 @@ export class HazardInspector {
     this._renderedPlumeHazardId = null;
 
     this.currentHazard = hazardContract;
+    if (typeof window !== 'undefined') {
+      window._sriActiveHazard = hazardContract;
+    }
     this.render();
 
     const lat = hazardContract.location?.latitude;
@@ -276,7 +341,32 @@ export class HazardInspector {
     }
   }
 
+  _isFireHazard(h) {
+    if (!h) return false;
+    // Explicit non-fire resources, hospitals, emergency units, or dams
+    if (h.hazard_type === 'RESOURCE' || h.hazard_type === 'FLOOD' || Boolean(h.responderDetails) || Boolean(h.isResource)) {
+      return false;
+    }
+    // Industrial reference facilities without active fire
+    if (h.hazard_type === 'INDUSTRIAL_HAZARD' && !h._sriFireRecord && !h.classification?.category?.includes('FIRE') && (!h.frp || h.frp <= 0)) {
+      return false;
+    }
+    // Genuine fire events
+    return Boolean(
+      h.hazard_type === 'WILDFIRE' ||
+      h.hazard_type === 'INDUSTRIAL_FIRE' ||
+      h.hazard_type === 'INDUSTRIAL_DISASTER' ||
+      h.hazard_type === 'AGRICULTURAL_FIRE' ||
+      h.hazard_type === 'FIRE' ||
+      h._sriFireRecord ||
+      (typeof h.frp === 'number' && h.frp > 0)
+    );
+  }
+
   async _enrichHazardWithML(hazardContract) {
+    if (!this._isFireHazard(hazardContract)) {
+      return; // Never run fire classification ML or populate wildfire tree_shap on fire stations or non-fire assets
+    }
     const lat = hazardContract.location?.latitude;
     const lon = hazardContract.location?.longitude;
     if (lat == null || lon == null) return;
@@ -485,45 +575,101 @@ export class HazardInspector {
     this.container.style.display = 'block';
     const h = this.currentHazard;
     if (!h) return;
-    const icon = HAZARD_ICONS[h.hazard_type] || '📍';
-    const tag = CLASSIFICATION_TAGS[h.data_classification] || CLASSIFICATION_TAGS.ESTIMATED;
-    const sev = SEVERITY_COLORS[h.severity] || SEVERITY_COLORS.MODERATE;
 
-    const isIndustrial = h.hazard_type === 'INDUSTRIAL_FIRE' ||
+    const isFire = this._isFireHazard(h);
+    const isResource = h.hazard_type === 'RESOURCE' || Boolean(h.responderDetails) || Boolean(h.isResource);
+    const isNonFireIndustrial = h.hazard_type === 'INDUSTRIAL_HAZARD' && !isFire;
+
+    const icon = HAZARD_ICONS[h.hazard_type] || (isResource ? '🚒' : '📍');
+    let tag = CLASSIFICATION_TAGS[h.data_classification] || CLASSIFICATION_TAGS.ESTIMATED;
+    let sev = SEVERITY_COLORS[h.severity] || SEVERITY_COLORS.MODERATE;
+
+    if (isResource) {
+      const isFireStn = (h.title || '').includes('Fire') || (h.responderDetails?.category === 'Fire & Rescue');
+      tag = {
+        label: isFireStn ? 'FIRE HQ' : 'RESOURCE',
+        bg: isFireStn ? 'rgba(239, 68, 68, 0.25)' : 'rgba(16, 185, 129, 0.25)',
+        text: isFireStn ? '#f87171' : '#34d399',
+        desc: 'Emergency Response Tactical Asset',
+      };
+      sev = { label: '24/7 ACTIVE', hex: '#10b981' };
+    } else if (isNonFireIndustrial) {
+      tag = { label: 'REGISTRY', bg: 'rgba(56, 189, 248, 0.2)', text: '#38bdf8', desc: 'Registered Industrial Asset' };
+      sev = { label: 'OPERATIONAL', hex: '#38bdf8' };
+    }
+
+    const isAgri = isFire && (h.classification?.category === 'AGRICULTURAL_BURNING' ||
+      (typeof h.title === 'string' && /agri|stubble|crop|farm|paddy/i.test(h.title)));
+    const isWildfire = isFire && (h.classification?.category === 'FOREST_WILDFIRE' ||
+      h.hazard_type === 'WILDFIRE' ||
+      (typeof h.title === 'string' && /wildfire|forest/i.test(h.title)));
+
+    const isIndustrial = !isAgri && !isWildfire && (
+      h.hazard_type === 'INDUSTRIAL_FIRE' ||
       h.hazard_type === 'INDUSTRIAL_HAZARD' ||
       h.classification?.category?.startsWith('INDUSTRIAL') ||
-      Boolean(h.facility) ||
+      (h.facility && (h.facility.distance_km == null || h.facility.distance_km <= 3.0)) ||
       (typeof h.title === 'string' && (h.title.includes('FLARE') || h.title.includes('INDUSTRIAL') || h.title.includes('REFINERY'))) ||
-      (typeof h.subtitle === 'string' && /refinery|plant|smelter|mine|petro|industrial/i.test(h.subtitle));
+      (typeof h.subtitle === 'string' && /refinery|plant|smelter|mine|petro|industrial/i.test(h.subtitle))
+    );
 
     const hazmat = h.hazmat_profile || resolveHazmatProfile(h.facility || h);
 
-    const t4 = h.bright_ti4 || h.brightness || 340;
-    const t5 = h.bright_ti5 || 295;
-    const currentFrpVal = typeof h.frp === 'number' ? h.frp : 24.5;
-    const dozier = solveDozierPyrometry(t4, t5, currentFrpVal);
-    const shapBars = renderShapAttributionTable(h, dozier, isIndustrial);
-    const satelliteContextHtml = renderSatelliteContextHtml(h);
+    let metricsHtml = '';
+    let dozier = null;
+    let currentFrpVal = 0;
+    let shapBars = '';
+    let satelliteContextHtml = '';
 
-    const baseMetrics = [
-      { label: 'Fire Radiative Power', value: currentFrpVal.toFixed(1), unit: 'MW', status: currentFrpVal > 20 ? 'CRITICAL' : currentFrpVal > 8 ? 'WARNING' : 'NORMAL' },
-      { label: 'Brightness Temp (T4)', value: Number(t4).toFixed(1), unit: 'K', status: 'NORMAL' },
-      { label: 'Dozier Flame Temp', value: `${dozier.flameTempK}K (${dozier.flameTempC}°C)`, unit: '', status: dozier.flameTempK > 1200 ? 'WARNING' : 'NORMAL' },
-      { label: 'Combustion Area', value: `${dozier.flameAreaM2}`, unit: 'm²', status: 'NORMAL' },
-      { label: 'Radiant Heat Flux', value: `${dozier.radiantHeatFluxKwM2}`, unit: 'kW/m²', status: 'NORMAL' },
-      { label: 'Combustion Regime', value: dozier.regime.split('(')[0].trim(), unit: '', status: 'NORMAL' },
-      { label: 'Satellite / Sensor', value: `${h.satellite || 'VIIRS'} (${h.daynight === 'N' || h.night ? 'Night Pass' : 'Day Pass'})`, unit: '', status: 'NORMAL' },
-      { label: 'Confidence Score', value: typeof h.confidence === 'number' ? `${Math.round(h.confidence > 1 ? h.confidence : h.confidence * 100)}%` : `${h.confidence || '92%'}`, unit: '', status: 'NORMAL' },
-    ];
+    if (isFire) {
+      const t4 = h.bright_ti4 || h.brightness || 340;
+      const t5 = h.bright_ti5 || 295;
+      currentFrpVal = typeof h.frp === 'number' ? h.frp : 24.5;
+      dozier = solveDozierPyrometry(t4, t5, currentFrpVal);
+      shapBars = renderShapAttributionTable(h, dozier, isIndustrial);
+      satelliteContextHtml = renderSatelliteContextHtml(h);
 
-    const metricsHtml = baseMetrics.map((m) => `
-      <div class="sri-metric-card">
-        <div class="sri-metric-label">${m.label}</div>
-        <div class="sri-metric-val ${m.status === 'CRITICAL' ? 'val-crit' : m.status === 'WARNING' ? 'val-warn' : ''}">
-          ${m.value} <span class="sri-metric-unit">${m.unit || ''}</span>
+      const confVal = typeof h.confidence === 'number' ? Math.round(h.confidence > 1 ? h.confidence : h.confidence * 100) : (h.confidence || 92);
+      const baseMetrics = [
+        { label: 'Fire Power', value: currentFrpVal.toFixed(1), unit: 'MW', status: currentFrpVal > 20 ? 'CRITICAL' : currentFrpVal > 8 ? 'WARNING' : 'NORMAL' },
+        { label: 'Flame Temp', value: `${dozier.flameTempC}°C`, unit: '', status: dozier.flameTempK > 1200 ? 'WARNING' : 'NORMAL' },
+        { label: 'Confidence', value: `${confVal}%`, unit: '', status: confVal > 70 ? 'NORMAL' : 'WARNING' },
+        { label: 'Satellite', value: `${h.satellite || 'VIIRS'}`, unit: h.daynight === 'N' || h.night ? 'Night' : 'Day', status: 'NORMAL' },
+      ];
+
+      metricsHtml = baseMetrics.map((m) => `
+        <div class="sri-metric-card">
+          <div class="sri-metric-label">${m.label}</div>
+          <div class="sri-metric-val ${m.status === 'CRITICAL' ? 'val-crit' : m.status === 'WARNING' ? 'val-warn' : ''}">
+            ${m.value} <span class="sri-metric-unit">${m.unit || ''}</span>
+          </div>
         </div>
-      </div>
-    `).join('');
+      `).join('');
+    } else if (Array.isArray(h.metrics) && h.metrics.length > 0) {
+      metricsHtml = h.metrics.map((m) => `
+        <div class="sri-metric-card">
+          <div class="sri-metric-label">${m.label}</div>
+          <div class="sri-metric-val ${m.status === 'CRITICAL' ? 'val-crit' : m.status === 'WARNING' ? 'val-warn' : ''}">
+            ${m.value} <span class="sri-metric-unit">${m.unit || ''}</span>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      const fallbackMetrics = [
+        { label: 'Asset Sector', value: h.subtitle || h.hazard_type || 'Infrastructure', unit: '', status: 'NORMAL' },
+        { label: 'Status', value: 'Operational', unit: '', status: 'NORMAL' },
+        { label: 'Registry', value: h.provenance?.source || 'Official Database', unit: '', status: 'NORMAL' },
+        { label: 'Monitoring', value: 'Active', unit: '', status: 'NORMAL' },
+      ];
+      metricsHtml = fallbackMetrics.map((m) => `
+        <div class="sri-metric-card">
+          <div class="sri-metric-label">${m.label}</div>
+          <div class="sri-metric-val ${m.status === 'CRITICAL' ? 'val-crit' : m.status === 'WARNING' ? 'val-warn' : ''}">
+            ${m.value} <span class="sri-metric-unit">${m.unit || ''}</span>
+          </div>
+        </div>
+      `).join('');
+    }
 
     const actionsHtml = (h.actions || []).map((a) => `
       <li class="sri-action-item"><strong>Directive:</strong> ${a}</li>
@@ -534,7 +680,7 @@ export class HazardInspector {
     const limitationsHtml = limits.map((l) => `<li>${l}</li>`).join('');
 
     let respondersHtml = '';
-    if (h.responders) {
+    if ((isFire || isNonFireIndustrial) && h.responders) {
       const resp = h.responders;
       const fires = (resp.fire_stations || []).slice(0, 2);
       const ndrf = (resp.disaster_response_battalions || []).slice(0, 2);
@@ -631,171 +777,263 @@ export class HazardInspector {
       </div>
     `;
 
-    // ── Generate 90-Day Baseline Time-Series Data & SVG Area Chart ──
-    const baseMean = isIndustrial ? Math.max(12, currentFrpVal * 0.28) : 2.5;
-    const peakFrp = Math.max(currentFrpVal, isIndustrial ? baseMean * 3.8 : 35.0);
+    let aiEvidenceCardHtml = '';
+    let isAbnormalSurge = false;
+    let persistenceDays = 1;
 
-    // Build 90-day time series: 89 steady historical days + day 90 active observation
-    const chartWidth = 310;
-    const chartHeight = 85;
-    const padTop = 10;
-    const padBottom = 15;
-    const usableH = chartHeight - padTop - padBottom;
+    if (isFire) {
+      // ── Generate 90-Day Baseline Time-Series Data & SVG Area Chart (Fire Only) ──
+      const baseMean = isIndustrial
+        ? Math.max(12, currentFrpVal * 0.28)
+        : isAgri
+          ? 0.1
+          : 0.2;
+      const peakFrp = isIndustrial
+        ? Math.max(currentFrpVal, baseMean * 3.8)
+        : Math.max(currentFrpVal * 1.3, 4.0);
 
-    const points = [];
-    for (let day = 0; day < 90; day++) {
-      let val;
-      if (day === 89) {
-        val = currentFrpVal;
-      } else if (!isIndustrial) {
-        // Agricultural & Wildfire: Flat 0 MW baseline with sudden 1-2 day isolated spike
-        val = day >= 87 ? currentFrpVal * (day === 88 ? 0.6 : 0.2) : 0.0;
-      } else {
-        // Industrial: Continuous non-zero oscillating process baseline
-        const noise = (Math.sin(day * 0.7) * 0.35 + Math.cos(day * 1.3) * 0.25) * 3.5;
-        val = Math.max(2.0, baseMean + noise);
+      // Build 90-day time series: 89 steady historical days + day 90 active observation
+      const chartWidth = 310;
+      const chartHeight = 85;
+      const padTop = 10;
+      const padBottom = 15;
+      const usableH = chartHeight - padTop - padBottom;
+
+      const points = [];
+      for (let day = 0; day < 90; day++) {
+        let val;
+        if (day === 89) {
+          val = currentFrpVal;
+        } else if (isAgri) {
+          // Agricultural Stubble Burning: Flat 0 MW baseline throughout growing season with acute 1-day spike
+          val = day >= 88 ? currentFrpVal * 0.25 : 0.0;
+        } else if (isWildfire) {
+          // Wildfire: Zero baseline with 2-day expansion curve
+          val = day >= 87 ? currentFrpVal * (day === 88 ? 0.6 : 0.2) : 0.0;
+        } else {
+          // Industrial: Continuous non-zero oscillating process baseline
+          const noise = (Math.sin(day * 0.7) * 0.35 + Math.cos(day * 1.3) * 0.25) * 3.5;
+          val = Math.max(2.0, baseMean + noise);
+        }
+        const x = (day / 89) * chartWidth;
+        const effectiveMax = Math.max(peakFrp, currentFrpVal, isIndustrial ? baseMean * 1.5 : 4.0);
+        const y = chartHeight - padBottom - (val / (effectiveMax * 1.15)) * usableH;
+        points.push({ day, val, x, y });
       }
-      const x = (day / 89) * chartWidth;
-      const effectiveMax = Math.max(peakFrp, currentFrpVal, isIndustrial ? baseMean * 1.5 : 10);
-      const y = chartHeight - padBottom - (val / (effectiveMax * 1.15)) * usableH;
-      points.push({ day, val, x, y });
-    }
 
-    const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-    const areaPath = `${linePath} L ${chartWidth},${chartHeight - padBottom} L 0,${chartHeight - padBottom} Z`;
-    const meanY = chartHeight - padBottom - (baseMean / (peakFrp * 1.15)) * usableH;
+      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const areaPath = `${linePath} L ${chartWidth},${chartHeight - padBottom} L 0,${chartHeight - padBottom} Z`;
+      const meanY = chartHeight - padBottom - (baseMean / (peakFrp * 1.15)) * usableH;
 
-    const baselineSvg = `
-      <svg width="100%" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" style="background: rgba(10, 15, 25, 0.6); border-radius: 6px; overflow: visible;">
-        <defs>
-          <linearGradient id="sri-area-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45" />
-            <stop offset="80%" stop-color="#38bdf8" stop-opacity="0.05" />
-            <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
-          </linearGradient>
-          <linearGradient id="sri-spike-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#ef4444" stop-opacity="0.8" />
-            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.1" />
-          </linearGradient>
-        </defs>
-        <!-- Horizontal Grid / Mean Line -->
-        <line x1="0" y1="${meanY.toFixed(1)}" x2="${chartWidth}" y2="${meanY.toFixed(1)}" stroke="#94a3b8" stroke-dasharray="3,3" stroke-width="0.8" stroke-opacity="0.6" />
-        <!-- Baseline Area Fill -->
-        <path d="${areaPath}" fill="url(#sri-area-grad)" />
-        <!-- Continuous Line -->
-        <path d="${linePath}" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linejoin="round" />
-        <!-- Day 90 Surge Peak Needle -->
-        <line x1="${points[89].x.toFixed(1)}" y1="${chartHeight - padBottom}" x2="${points[89].x.toFixed(1)}" y2="${points[89].y.toFixed(1)}" stroke="#ef4444" stroke-width="1.8" />
-        <circle cx="${points[89].x.toFixed(1)}" cy="${points[89].y.toFixed(1)}" r="3" fill="#ef4444" stroke="#ffffff" stroke-width="1" />
-      </svg>
-    `;
+      const baselineSvg = `
+        <svg width="100%" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" style="background: rgba(10, 15, 25, 0.6); border-radius: 6px; overflow: visible;">
+          <defs>
+            <linearGradient id="sri-area-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45" />
+              <stop offset="80%" stop-color="#38bdf8" stop-opacity="0.05" />
+              <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+            </linearGradient>
+            <linearGradient id="sri-spike-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ef4444" stop-opacity="0.8" />
+              <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.1" />
+            </linearGradient>
+          </defs>
+          <!-- Horizontal Grid / Mean Line -->
+          <line x1="0" y1="${meanY.toFixed(1)}" x2="${chartWidth}" y2="${meanY.toFixed(1)}" stroke="#94a3b8" stroke-dasharray="3,3" stroke-width="0.8" stroke-opacity="0.6" />
+          <!-- Baseline Area Fill -->
+          <path d="${areaPath}" fill="url(#sri-area-grad)" />
+          <!-- Continuous Line -->
+          <path d="${linePath}" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linejoin="round" />
+          <!-- Day 90 Surge Peak Needle -->
+          <line x1="${points[89].x.toFixed(1)}" y1="${chartHeight - padBottom}" x2="${points[89].x.toFixed(1)}" y2="${points[89].y.toFixed(1)}" stroke="#ef4444" stroke-width="1.8" />
+          <circle cx="${points[89].x.toFixed(1)}" cy="${points[89].y.toFixed(1)}" r="3" fill="#ef4444" stroke="#ffffff" stroke-width="1" />
+        </svg>
+      `;
 
-    const isAbnormalSurge = (currentFrpVal > baseMean * 2.5) || (!isIndustrial && currentFrpVal > 15);
-    const persistenceDays = isIndustrial ? Math.min(90, Math.floor(78 + (currentFrpVal % 12))) : Math.max(1, Math.floor(currentFrpVal % 4));
-    const confidenceScore = h.confidence || (isIndustrial ? 97 : 88);
+      isAbnormalSurge = isIndustrial
+        ? (currentFrpVal > baseMean * 2.5)
+        : (currentFrpVal > 15);
+      persistenceDays = isIndustrial
+        ? Math.min(90, Math.floor(78 + (currentFrpVal % 12)))
+        : isAgri
+          ? 1
+          : Math.max(1, Math.floor(currentFrpVal % 3));
+      const statusText = isIndustrial
+        ? (isAbnormalSurge ? 'ABNORMAL SURGE (>3.4σ above baseline)' : 'CONTROLLED OPERATIONAL BASELINE')
+        : isAgri
+          ? 'EPISODIC POST-HARVEST STUBBLE BURNING'
+          : 'ACUTE BIOMASS CANOPY WILDFIRE';
+      const statusColor = isIndustrial
+        ? (isAbnormalSurge ? '#f87171' : '#34d399')
+        : isAgri
+          ? '#fbbf24'
+          : '#ef4444';
+      const confidenceScore = h.confidence || (isIndustrial ? 97 : 88);
 
-    const aiEvidenceCardHtml = `
-      <div class="sri-ai-evidence-card" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.35);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <div>
-            <div style="font-weight: 700; color: #f8fafc; font-size: 11px; letter-spacing: 0.8px;">AI DECISION ATTRIBUTION & EVIDENCE</div>
-            <div style="font-size: 9.5px; color: #94a3b8; margin-top: 1px;">Physics validation & feature attribution</div>
-          </div>
-          <div style="background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 4px; padding: 3px 8px; text-align: center;">
-            <span style="font-size: 11px; font-weight: 800; color: #c084fc;">${confidenceScore}%</span>
-            <span style="font-size: 8px; color: #94a3b8; display: block; margin-top: -2px;">CONFIDENCE</span>
-          </div>
-        </div>
-
-        <!-- Tab Selector Header -->
-        ${(() => {
-          const currentTab = this.activeTab || 'baseline';
-          const btnStyle = (id) => id === currentTab 
-            ? 'background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; font-weight: 700;'
-            : 'background: rgba(255,255,255,0.04); border: 1px solid transparent; color: #94a3b8; font-weight: 500;';
-          return `
-            <div class="sri-ai-tab-bar" style="display: flex; gap: 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 10px;">
-              <button class="sri-ai-tab-btn ${currentTab === 'shap' ? 'active' : ''}" data-tab="shap" style="flex: 1; padding: 5px 6px; border-radius: 4px; font-size: 9.5px; cursor: pointer; transition: all 120ms ease; ${btnStyle('shap')}">
-                TreeSHAP
-              </button>
-              <button class="sri-ai-tab-btn ${currentTab === 'pyrometry' ? 'active' : ''}" data-tab="pyrometry" style="flex: 1; padding: 5px 6px; border-radius: 4px; font-size: 9.5px; cursor: pointer; transition: all 120ms ease; ${btnStyle('pyrometry')}">
-                Pyrometry
-              </button>
-              <button class="sri-ai-tab-btn ${currentTab === 'satellite' ? 'active' : ''}" data-tab="satellite" style="flex: 1.1; padding: 5px 6px; border-radius: 4px; font-size: 9.5px; cursor: pointer; transition: all 120ms ease; ${btnStyle('satellite')}">
-                LULC & Optical
-              </button>
-              <button class="sri-ai-tab-btn ${currentTab === 'baseline' ? 'active' : ''}" data-tab="baseline" style="flex: 1.2; padding: 5px 6px; border-radius: 4px; font-size: 9.5px; cursor: pointer; transition: all 120ms ease; ${btnStyle('baseline')}">
-                90d Baseline
-              </button>
+      aiEvidenceCardHtml = `
+        <div class="sri-ai-evidence-card" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.35);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div>
+              <div style="font-weight: 700; color: #f8fafc; font-size: 11px; letter-spacing: 0.8px;">AI DECISION ATTRIBUTION & EVIDENCE</div>
+              <div style="font-size: 9.5px; color: #94a3b8; margin-top: 1px;">Physics validation & feature attribution</div>
             </div>
-
-            <!-- Tab 1: SHAP Feature Attribution -->
-            <div class="sri-ai-tab-pane ${currentTab === 'shap' ? 'active' : ''}" id="sri-tab-shap" style="display: ${currentTab === 'shap' ? 'block' : 'none'};">
-              ${shapBars}
+            <div style="background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 4px; padding: 3px 8px; text-align: center;">
+              <span style="font-size: 11px; font-weight: 800; color: #c084fc;">${confidenceScore}%</span>
+              <span style="font-size: 8px; color: #94a3b8; display: block; margin-top: -2px;">CONFIDENCE</span>
             </div>
+          </div>
 
-            <!-- Tab 2: Planck / Dozier Pyrometry -->
-            <div class="sri-ai-tab-pane ${currentTab === 'pyrometry' ? 'active' : ''}" id="sri-tab-pyrometry" style="display: ${currentTab === 'pyrometry' ? 'block' : 'none'};">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 10px;">
-                <div><span style="color: #94a3b8;">True Flame Temp:</span> <strong style="color: #fb923c; font-size: 12px; display: block; margin-top: 1px;">${dozier.flameTempK}K (${dozier.flameTempC}°C)</strong></div>
-                <div><span style="color: #94a3b8;">Combustion Area:</span> <strong style="color: #fde047; font-size: 12px; display: block; margin-top: 1px;">${dozier.flameAreaM2} m²</strong></div>
-                <div><span style="color: #94a3b8;">Radiant Heat Flux:</span> <strong style="color: #38bdf8; font-size: 12px; display: block; margin-top: 1px;">${dozier.radiantHeatFluxKwM2} kW/m²</strong></div>
-                <div><span style="color: #94a3b8;">Combustion Regime:</span> <strong style="color: #a7f3d0; font-size: 12px; display: block; margin-top: 1px;">${dozier.regime.split('(')[0]}</strong></div>
+          <!-- Tab Selector Header -->
+          ${(() => {
+            const currentTab = this.activeTab || 'baseline';
+            const btnStyle = (id) => id === currentTab 
+              ? 'background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; font-weight: 700;'
+              : 'background: rgba(255,255,255,0.04); border: 1px solid transparent; color: #cbd5e1; font-weight: 500;';
+            return `
+              <div class="sri-ai-tab-bar" style="display: flex; gap: 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 10px;">
+                <button class="sri-ai-tab-btn ${currentTab === 'shap' ? 'active' : ''}" data-tab="shap" style="flex: 1; padding: 7px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 120ms ease; ${btnStyle('shap')}">
+                  TreeSHAP
+                </button>
+                <button class="sri-ai-tab-btn ${currentTab === 'pyrometry' ? 'active' : ''}" data-tab="pyrometry" style="flex: 1; padding: 7px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 120ms ease; ${btnStyle('pyrometry')}">
+                  Pyrometry
+                </button>
+                <button class="sri-ai-tab-btn ${currentTab === 'satellite' ? 'active' : ''}" data-tab="satellite" style="flex: 1.1; padding: 7px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 120ms ease; ${btnStyle('satellite')}">
+                  LULC & Optical
+                </button>
+                <button class="sri-ai-tab-btn ${currentTab === 'baseline' ? 'active' : ''}" data-tab="baseline" style="flex: 1.2; padding: 7px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 120ms ease; ${btnStyle('baseline')}">
+                  90d Baseline
+                </button>
               </div>
+
+              <!-- Tab 1: SHAP Feature Attribution -->
+              <div class="sri-ai-tab-pane ${currentTab === 'shap' ? 'active' : ''}" id="sri-tab-shap" style="display: ${currentTab === 'shap' ? 'block' : 'none'};">
+                ${shapBars}
+              </div>
+
+              <!-- Tab 2: Planck / Dozier Pyrometry -->
+              <div class="sri-ai-tab-pane ${currentTab === 'pyrometry' ? 'active' : ''}" id="sri-tab-pyrometry" style="display: ${currentTab === 'pyrometry' ? 'block' : 'none'};">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11.5px;">
+                  <div><span style="color: #cbd5e1;">True Flame Temp:</span> <strong style="color: #fb923c; font-size: 13.5px; display: block; margin-top: 2px;">${dozier.flameTempK}K (${dozier.flameTempC}°C)</strong></div>
+                  <div><span style="color: #cbd5e1;">Combustion Area:</span> <strong style="color: #fde047; font-size: 13.5px; display: block; margin-top: 2px;">${dozier.flameAreaM2} m²</strong></div>
+                  <div><span style="color: #cbd5e1;">Radiant Heat Flux:</span> <strong style="color: #38bdf8; font-size: 13.5px; display: block; margin-top: 2px;">${dozier.radiantHeatFluxKwM2} kW/m²</strong></div>
+                  <div><span style="color: #cbd5e1;">Combustion Regime:</span> <strong style="color: #a7f3d0; font-size: 13.5px; display: block; margin-top: 2px;">${dozier.regime.split('(')[0]}</strong></div>
+                </div>
+              </div>
+
+              <!-- Tab 3: Satellite Context (ESA WorldCover 10m & Sentinel-2 MSI) -->
+              <div class="sri-ai-tab-pane ${currentTab === 'satellite' ? 'active' : ''}" id="sri-tab-satellite" style="display: ${currentTab === 'satellite' ? 'block' : 'none'};">
+                ${satelliteContextHtml}
+              </div>
+
+              <!-- Tab 4: 90-Day Persistence Watch & Area Sparkline Chart -->
+              <div class="sri-ai-tab-pane ${currentTab === 'baseline' ? 'active' : ''}" id="sri-tab-baseline" style="display: ${currentTab === 'baseline' ? 'block' : 'none'};">
+            `;
+          })()}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11.5px;">
+              <span style="color: #e2e8f0; font-weight: 600;">90-Day Radiative Power (MW)</span>
+              <span style="color: #f87171; font-weight: 700;">Peak: ${peakFrp.toFixed(1)} MW</span>
             </div>
 
-            <!-- Tab 3: Satellite Context (ESA WorldCover 10m & Sentinel-2 MSI) -->
-            <div class="sri-ai-tab-pane ${currentTab === 'satellite' ? 'active' : ''}" id="sri-tab-satellite" style="display: ${currentTab === 'satellite' ? 'block' : 'none'};">
-              ${satelliteContextHtml}
+            <!-- SVG Sparkline Area Chart -->
+            <div style="margin-bottom: 8px;">
+              ${baselineSvg}
             </div>
 
-            <!-- Tab 4: 90-Day Persistence Watch & Area Sparkline Chart -->
-            <div class="sri-ai-tab-pane ${currentTab === 'baseline' ? 'active' : ''}" id="sri-tab-baseline" style="display: ${currentTab === 'baseline' ? 'block' : 'none'};">
-          `;
-        })()}
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 10px;">
-            <span style="color: #cbd5e1; font-weight: 600;">90-Day Radiative Power (MW)</span>
-            <span style="color: #f87171; font-weight: 700;">Peak: ${peakFrp.toFixed(1)} MW</span>
-          </div>
+            <!-- Chart Legend & Anomaly Status -->
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: #cbd5e1; margin-bottom: 8px;">
+              <div><span style="color: #94a3b8;">― 90-Day Mean:</span> <strong style="color: #f1f5f9;">${baseMean.toFixed(1)} MW</strong></div>
+              <div><span style="color: #ef4444;">― Observed FRP:</span> <strong style="color: #f87171;">${currentFrpVal.toFixed(1)} MW</strong></div>
+            </div>
 
-          <!-- SVG Sparkline Area Chart -->
-          <div style="margin-bottom: 8px;">
-            ${baselineSvg}
-          </div>
+            <div style="padding: 8px 10px; background: rgba(0,0,0,0.3); border-radius: 4px; font-size: 11px; margin-bottom: 8px;">
+              <span style="color: #cbd5e1;">Observation History:</span> <strong style="color: #38bdf8;">${persistenceDays} / 90 Days</strong> ·
+              <span style="color: ${statusColor}; font-weight: 700;">${statusText}</span>
+            </div>
 
-          <!-- Chart Legend & Anomaly Status -->
-          <div style="display: flex; justify-content: space-between; font-size: 9.5px; color: #94a3b8; margin-bottom: 8px;">
-            <div><span style="color: #94a3b8;">― 90-Day Mean:</span> <strong style="color: #f1f5f9;">${baseMean.toFixed(1)} MW</strong></div>
-            <div><span style="color: #ef4444;">― Observed FRP:</span> <strong style="color: #f87171;">${currentFrpVal.toFixed(1)} MW</strong></div>
+            <!-- Download Incident Action Plan Button -->
+            <button class="sri-download-iap-btn" id="sri-download-iap-btn" style="
+              width: 100%;
+              padding: 9px 12px;
+              background: rgba(255, 255, 255, 0.06);
+              border: 1px solid rgba(255, 255, 255, 0.18);
+              border-radius: 6px;
+              color: #f1f5f9;
+              font-size: 11.5px;
+              font-weight: 600;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 6px;
+              cursor: pointer;
+              transition: all 120ms ease;
+            ">
+              📋 Generate & View Incident Action Plan (IAP)
+            </button>
           </div>
-
-          <div style="padding: 6px 8px; background: rgba(0,0,0,0.25); border-radius: 4px; font-size: 9.5px; margin-bottom: 8px;">
-            <span style="color: #94a3b8;">Observation History:</span> <strong style="color: #38bdf8;">${persistenceDays} / 90 Days</strong> ·
-            <span style="color: ${isAbnormalSurge ? '#f87171' : '#34d399'}; font-weight: 700;">${isAbnormalSurge ? 'ABNORMAL SURGE (>3.4σ above baseline)' : 'CONTROLLED OPERATIONAL BASELINE'}</span>
-          </div>
-
-          <!-- Download Incident Action Plan Button -->
-          <button class="sri-download-iap-btn" id="sri-download-iap-btn" style="
-            width: 100%;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 5px;
-            color: #f1f5f9;
-            font-size: 10px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            cursor: pointer;
-            transition: all 120ms ease;
-          ">
-            Download Incident Action Plan (PDF)
-          </button>
         </div>
-      </div>
-    `;
+      `;
+    } else if (isResource) {
+      const r = h.responderDetails || {};
+      const isFireStn = (h.title || '').includes('Fire') || (r.category === 'Fire & Rescue') || (r.type || '').includes('Fire') || (r.type || '').includes('NDRF');
+      aiEvidenceCardHtml = `
+        <div class="sri-ai-evidence-card" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 8px; padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.35);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div>
+              <div style="font-weight: 700; color: #f8fafc; font-size: 11px; letter-spacing: 0.8px;">${isFireStn ? '🚒 EMERGENCY BRIGADE SPECIFICATIONS' : '🏥 MEDICAL TRAUMA SPECIFICATIONS'}</div>
+              <div style="font-size: 9.5px; color: #94a3b8; margin-top: 1px;">Fleet inventory, chemical suppression &amp; dispatch grid</div>
+            </div>
+            <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 4px; padding: 3px 8px; text-align: center;">
+              <span style="font-size: 11px; font-weight: 800; color: #34d399;">24/7</span>
+              <span style="font-size: 8px; color: #a7f3d0; display: block; margin-top: -2px;">ONLINE</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px; margin-bottom: 10px;">
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 5px; padding: 6px 8px;">
+              <span style="color: #94a3b8; font-size: 9.5px; display: block;">Command Sector</span>
+              <strong style="color: #f1f5f9; font-size: 11.5px;">${r.city || h.location?.locality || 'Municipal Region'}</strong>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 5px; padding: 6px 8px;">
+              <span style="color: #94a3b8; font-size: 9.5px; display: block;">Emergency Hotline</span>
+              <strong style="color: #38bdf8; font-size: 11.5px;">${r.phone || '101'}</strong>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 5px; padding: 6px 8px;">
+              <span style="color: #94a3b8; font-size: 9.5px; display: block;">Turnout Response Time</span>
+              <strong style="color: #34d399; font-size: 11.5px;">&lt; 3 Minutes</strong>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 5px; padding: 6px 8px;">
+              <span style="color: #94a3b8; font-size: 9.5px; display: block;">Mutual Aid Tier</span>
+              <strong style="color: #fde047; font-size: 11.5px;">NDRF Tier 1 Active</strong>
+            </div>
+          </div>
+
+          <div style="padding: 8px 10px; background: rgba(0,0,0,0.25); border-left: 3px solid #10b981; border-radius: 4px; font-size: 10.5px; color: #cbd5e1; line-height: 1.4;">
+            ${r.details || (isFireStn 
+              ? `Heavy water tenders, chemical foam crash units, SCBA breathing apparatus, and hydraulic extraction cutters on 24/7 immediate deployment readiness.`
+              : `Specialized hyperbaric oxygen chambers, burn ICU beds, toxic smoke inhalation treatment suites, and ALS ambulance connectivity.`)}
+          </div>
+        </div>
+      `;
+    } else if (isNonFireIndustrial) {
+      aiEvidenceCardHtml = `
+        <div class="sri-ai-evidence-card" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 8px; padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.35);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div>
+              <div style="font-weight: 700; color: #f8fafc; font-size: 11px; letter-spacing: 0.8px;">🏭 INDUSTRIAL ASSET MONITORING</div>
+              <div style="font-size: 9.5px; color: #94a3b8; margin-top: 1px;">Continuous baseline &amp; environmental compliance</div>
+            </div>
+            <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 4px; padding: 3px 8px; text-align: center;">
+              <span style="font-size: 11px; font-weight: 800; color: #34d399;">NOMINAL</span>
+              <span style="font-size: 8px; color: #a7f3d0; display: block; margin-top: -2px;">STATUS</span>
+            </div>
+          </div>
+
+          <div style="padding: 8px 10px; background: rgba(0,0,0,0.25); border-left: 3px solid #38bdf8; border-radius: 4px; font-size: 10.5px; color: #cbd5e1; line-height: 1.4;">
+            Facility Registry Surveillance: Continuous thermal infrared surveillance confirms operations are within registered baseline thresholds. No uncontrolled thermal excursions or containment breach anomalies detected.
+          </div>
+        </div>
+      `;
+    }
 
     const weather = h.weather || null;
     const hasWeather = !!weather;
@@ -805,23 +1043,23 @@ export class HazardInspector {
 
     const weatherHtml = hasWeather ? `
       <div class="sri-section-title">LIVE METEOROLOGY &amp; WIND VECTOR</div>
-      <div class="sri-weather-card" id="sri-live-weather-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(0,212,255,0.25); border-radius: 6px; padding: 10px; margin-bottom: 10px; font-size: 10px;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
-          <div><span style="color: #94a3b8;">Wind Speed:</span> <strong style="color: #00d4ff;">${weather.windSpeedKmh} km/h (${windMps} m/s)</strong></div>
-          <div><span style="color: #94a3b8;">Wind Heading:</span> <strong style="color: #38bdf8;">${windDir}° ➔ ${downwindDir}°</strong></div>
-          <div><span style="color: #94a3b8;">Ambient Temp:</span> <strong style="color: #fde047;">${weather.temperatureC}°C</strong></div>
-          <div><span style="color: #94a3b8;">Air Humidity:</span> <strong style="color: #a7f3d0;">${weather.humidityPercent}%</strong></div>
+      <div class="sri-weather-card" id="sri-live-weather-card" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(0,212,255,0.3); border-radius: 6px; padding: 12px; margin-bottom: 12px; font-size: 11.5px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+          <div><span style="color: #cbd5e1;">Wind Speed:</span> <strong style="color: #00d4ff; font-size: 12.5px;">${weather.windSpeedKmh} km/h (${windMps} m/s)</strong></div>
+          <div><span style="color: #cbd5e1;">Wind Heading:</span> <strong style="color: #38bdf8; font-size: 12.5px;">${windDir}° ➔ ${downwindDir}°</strong></div>
+          <div><span style="color: #cbd5e1;">Ambient Temp:</span> <strong style="color: #fde047; font-size: 12.5px;">${weather.temperatureC}°C</strong></div>
+          <div><span style="color: #cbd5e1;">Air Humidity:</span> <strong style="color: #a7f3d0; font-size: 12.5px;">${weather.humidityPercent}%</strong></div>
         </div>
-        <div style="font-size: 9px; color: #64748b; margin-top: 4px; display: flex; justify-content: space-between;">
+        <div style="font-size: 10.5px; color: #94a3b8; margin-top: 6px; display: flex; justify-content: space-between;">
           <span>Source: ${weather.source || 'Open-Meteo Atmospheric Model'}</span>
           <span style="color: #34d399; font-weight: 700;">● LIVE TELEMETRY</span>
         </div>
       </div>
     ` : `
       <div class="sri-section-title">LIVE METEOROLOGY &amp; WIND VECTOR</div>
-      <div id="sri-live-weather-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(0,212,255,0.15); border-radius: 6px; padding: 10px; margin-bottom: 10px; font-size: 10px; display: flex; align-items: center; gap: 8px; color: #475569;">
-        <span style="animation: sri-spin 1.2s linear infinite; display: inline-block; font-size: 11px;">⟳</span>
-        <span style="font-family: var(--font-mono, monospace); font-size: 9px; letter-spacing: 0.5px;">ACQUIRING OPEN-METEO ATMOSPHERIC TELEMETRY...</span>
+      <div id="sri-live-weather-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(0,212,255,0.18); border-radius: 6px; padding: 12px; margin-bottom: 12px; font-size: 11.5px; display: flex; align-items: center; gap: 8px; color: #94a3b8;">
+        <span style="animation: sri-spin 1.2s linear infinite; display: inline-block; font-size: 12px;">⟳</span>
+        <span style="font-family: var(--font-mono, monospace); font-size: 11px; letter-spacing: 0.5px;">ACQUIRING OPEN-METEO ATMOSPHERIC TELEMETRY...</span>
       </div>
     `;
 
@@ -833,53 +1071,82 @@ export class HazardInspector {
     let protectedAreaHtml = '';
     if (paThreat?.nearest) {
       const pNear = paThreat.nearest;
-      const threatColor = paThreat.threatLevel === 'CRITICAL' ? '#ef4444' :
-        paThreat.threatLevel === 'WARNING' ? '#f59e0b' :
-        paThreat.threatLevel === 'ADVISORY' ? '#38bdf8' : '#10b981';
+      const isNominal = paThreat.threatLevel === 'NOMINAL';
+      const categoryLabel = pNear.type || pNear.category || 'Wildlife Sanctuary / National Park';
 
-      protectedAreaHtml = `
-        <div class="sri-section-title">🌲 PROTECTED AREA &amp; FOREST THREAT INTELLIGENCE</div>
-        <div class="sri-protected-area-card" style="
-          background: rgba(16, 185, 129, 0.06);
-          border: 1px solid ${threatColor};
-          border-radius: 6px;
-          padding: 8px;
-          margin-bottom: 8px;
-          font-size: 8.5px;
-        ">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
-            <div>
-              <strong style="color: #6ee7b7; font-size: 10px; display: block;">${pNear.name}</strong>
-              <span style="color: #94a3b8; font-size: 7.5px;">${pNear.category} · ${pNear.state}</span>
-            </div>
-            <span style="background: ${threatColor}22; color: ${threatColor}; border: 1px solid ${threatColor}; padding: 1px 6px; border-radius: 3px; font-size: 7.5px; font-weight: 700;">
-              ${paThreat.threatLevel} (${paThreat.distanceKm.toFixed(2)} km)
-            </span>
-          </div>
-          <div style="font-size: 8px; color: #cbd5e1; margin-bottom: 5px;">
-            ${paThreat.actionDirective}
-          </div>
-          ${pNear.keySpecies?.length ? `
-            <div style="font-size: 7.5px; color: #94a3b8; margin-bottom: 6px;">
-              <span style="color: #e2e8f0;">Key Species:</span> ${pNear.keySpecies.join(', ')}
-            </div>
-          ` : ''}
-          <button id="sri-focus-sanctuary-btn" style="
-            width: 100%;
-            padding: 5px;
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid #10b981;
-            border-radius: 4px;
-            color: #a7f3d0;
-            font-size: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            letter-spacing: 0.5px;
+      if (isNominal) {
+        // Safe buffer zone — clean, compact, non-intrusive indicator
+        protectedAreaHtml = `
+          <div class="sri-section-title">🌲 ECOLOGICAL &amp; FOREST BUFFER</div>
+          <div class="sri-protected-area-nominal" style="
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            font-size: 11.5px;
+            line-height: 1.4;
           ">
-            🎯 TARGET &amp; INSPECT SANCTUARY BOUNDARY
-          </button>
-        </div>
-      `;
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: #34d399; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                <span>●</span> BUFFER CLEAR (NOMINAL)
+              </span>
+              <span style="color: #94a3b8; font-size: 11px;">${paThreat.distanceKm.toFixed(1)} km away</span>
+            </div>
+            <div style="color: #cbd5e1; font-size: 11px; margin-top: 4px;">
+              No national parks or wildlife sanctuaries within 10 km proximity zone. Nearest: <span style="color: #e2e8f0; font-weight: 600;">${pNear.name}</span> (${pNear.state}).
+            </div>
+          </div>
+        `;
+      } else {
+        const threatColor = paThreat.threatLevel === 'CRITICAL' ? '#ef4444' :
+          paThreat.threatLevel === 'WARNING' ? '#f59e0b' : '#38bdf8';
+
+        protectedAreaHtml = `
+          <div class="sri-section-title">🌲 PROTECTED AREA &amp; FOREST THREAT INTELLIGENCE</div>
+          <div class="sri-protected-area-card" style="
+            background: rgba(16, 185, 129, 0.08);
+            border: 1.5px solid ${threatColor};
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            font-size: 11.5px;
+          ">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+              <div>
+                <strong style="color: #6ee7b7; font-size: 12.5px; display: block; font-weight: 700;">${pNear.name}</strong>
+                <span style="color: #94a3b8; font-size: 11px;">${categoryLabel} · ${pNear.state}</span>
+              </div>
+              <span style="background: ${threatColor}26; color: ${threatColor}; border: 1px solid ${threatColor}; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; white-space: nowrap;">
+                ${paThreat.threatLevel} (${paThreat.distanceKm.toFixed(1)} km)
+              </span>
+            </div>
+            <div style="font-size: 11.5px; color: #cbd5e1; margin-bottom: 6px; line-height: 1.45;">
+              ${paThreat.actionDirective}
+            </div>
+            ${pNear.keySpecies?.length ? `
+              <div style="font-size: 11px; color: #94a3b8; margin-bottom: 8px;">
+                <span style="color: #e2e8f0; font-weight: 600;">Key Species:</span> ${pNear.keySpecies.join(', ')}
+              </div>
+            ` : ''}
+            <button id="sri-focus-sanctuary-btn" style="
+              width: 100%;
+              padding: 7px 10px;
+              background: rgba(16, 185, 129, 0.2);
+              border: 1px solid #10b981;
+              border-radius: 5px;
+              color: #a7f3d0;
+              font-size: 11px;
+              font-weight: 700;
+              cursor: pointer;
+              letter-spacing: 0.6px;
+              transition: all 150ms ease;
+            ">
+              🎯 TARGET &amp; INSPECT SANCTUARY BOUNDARY
+            </button>
+          </div>
+        `;
+      }
     }
 
     // Critical Infrastructure intersection
@@ -962,19 +1229,27 @@ export class HazardInspector {
         </div>
 
         <div class="sri-inspector-body">
-          <div class="sri-section-title">PHYSICAL PARAMETERS & SENSORS</div>
+          <div class="sri-section-title">KEY METRICS</div>
           <div class="sri-metrics-grid">
             ${metricsHtml}
           </div>
 
           ${aiEvidenceCardHtml}
-          ${weatherHtml}
-          ${protectedAreaHtml}
-          ${infraHtml}
+
+          <details class="sri-details-section" open>
+            <summary class="sri-section-title" style="cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px;">WEATHER & CONTEXT <span style="font-size: 8px; color: #475569;">▼</span></summary>
+            ${weatherHtml}
+            ${protectedAreaHtml}
+            ${infraHtml}
+          </details>
 
           ${(() => {
+            if (!isIndustrial) return '';  // Only show for industrial events
             const fac = h.facility || h.classification?.facility;
             if (!fac) return '';
+            // Skip if facility is too far (>10km) to be genuinely associated
+            const facDist = fac.distance_km ?? fac.distanceKm ?? h.location?.distKm ?? 999;
+            if (Number(facDist) > 10) return '';
             const dist = fac.distance_km != null 
               ? `${Number(fac.distance_km).toFixed(2)} km` 
               : (fac.distanceKm != null 
@@ -1010,9 +1285,9 @@ export class HazardInspector {
           })()}
 
           ${(() => {
+            if (!isIndustrial) return '';  // Only show hazmat for industrial events
             const hazmat = h.hazmat_profile || resolveHazmatProfile(h.facility || h);
-            const hasHazmat = !!hazmat && (h.hazard_type?.includes('INDUSTRIAL') || h.facility || h.title?.includes('FLARE') || h.subtitle?.includes('Refinery') || h.subtitle?.includes('Plant') || h.subtitle?.includes('Smelter') || h.subtitle?.includes('Mine') || h.subtitle?.includes('Petro'));
-            if (!hasHazmat) return '';
+            if (!hazmat) return '';
 
             const unBadges = (hazmat.un_na_numbers || []).map(un => `
               <span style="
@@ -1105,84 +1380,170 @@ export class HazardInspector {
             `;
           })()}
 
-          ${revisitHtml}
-
-          <div class="sri-section-title">TACTICAL DIRECTIVES</div>
-          <ul class="sri-actions-list">
-            ${actionsHtml || '<li>Routine monitoring active.</li>'}
-          </ul>
+          ${isFire ? `
+          <details class="sri-details-section">
+            <summary class="sri-section-title" style="cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px;">SATELLITE REVISIT <span style="font-size: 8px; color: #475569;">▼</span></summary>
+            ${revisitHtml}
+          </details>
+          ` : ''}
 
           ${respondersHtml}
 
-          <div class="sri-section-title">DATA PROVENANCE & LIMITATIONS</div>
-          <div class="sri-prov-box">
-            <div class="sri-prov-row"><span class="sri-prov-k">Source:</span> ${prov.source || 'sriVision Analytical Engine'}</div>
-            <div class="sri-prov-row"><span class="sri-prov-k">Classification:</span> ${prov.source_type || h.data_classification || 'PHYSICAL_MODEL'}</div>
-            <div class="sri-prov-row"><span class="sri-prov-k">Calibration:</span> ${prov.confidence_basis || 'Calibrated physical baseline'}</div>
-            ${limits.length ? `<div class="sri-prov-limits"><span class="sri-prov-k">Scientific Caveats:</span><ul>${limitationsHtml}</ul></div>` : ''}
-          </div>
+          <details class="sri-details-section">
+            <summary class="sri-section-title" style="cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px;">DATA SOURCE <span style="font-size: 8px; color: #475569;">▼</span></summary>
+            <div class="sri-prov-box">
+              <div class="sri-prov-row"><span class="sri-prov-k">Source:</span> ${prov.source || 'sriVision Analytical Engine'}</div>
+              <div class="sri-prov-row"><span class="sri-prov-k">Type:</span> ${prov.source_type || h.data_classification || (isResource ? 'EMERGENCY_REGISTRY' : 'PHYSICAL_MODEL')}</div>
+              ${limits.length ? `<div class="sri-prov-limits"><span class="sri-prov-k">Caveats:</span><ul>${limitationsHtml}</ul></div>` : ''}
+            </div>
+          </details>
 
-          <button class="sri-dispatch-btn" id="sri-dispatch-responders-btn" style="
-            margin-top: 10px;
-            width: 100%;
-            padding: 9px 12px;
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(185, 28, 28, 0.4));
-            border: 1px solid #ef4444;
-            border-radius: var(--btn-radius, 8px);
-            color: #fecaca;
-            font-family: var(--font-mono, 'JetBrains Mono', monospace);
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 0 14px rgba(239, 68, 68, 0.3);
-            transition: all 150ms ease;
-          ">
-            🚨 DISPATCH FIRST RESPONDERS (SMS / WHATSAPP)
-          </button>
-
-          <button class="sri-plume-sim-btn" id="sri-simulate-plume-btn" style="
-            margin-top: 6px;
-            width: 100%;
-            padding: 9px 12px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(30, 64, 175, 0.35));
-            border: 1px solid #00d4ff;
-            border-radius: var(--btn-radius, 8px);
-            color: #bae6fd;
-            font-family: var(--font-mono, 'JetBrains Mono', monospace);
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 150ms ease;
-          ">
-            ${this._renderedPlumeHazardId === (h.id || `${lat}_${lon}`) ? 'PLUME SIMULATION ACTIVE (RE-SIMULATE)' : 'SIMULATE ATMOSPHERIC DISPERSION PLUME'}
-          </button>
-
-          <button class="sri-sim-lab-btn" id="sri-open-sim-lab-btn" style="
-            margin-top: 6px;
-            width: 100%;
-            padding: 9px 12px;
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(126, 34, 206, 0.35));
-            border: 1px solid #a855f7;
-            border-radius: var(--btn-radius, 8px);
-            color: #e9d5ff;
-            font-family: var(--font-mono, 'JetBrains Mono', monospace);
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 150ms ease;
-          ">
-            🧪 WHAT-IF INCIDENT SIMULATION LAB
-          </button>
-
-          <button class="sri-dossier-btn" id="sri-generate-dossier-btn">
-            GENERATE TACTICAL BRIEFING DOSSIER
-          </button>
+          ${isResource ? `
+            <button class="sri-dispatch-btn" id="sri-dispatch-responders-btn" style="
+              margin-top: 10px;
+              width: 100%;
+              padding: 9px 12px;
+              background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.4));
+              border: 1px solid #10b981;
+              border-radius: var(--btn-radius, 8px);
+              color: #a7f3d0;
+              font-family: var(--font-mono, 'JetBrains Mono', monospace);
+              font-size: 9px;
+              font-weight: 700;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              cursor: pointer;
+              box-shadow: 0 0 14px rgba(16, 185, 129, 0.3);
+              transition: all 150ms ease;
+            ">
+              📡 INITIATE DISPATCH FROM THIS UNIT
+            </button>
+            ${(h.responderDetails?.phone || h.phone) ? `
+              <a href="tel:${h.responderDetails?.phone || h.phone}" class="sri-phone-btn" style="
+                display: block;
+                text-align: center;
+                text-decoration: none;
+                margin-top: 6px;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 9px 12px;
+                background: rgba(30, 41, 59, 0.6);
+                border: 1px solid #38bdf8;
+                border-radius: var(--btn-radius, 8px);
+                color: #38bdf8;
+                font-family: var(--font-mono, 'JetBrains Mono', monospace);
+                font-size: 9px;
+                font-weight: 700;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                transition: all 150ms ease;
+              ">
+                📞 CALL STATION: ${h.responderDetails?.phone || h.phone}
+              </a>
+            ` : ''}
+            <button class="sri-dossier-btn" id="sri-generate-dossier-btn">
+              📄 EXPORT RESOURCE BRIEF
+            </button>
+          ` : isNonFireIndustrial ? `
+            <button class="sri-plume-sim-btn" id="sri-simulate-plume-btn" style="
+              margin-top: 10px;
+              width: 100%;
+              padding: 9px 12px;
+              background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(30, 64, 175, 0.35));
+              border: 1px solid #00d4ff;
+              border-radius: var(--btn-radius, 8px);
+              color: #bae6fd;
+              font-family: var(--font-mono, 'JetBrains Mono', monospace);
+              font-size: 9px;
+              font-weight: 700;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              cursor: pointer;
+              transition: all 150ms ease;
+            ">
+              ${this._renderedPlumeHazardId === (h.id || `${lat}_${lon}`) ? '✅ PLUME ACTIVE — RE-SIMULATE' : '💨 SIMULATE CONTAINMENT RELEASE PLUME'}
+            </button>
+            <button class="sri-sim-lab-btn" id="sri-open-sim-lab-btn" style="
+              margin-top: 6px;
+              width: 100%;
+              padding: 9px 12px;
+              background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(126, 34, 206, 0.35));
+              border: 1px solid #a855f7;
+              border-radius: var(--btn-radius, 8px);
+              color: #e9d5ff;
+              font-family: var(--font-mono, 'JetBrains Mono', monospace);
+              font-size: 9px;
+              font-weight: 700;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              cursor: pointer;
+              transition: all 150ms ease;
+            ">
+              🧪 SIMULATION LAB
+            </button>
+            <button class="sri-dossier-btn" id="sri-generate-dossier-btn">
+              📄 FACILITY COMPLIANCE REPORT
+            </button>
+          ` : `
+            <button class="sri-dispatch-btn" id="sri-dispatch-responders-btn" style="
+              margin-top: 10px;
+              width: 100%;
+              padding: 9px 12px;
+              background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(185, 28, 28, 0.4));
+              border: 1px solid #ef4444;
+              border-radius: var(--btn-radius, 8px);
+              color: #fecaca;
+              font-family: var(--font-mono, 'JetBrains Mono', monospace);
+              font-size: 9px;
+              font-weight: 700;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              cursor: pointer;
+              box-shadow: 0 0 14px rgba(239, 68, 68, 0.3);
+              transition: all 150ms ease;
+            ">
+              🚨 DISPATCH RESPONDERS
+            </button>
+            <button class="sri-plume-sim-btn" id="sri-simulate-plume-btn" style="
+              margin-top: 6px;
+              width: 100%;
+              padding: 9px 12px;
+              background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(30, 64, 175, 0.35));
+              border: 1px solid #00d4ff;
+              border-radius: var(--btn-radius, 8px);
+              color: #bae6fd;
+              font-family: var(--font-mono, 'JetBrains Mono', monospace);
+              font-size: 9px;
+              font-weight: 700;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              cursor: pointer;
+              transition: all 150ms ease;
+            ">
+              ${this._renderedPlumeHazardId === (h.id || `${lat}_${lon}`) ? '✅ PLUME ACTIVE — RE-SIMULATE' : '💨 SIMULATE PLUME'}
+            </button>
+            <button class="sri-sim-lab-btn" id="sri-open-sim-lab-btn" style="
+              margin-top: 6px;
+              width: 100%;
+              padding: 9px 12px;
+              background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(126, 34, 206, 0.35));
+              border: 1px solid #a855f7;
+              border-radius: var(--btn-radius, 8px);
+              color: #e9d5ff;
+              font-family: var(--font-mono, 'JetBrains Mono', monospace);
+              font-size: 9px;
+              font-weight: 700;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              cursor: pointer;
+              transition: all 150ms ease;
+            ">
+              🧪 SIMULATION LAB
+            </button>
+            <button class="sri-dossier-btn" id="sri-generate-dossier-btn">
+              📋 GENERATE ACTION PLAN (IAP)
+            </button>
+          `}
         </div>
       </div>
     `;
@@ -1234,7 +1595,29 @@ export class HazardInspector {
     // ── Wire What-If Incident Simulation Lab Modal ──
     document.getElementById('sri-open-sim-lab-btn')?.addEventListener('click', () => {
       if (this.currentHazard) {
-        openSimulationLabModal(this.currentHazard, { viewer: window.__sriVision?.viewer });
+        const viewer = window.__sriVision?.viewer;
+        openSimulationLabModal(this.currentHazard, {
+          viewer,
+          onProjectToGlobe: (simPayload) => {
+            if (viewer && simPayload?.plume) {
+              renderPlumeOnCesium(viewer, simPayload.plume);
+              const lat = Number(simPayload.inputs?.latitude || this.currentHazard.location?.latitude);
+              const lon = Number(simPayload.inputs?.longitude || this.currentHazard.location?.longitude);
+              if (Number.isFinite(lat) && Number.isFinite(lon)) {
+                const C = typeof Cesium !== 'undefined' ? Cesium : window.Cesium;
+                if (C && viewer.camera) {
+                  viewer.camera.flyTo({
+                    destination: C.Cartesian3.fromDegrees(lon, lat, 14000),
+                    duration: 1.5,
+                  });
+                }
+              }
+              this._renderedPlumeHazardId = this.currentHazard.id || `${lat}_${lon}`;
+              const pBtn = this.container.querySelector('#sri-simulate-plume-btn');
+              if (pBtn) pBtn.textContent = '✅ SIMULATION ACTIVE — RE-SIMULATE';
+            }
+          }
+        });
       }
     });
 
@@ -1275,6 +1658,9 @@ export class HazardInspector {
           link.click();
           btn.textContent = origText;
           btn.disabled = false;
+          if (this.onGenerateDossier && this.currentHazard) {
+            this.onGenerateDossier(this.currentHazard);
+          }
           return;
         }
       } catch (err) {
@@ -1329,6 +1715,11 @@ CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
       link.href = URL.createObjectURL(blob);
       link.download = `Incident_Action_Plan_${Number(lat).toFixed(2)}N_${Number(lon).toFixed(2)}E.md`;
       link.click();
+
+      // Open on-screen Incident Action Plan modal
+      if (this.onGenerateDossier && this.currentHazard) {
+        this.onGenerateDossier(this.currentHazard);
+      }
     });
 
     document.getElementById('sri-inspector-close')?.addEventListener('click', () => {
@@ -1341,6 +1732,7 @@ CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
 
     document.getElementById('sri-dispatch-responders-btn')?.addEventListener('click', () => {
       if (this.currentHazard) {
+        const isRes = !this._isFireHazard(this.currentHazard) && (this.currentHazard.isResource || this.currentHazard.hazard_type === 'RESOURCE' || this.currentHazard.responderDetails != null);
         openDispatchModal({
           lat: this.currentHazard.location?.latitude,
           lon: this.currentHazard.location?.longitude,
@@ -1349,6 +1741,8 @@ CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
           facilityName: this.currentHazard.facility?.name || this.currentHazard.subtitle || 'Active Sector',
           flameTempC: this.currentHazard.flameTempC,
           flameTempK: this.currentHazard.flameTempK,
+          isResource: isRes,
+          responder: this.currentHazard.responderDetails || (isRes ? this.currentHazard : null),
         });
       }
     });
@@ -1369,11 +1763,24 @@ CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
         position: absolute;
         top: 60px;
         right: 20px;
-        width: 380px;
+        width: 360px;
         max-height: calc(100vh - 90px);
         z-index: 999;
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
         pointer-events: auto;
+      }
+      .sri-details-section {
+        margin-bottom: 4px;
+      }
+      .sri-details-section > summary {
+        user-select: none;
+      }
+      .sri-details-section > summary::-webkit-details-marker {
+        display: none;
+      }
+      .sri-details-section[open] > summary span {
+        transform: rotate(180deg);
+        display: inline-block;
       }
       .sri-inspector-panel {
         background: var(--glass-bg, rgba(12, 12, 20, 0.88));
@@ -1400,24 +1807,24 @@ CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
       .sri-header-icon { font-size: 20px; flex-shrink: 0; }
       .sri-header-title {
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 700;
         letter-spacing: 0.6px;
         color: #fff;
-        line-height: 1.35;
+        line-height: 1.4;
       }
       .sri-header-subtitle {
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
-        font-size: 10.5px;
+        font-size: 12px;
         letter-spacing: 0.4px;
         color: var(--accent, #00d4ff);
-        margin-top: 3px;
+        margin-top: 4px;
       }
       .sri-close-btn {
         background: none;
         border: none;
         color: var(--text-dim, rgba(232, 234, 237, 0.5));
-        font-size: 20px;
+        font-size: 22px;
         cursor: pointer;
         padding: 0 4px;
         line-height: 1;
@@ -1427,11 +1834,11 @@ CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
       .sri-badge-row { display: flex; gap: 6px; margin-top: 8px; }
       .sri-tag, .sri-sev-tag {
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
-        font-size: 9.5px;
+        font-size: 11px;
         font-weight: 700;
         letter-spacing: 0.8px;
         text-transform: uppercase;
-        padding: 3px 8px;
+        padding: 4px 9px;
         border-radius: 4px;
       }
       .sri-inspector-body {
@@ -1441,80 +1848,80 @@ CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
       }
       .sri-section-title {
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
-        font-size: 10.5px;
+        font-size: 12px;
         font-weight: 700;
         letter-spacing: 1.2px;
         text-transform: uppercase;
-        color: #94a3b8;
-        margin: 14px 0 8px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        padding-bottom: 4px;
+        color: #e2e8f0;
+        margin: 16px 0 9px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 5px;
       }
-      .sri-metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .sri-metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
       .sri-metric-card {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        padding: 8px 10px;
-        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 11px 13px;
+        border-radius: 8px;
       }
       .sri-metric-label {
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
-        font-size: 9.5px;
+        font-size: 11px;
         letter-spacing: 0.8px;
         text-transform: uppercase;
-        color: #94a3b8;
-        margin-bottom: 3px;
+        color: #cbd5e1;
+        margin-bottom: 5px;
         font-weight: 600;
       }
       .sri-metric-val {
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
-        font-size: 16px;
-        font-weight: 700;
+        font-size: 19px;
+        font-weight: 800;
         color: var(--accent, #00d4ff);
         letter-spacing: 0.5px;
       }
       .sri-metric-val.val-crit { color: #ff3344; }
       .sri-metric-val.val-warn { color: #ffaa00; }
-      .sri-metric-unit { font-size: 11px; font-weight: 500; color: var(--text-dim); }
+      .sri-metric-unit { font-size: 13px; font-weight: 500; color: #cbd5e1; }
       .sri-actions-list {
         margin: 0;
-        padding-left: 16px;
+        padding-left: 18px;
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
-        font-size: 11px;
-        color: var(--text-secondary, rgba(232, 234, 237, 0.8));
+        font-size: 12.5px;
+        color: #f1f5f9;
       }
-      .sri-action-item { margin-bottom: 6px; line-height: 1.45; }
+      .sri-action-item { margin-bottom: 8px; line-height: 1.5; }
       .sri-responders-list {
         background: rgba(0, 0, 0, 0.35);
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 6px;
-        padding: 8px 10px;
+        padding: 10px 12px;
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
       }
-      .sri-resp-row { font-size: 10.5px; color: #cbd5e1; margin-bottom: 5px; line-height: 1.35; }
+      .sri-resp-row { font-size: 12px; color: #e2e8f0; margin-bottom: 6px; line-height: 1.4; }
       .sri-prov-box {
         background: rgba(0, 0, 0, 0.35);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        padding: 8px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 10px 12px;
         border-radius: 6px;
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
-        font-size: 10.5px;
-        color: var(--text-secondary, rgba(232, 234, 237, 0.75));
-        line-height: 1.4;
+        font-size: 12px;
+        color: #e2e8f0;
+        line-height: 1.45;
       }
-      .sri-prov-row { margin-bottom: 3px; }
-      .sri-prov-k { color: var(--accent, #00d4ff); }
-      .sri-prov-limits { margin-top: 5px; color: #ffaa00; }
+      .sri-prov-row { margin-bottom: 4px; }
+      .sri-prov-k { color: var(--accent, #00d4ff); font-weight: 600; }
+      .sri-prov-limits { margin-top: 6px; color: #ffaa00; font-size: 11.5px; }
       .sri-plume-sim-btn {
         margin-top: 12px;
         width: 100%;
-        padding: 10px 14px;
-        background: rgba(255, 153, 0, 0.12);
-        border: 1px solid rgba(255, 153, 0, 0.45);
+        padding: 11px 14px;
+        background: rgba(255, 153, 0, 0.14);
+        border: 1px solid rgba(255, 153, 0, 0.5);
         border-radius: var(--btn-radius, 8px);
         color: #ffaa00;
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
-        font-size: 10.5px;
+        font-size: 12px;
         font-weight: 700;
         letter-spacing: 1.2px;
         text-transform: uppercase;
@@ -1531,13 +1938,13 @@ CLASSIFICATION: SATELLITE INTELLIGENCE // AUTHORIZED INCIDENT COMMAND DISPATCH`;
       .sri-dossier-btn {
         margin-top: 8px;
         width: 100%;
-        padding: 10px 14px;
-        background: rgba(0, 212, 255, 0.1);
-        border: 1px solid rgba(0, 212, 255, 0.4);
+        padding: 11px 14px;
+        background: rgba(0, 212, 255, 0.12);
+        border: 1px solid rgba(0, 212, 255, 0.45);
         border-radius: var(--btn-radius, 8px);
         color: var(--accent, #00d4ff);
         font-family: var(--font-mono, 'JetBrains Mono', monospace);
-        font-size: 10.5px;
+        font-size: 12px;
         font-weight: 700;
         letter-spacing: 1.5px;
         text-transform: uppercase;

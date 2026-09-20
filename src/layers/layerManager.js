@@ -65,12 +65,12 @@ export class HazardLayerManager {
     return () => this._listeners.delete(callback);
   }
 
-  notifyHazardSelected(hazardContract) {
+  notifyHazardSelected(hazardContract, options = {}) {
     this.selectedHazard = hazardContract;
     for (const listener of this._listeners) {
-      try { listener(hazardContract); } catch (e) { console.error('[LayerManager] Listener error:', e); }
+      try { listener(hazardContract, options); } catch (e) { console.error('[LayerManager] Listener error:', e); }
     }
-    eventBus.emit(SRI_EVENTS.HAZARD_SELECTED, hazardContract);
+    eventBus.emit(SRI_EVENTS.HAZARD_SELECTED, { ...hazardContract, _flyTo: Boolean(options?.flyTo) });
   }
 
   _notifyStateChange(layer) {
@@ -86,6 +86,7 @@ export class HazardLayerManager {
 
     this._screenSpaceHandler = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
 
+    // LEFT CLICK → open AI panel only (no zoom)
     this._screenSpaceHandler.setInputAction((click) => {
       let pickedObject = this.viewer.scene.pick(click.position);
       let entity = pickedObject?.id;
@@ -99,9 +100,39 @@ export class HazardLayerManager {
         }
       }
       if (entity && entity._sriHazardContract) {
-        this.notifyHazardSelected(entity._sriHazardContract);
+        this.notifyHazardSelected(entity._sriHazardContract, { flyTo: false });
       }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+    // RIGHT CLICK → zoom/fly to the entity
+    this._screenSpaceHandler.setInputAction((click) => {
+      let pickedObject = this.viewer.scene.pick(click.position);
+      let entity = pickedObject?.id;
+      if (!entity?._sriHazardContract && this.viewer.scene.drillPick) {
+        const drilled = this.viewer.scene.drillPick(click.position, 10);
+        for (const p of drilled) {
+          if (p?.id?._sriHazardContract) {
+            entity = p.id;
+            break;
+          }
+        }
+      }
+      if (entity && entity._sriHazardContract) {
+        // Open panel and fly to hazard
+        this.notifyHazardSelected(entity._sriHazardContract, { flyTo: true });
+
+        // Fly camera to the entity's location
+        const hazard = entity._sriHazardContract;
+        const lat = hazard.location?.latitude;
+        const lon = hazard.location?.longitude;
+        if (lat != null && lon != null) {
+          this.viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(lon, lat, 18000),
+            duration: 1.6,
+          });
+        }
+      }
+    }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
   }
 
   destroy() {

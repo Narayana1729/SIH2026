@@ -20,6 +20,9 @@ import { composeLocalityTag } from './hudLocality.js';
 import { ellipsoidalToMslDisplayM, ensureGeoidReady, geoidHeight } from './data/geoid.js';
 import { getBasemapLabelContext } from './voice/gevActions.js';
 import { isHudSummaryUnconfigured } from './hudSummaryResponse.js';
+import { findFacilitiesNearby, resolveHazmatProfile } from './disasters/industrial/industrialFacilities.js';
+import { calculateRateOfSpread } from './disasters/wildfire/fireSpreadSimulation.js';
+import { ThermalCategories } from './intelligence/thermalClassifier.js';
 
 import { eventBus, SRI_EVENTS } from './core/eventBus.js';
 
@@ -54,6 +57,62 @@ const NEARBY_POINTS = Object.values(CITY_POIS)
     lat: poi.lat,
     lon: poi.lon,
   })));
+
+/** In-memory cache for reverse-geocoded OpenStreetMap settlements and tehsils. */
+const _osmCache = new Map();
+
+/**
+ * Return 16-wind cardinal direction for a given heading in degrees.
+ * @param {number} degrees - Azimuth / heading in degrees (0-360).
+ * @returns {string} Compass direction (e.g. 'N', 'NE', 'SE', 'WNW').
+ */
+function getCompassDirection(degrees) {
+  const normalized = ((degrees % 360) + 360) % 360;
+  const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+  const index = Math.round(normalized / 22.5) % 16;
+  return directions[index];
+}
+
+/**
+ * Reverse-geocode coordinates via OpenStreetMap Nominatim with caching.
+ * @param {number} lat - Latitude in degrees
+ * @param {number} lon - Longitude in degrees
+ * @returns {Promise<string|null>} Formatted place string (e.g. "Dhurkot Kalan, Barnala, Punjab")
+ */
+async function fetchOsmLocationName(lat, lon) {
+  const key = `${lat.toFixed(3)},${lon.toFixed(3)}`;
+  if (_osmCache.has(key)) return _osmCache.get(key);
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3500);
+    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=14`, {
+      headers: { 'User-Agent': 'sriVision-Disaster-Command/1.0 (https://github.com/srivision)' },
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!res.ok) throw new Error(`OSM HTTP ${res.status}`);
+    const data = await res.json();
+    const addr = data.address || {};
+    const local = addr.village || addr.hamlet || addr.town || addr.suburb || addr.neighbourhood || addr.city || '';
+    const tehsil = addr.county || addr.subdistrict || addr.tehsil || '';
+    const district = addr.state_district || addr.district || '';
+    const state = addr.state || '';
+
+    const parts = [local, tehsil, district, state].filter(Boolean);
+    let name = parts.slice(0, 3).join(', ');
+    if (!name && data.display_name) {
+      name = data.display_name.split(',').slice(0, 3).join(',').trim();
+    }
+    if (name) {
+      _osmCache.set(key, name);
+      return name;
+    }
+  } catch (err) {
+    // Offline / rate-limit fallback
+  }
+  return null;
+}
 
 /**
  * Full-screen intelligence HUD overlay rendered on top of the Cesium canvas.
@@ -174,7 +233,7 @@ export class IntelHUD {
           <div class="hud-system">${this._missionId}  ${this._sensorId}</div>
           <div class="hud-mode" id="hud-mode">MONITORING (NORMAL)</div>
           <div class="hud-summary-wrap">
-            <div class="hud-summary-label">SUMMARY</div>
+            <div class="hud-summary-label" id="hud-summary-label">SUMMARY</div>
             <div class="hud-summary" id="hud-summary">Awaiting telemetry...</div>
           </div>
         </div>
@@ -573,6 +632,196 @@ export class IntelHUD {
   }
 
   /**
+   * Determine high-level thermal category for HUD intelligence.
+   * @param {Object} hazard
+   * @returns {'INDUSTRY'|'AGRICULTURE'|'MINING'|'WILDFIRE'|'OTHER'}
+   */
+  _getHazardCategory(hazard) {
+    if (!hazard) return 'OTHER';
+    const rawCat = String(
+      hazard.classification?.category ||
+      hazard.category ||
+      hazard._sriCategory ||
+      hazard.hazard_type ||
+      ''
+    );
+    const text = `${rawCat} ${hazard.title || ''} ${hazard.facilityType || ''} ${hazard.sector || ''} ${hazard.name || ''}`.toLowerCase();
+
+    if (
+      rawCat === ThermalCategories.MINING_SMELTING ||
+      text.includes('mining') ||
+      text.includes('coalfield') ||
+      text.includes('colliery') ||
+      text.includes('smelt') ||
+      text.includes('mine ') ||
+      text.includes('quarry') ||
+      text.includes('open cast') ||
+      text.includes('ocp')
+    ) {
+      return 'MINING';
+    }
+
+    if (
+      rawCat === ThermalCategories.INDUSTRIAL_FLARE ||
+      rawCat === ThermalCategories.INDUSTRIAL_PROCESS ||
+      rawCat === ThermalCategories.INDUSTRIAL_DISASTER ||
+      hazard.hazard_type === 'INDUSTRIAL_FIRE' ||
+      text.includes('industrial') ||
+      text.includes('refinery') ||
+      text.includes('flare') ||
+      text.includes('power plant') ||
+      text.includes('petrochem') ||
+      text.includes('chemical')
+    ) {
+      return 'INDUSTRY';
+    }
+
+    if (
+      rawCat === ThermalCategories.AGRICULTURAL_BURNING ||
+      text.includes('agri') ||
+      text.includes('stubble') ||
+      text.includes('crop') ||
+      text.includes('farm') ||
+      text.includes('residue')
+    ) {
+      return 'AGRICULTURE';
+    }
+
+    if (
+      rawCat === ThermalCategories.FOREST_WILDFIRE ||
+      hazard.hazard_type === 'WILDFIRE' ||
+      text.includes('wildfire') ||
+      text.includes('forest') ||
+      text.includes('canopy') ||
+      text.includes('vegetation')
+    ) {
+      return 'WILDFIRE';
+    }
+
+    return 'OTHER';
+  }
+
+  /**
+   * Compose rich category-specific intelligence string for locked thermal anomaly.
+   * @param {Object} hazard
+   * @returns {string}
+   */
+  _composeHazardIntelligence(hazard) {
+    const lat = Number(hazard.latitude ?? hazard.lat ?? hazard.location?.latitude ?? 0);
+    const lon = Number(hazard.longitude ?? hazard.lon ?? hazard.location?.longitude ?? 0);
+    const frp = Number(hazard.frp ?? hazard.powerMW ?? hazard.frpMW ?? 0);
+    const frpStr = frp > 0 ? `${frp.toFixed(1)} MW` : 'Active';
+    const cat = this._getHazardCategory(hazard);
+
+    if (cat === 'INDUSTRY') {
+      let fac = hazard.facility || hazard.facilityMatch;
+      let distKm = fac?.distance_km;
+      if (!fac && lat && lon) {
+        const nearby = findFacilitiesNearby(lat, lon, 25);
+        if (nearby.length > 0) {
+          fac = nearby[0];
+          distKm = fac.distance_km;
+        }
+      }
+
+      const facName = fac?.name || hazard.title || hazard.facilityType || 'Hydrocarbon Processing Facility';
+      const distStr = Number.isFinite(distKm) ? ` (${distKm.toFixed(1)} km)` : '';
+      const hazmatProfile = resolveHazmatProfile(fac || hazard);
+      const chemicals = hazmatProfile?.primary_chemicals?.length
+        ? hazmatProfile.primary_chemicals.slice(0, 4).join(', ')
+        : 'Crude Oil, Benzene, LPG, Naphtha';
+      const risk = hazmatProfile?.primary_disaster_risk || 'Hydrocarbon Combustion / Thermal Surge';
+
+      return `${facName}${distStr} | Chems: ${chemicals} | Risk: ${risk} | FRP: ${frpStr}`;
+    }
+
+    if (cat === 'AGRICULTURE') {
+      const cacheKey = `${lat.toFixed(3)},${lon.toFixed(3)}`;
+      let osmLoc = _osmCache.get(cacheKey);
+      if (!osmLoc) {
+        const nearest = this._nearestKnownPoint(lat, lon);
+        osmLoc = nearest?.city || nearest?.poi || (lat ? `${Math.abs(lat).toFixed(2)}°N, ${Math.abs(lon).toFixed(2)}°E` : 'Agricultural Region');
+        void this._fetchAndApplyOsmLocation(lat, lon);
+      }
+
+      const windSpeed = Math.round(hazard.weather?.windSpeedKmh || 16);
+      const windDir = hazard.weather?.windDirectionDegrees != null
+        ? getCompassDirection(hazard.weather.windDirectionDegrees)
+        : 'NW';
+
+      return `Cropland Stubble Burn | Loc: ${osmLoc} (OSM) | Wind: ${windDir} @ ${windSpeed} km/h | FRP: ${frpStr}`;
+    }
+
+    if (cat === 'MINING') {
+      let fac = hazard.facility || hazard.facilityMatch;
+      let mineName = fac?.name;
+      if (!mineName && lat && lon) {
+        const nearby = findFacilitiesNearby(lat, lon, 35);
+        const mineFac = nearby.find((f) => {
+          const s = `${f.name} ${f.sector || ''}`.toLowerCase();
+          return s.includes('mine') || s.includes('coal') || s.includes('colliery') || s.includes('quarry');
+        });
+        if (mineFac) {
+          mineName = `${mineFac.name} (${mineFac.distance_km.toFixed(1)} km)`;
+        }
+      }
+      if (!mineName) {
+        const nearest = this._nearestKnownPoint(lat, lon);
+        mineName = nearest ? `${nearest.city} Coalfield Basin` : 'Open-Cast Mineral Extraction Zone';
+      }
+
+      const hazmatProfile = resolveHazmatProfile(fac || 'mining');
+      const mineralType = 'High-Volatile Coal Seam / Open-Cast Pit';
+      const miningRisk = hazmatProfile?.primary_disaster_risk || 'Subsurface Coal Smoldering & Methane (CH4) Accumulation';
+
+      return `${mineName} | Mineral: ${mineralType} | Hazard: ${miningRisk} | FRP: ${frpStr}`;
+    }
+
+    if (cat === 'WILDFIRE') {
+      const windSpeed = Number(hazard.weather?.windSpeedKmh || 18);
+      const windDirDeg = Number(hazard.weather?.windDirectionDegrees ?? 240);
+      const rosData = calculateRateOfSpread({ fuelCategory: 'DENSE_FOREST', windSpeedKmh: windSpeed, relativeHumidity: 28 });
+      const rosKmh = Math.max(0.4, Math.round(((rosData.head_ros_m_per_min * 60) / 1000) * 10) / 10);
+      const spreadHeadingDeg = (windDirDeg + 180) % 360;
+      const spreadCardinal = getCompassDirection(spreadHeadingDeg);
+      const areaHa = Math.max(2, Math.round((Math.PI * (rosKmh * 1000) * (rosKmh * 550)) / 10000));
+
+      return `1-Hr Forward Spread: ~${rosKmh.toFixed(1)} km (towards ${spreadCardinal}) | Rate: ${rosKmh.toFixed(1)} km/h | Perimeter Expansion: ~${areaHa} ha/hr | FRP: ${frpStr}`;
+    }
+
+    const latStr = lat ? `${Math.abs(lat).toFixed(2)}°${lat >= 0 ? 'N' : 'S'}` : '';
+    const lonStr = lon ? `${Math.abs(lon).toFixed(2)}°${lon >= 0 ? 'E' : 'W'}` : '';
+    const label = hazard.title || hazard.facilityType || hazard.name || 'THERMAL TARGET';
+    return `TARGET LOCK: ${label.toUpperCase()} ${latStr} ${lonStr} | FRP: ${frpStr} | VIIRS NRT LIVE`;
+  }
+
+  /**
+   * Asynchronously fetch OpenStreetMap reverse geocode and refresh the summary.
+   * @param {number} lat
+   * @param {number} lon
+   */
+  async _fetchAndApplyOsmLocation(lat, lon) {
+    if (!lat || !lon) return;
+    const cacheKey = `${lat.toFixed(3)},${lon.toFixed(3)}`;
+    if (_osmCache.has(cacheKey)) return;
+    if (this._osmPending?.has(cacheKey)) return;
+
+    if (!this._osmPending) this._osmPending = new Set();
+    this._osmPending.add(cacheKey);
+
+    const locName = await fetchOsmLocationName(lat, lon);
+    this._osmPending.delete(cacheKey);
+
+    if (locName && this._selectedHazard) {
+      const hLat = Number(this._selectedHazard.latitude ?? this._selectedHazard.lat ?? this._selectedHazard.location?.latitude ?? 0);
+      const hLon = Number(this._selectedHazard.longitude ?? this._selectedHazard.lon ?? this._selectedHazard.location?.longitude ?? 0);
+      if (Math.abs(hLat - lat) < 0.05 && Math.abs(hLon - lon) < 0.05) {
+        this._setSummaryText(this._composeSummary(), false);
+      }
+    }
+  }
+
+  /**
    * React when a hazard, industrial facility, or thermal anomaly is selected.
    * Dynamically updates the HUD mode, color scheme, and locked target telemetry.
    * @param {Object} hazard
@@ -582,6 +831,7 @@ export class IntelHUD {
     this._selectedHazard = hazard;
     const modeEl = document.getElementById('hud-mode');
     const systemEl = this._el?.querySelector('.hud-system');
+    const labelEl = document.getElementById('hud-summary-label') || this._el?.querySelector('.hud-summary-label');
 
     const frp = Number(hazard.frp || hazard.powerMW || hazard.frpMW || 0);
     const isCritical = hazard.severity === 'CRITICAL' || frp > 50 || hazard.isAbnormal;
@@ -606,6 +856,21 @@ export class IntelHUD {
       systemEl.textContent = `TARGET ACQUIRED · ${conf}${frpStr}`;
     }
 
+    const cat = this._getHazardCategory(hazard);
+    if (labelEl) {
+      if (cat === 'INDUSTRY') {
+        labelEl.textContent = 'FACILITY & CHEMICAL HAZMAT';
+      } else if (cat === 'AGRICULTURE') {
+        labelEl.textContent = 'AGRICULTURAL LOCATION (OSM)';
+      } else if (cat === 'MINING') {
+        labelEl.textContent = 'MINING SECTOR INTELLIGENCE';
+      } else if (cat === 'WILDFIRE') {
+        labelEl.textContent = 'WILDFIRE SPREAD DYNAMICS (1-HR PROJECTION)';
+      } else {
+        labelEl.textContent = 'TARGET TELEMETRY';
+      }
+    }
+
     this._setSummaryText(this._composeSummary(), true);
   }
 
@@ -616,6 +881,7 @@ export class IntelHUD {
     this._selectedHazard = null;
     const modeEl = document.getElementById('hud-mode');
     const systemEl = this._el?.querySelector('.hud-system');
+    const labelEl = document.getElementById('hud-summary-label') || this._el?.querySelector('.hud-summary-label');
 
     if (modeEl) {
       modeEl.textContent = 'MONITORING (NORMAL)';
@@ -625,6 +891,10 @@ export class IntelHUD {
 
     if (systemEl) {
       systemEl.textContent = `${this._missionId}  ${this._sensorId}`;
+    }
+
+    if (labelEl) {
+      labelEl.textContent = 'SUMMARY';
     }
 
     this._setSummaryText(this._composeSummary(), false);
@@ -663,17 +933,7 @@ export class IntelHUD {
     const localityTag = composeLocalityTag(nearest, m.latDeg, m.lonDeg);
 
     if (this._selectedHazard) {
-      const h = this._selectedHazard;
-      const lat = h.latitude ?? h.lat;
-      const lon = h.longitude ?? h.lon;
-      const latStr = lat != null ? `${Math.abs(lat).toFixed(2)}°${lat >= 0 ? 'N' : 'S'}` : '';
-      const lonStr = lon != null ? `${Math.abs(lon).toFixed(2)}°${lon >= 0 ? 'E' : 'W'}` : '';
-      const frpVal = h.frp ?? h.powerMW ?? h.frpMW;
-      const frpStr = frpVal != null ? ` | FRP: ${Number(frpVal).toFixed(1)} MW` : '';
-      const tempVal = h.brightness ?? h.dozierTempK ?? h.tempK;
-      const tempStr = tempVal != null ? ` | TEMP: ${Math.round(tempVal)}K` : '';
-      const label = h.title || h.facilityType || h.name || 'THERMAL TARGET';
-      return `TARGET LOCK: ${label.toUpperCase()} ${latStr} ${lonStr}${frpStr}${tempStr} | ${region} | VIIRS NRT LIVE`;
+      return this._composeHazardIntelligence(this._selectedHazard);
     }
 
     return `${modeLabel} ${band} ${localityTag} | ${region} | ALT ${altTag} | WINDOW ${winTag} | SUN ${m.sunEl.toFixed(0)}° | ONA ${m.ona.toFixed(0)}° | ${localTag}`;
@@ -681,7 +941,7 @@ export class IntelHUD {
 
   /**
    * Animate the summary text into the DOM using a typewriter effect
-   * (2 characters every 24ms).
+   * (3 characters every 18ms).
    * @param {string} text - Full summary string to type out.
    */
   _typeSummary(text) {
@@ -691,7 +951,7 @@ export class IntelHUD {
     let index = 0;
     el.textContent = '';
     this._summaryTypingInterval = setInterval(() => {
-      index += 2;
+      index += 3;
       if (index >= text.length) {
         el.textContent = text;
         clearInterval(this._summaryTypingInterval);
@@ -699,7 +959,7 @@ export class IntelHUD {
         return;
       }
       el.textContent = text.slice(0, index);
-    }, 24);
+    }, 18);
   }
 
   /**
@@ -708,6 +968,11 @@ export class IntelHUD {
    *   by character; otherwise sets it instantly.
    */
   async _updateSummary(animate = false, force = false) {
+    if (this._selectedHazard) {
+      this._setSummaryText(this._composeSummary(), animate);
+      return;
+    }
+
     const fallbackText = this._composeSummary();
     if (!this._latestMetrics) {
       this._setSummaryText(fallbackText, animate);

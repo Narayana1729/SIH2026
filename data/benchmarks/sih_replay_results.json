@@ -1,0 +1,189 @@
+[
+  {
+    "benchmarkId": "BENCH-001-JAMNAGAR-FLARE",
+    "name": "Jamnagar Petrochemical Complex Gas Flare (Gujarat)",
+    "coordinates": {
+      "lat": 22.4707,
+      "lon": 70.0634
+    },
+    "pyrometry": {
+      "flameTempK": 1040,
+      "flameAreaM2": 108.9,
+      "regime": "Industrial Kiln / Point-Source Thermal Target",
+      "radiantHeatFluxKwM2": 66.3
+    },
+    "classification": {
+      "category": "INDUSTRIAL_FLARE",
+      "confidence": 0.88,
+      "severity": "LOW"
+    },
+    "skepticAudit": {
+      "isDisproven": false,
+      "action": "CONFIRMED_HAZARD",
+      "passedCheckCount": 5,
+      "totalChecks": 5,
+      "primaryDisproveReason": null
+    },
+    "dispersionPlume": {
+      "buoyancyFb": 250.51,
+      "plumeRiseDeltaH": 23.6,
+      "touchdownDistanceM": 1001
+    },
+    "hazmat": null,
+    "testPassed": true
+  },
+  {
+    "benchmarkId": "BENCH-002-VIZAG-EXPLOSION",
+    "name": "HPCL Vizag Refinery Runaway Surge / Tank Explosion (AP)",
+    "coordinates": {
+      "lat": 17.6885,
+      "lon": 83.2519
+    },
+    "pyrometry": {
+      "flameTempK": 1360,
+      "flameAreaM2": 72,
+      "regime": "Industrial High-Temp Gas Flare (Hydrocarbon)",
+      "radiantHeatFluxKwM2": 194
+    },
+    "classification": {
+      "category": "INDUSTRIAL_DISASTER",
+      "confidence": 0.92,
+      "severity": "CRITICAL"
+    },
+    "skepticAudit": {
+      "isDisproven": false,
+      "action": "CONFIRMED_HAZARD",
+      "passedCheckCount": 5,
+      "totalChecks": 5,
+      "primaryDisproveReason": null
+    },
+    "dispersionPlume": {
+      "buoyancyFb": 1889.85,
+      "plumeRiseDeltaH": 79.3,
+      "touchdownDistanceM": 2003
+    },
+    "hazmat": {
+      "chemical": "Benzene",
+      "unNumber": "UN1114",
+      "isolationRadiusM": 800,
+      "protectiveActionKm": 1.6
+    },
+    "testPassed": true
+  },
+  {
+    "benchmarkId": "BENCH-003-SINGRAULI-PROCESS",
+    "name": "Singrauli Super Thermal Power & Smelting Belt (UP/MP)",
+    "coordinates": {
+      "lat": 24.1985,
+      "lon": 82.6642
+    },
+    "pyrometry": {
+      "flameTempK": 760,
+      "flameAreaM2": 202.2,
+      "regime": "Smoldering / Agricultural Stubble Residue",
+      "radiantHeatFluxKwM2": 18.9
+    },
+    "classification": {
+      "category": "INDUSTRIAL_PROCESS",
+      "confidence": 0.85,
+      "severity": "LOW"
+    },
+    "skepticAudit": {
+      "isDisproven": false,
+      "action": "CONFIRMED_HAZARD",
+      "passedCheckCount": 5,
+      "totalChecks": 5,
+      "primaryDisproveReason": null
+    },
+    "dispersionPlume": null,
+    "hazmat": null,
+    "testPassed": true
+  },
+  {
+    "benchmarkId": "BENCH-004-PUNJAB-STUBBLE",
+    "name": "Punjab Crop Stubble Post-Harvest Burning (Ludhiana)",
+    "coordinates": {
+      "lat": 30.901,
+      "lon": 75.8573
+    },
+    "pyrometry": {
+      "flameTempK": 620,
+      "flameAreaM2": 346.1,
+      "regime": "Smoldering / Agricultural Stubble Residue",
+      "radiantHeatFluxKwM2": 8.4
+    },
+    "classification": {
+      "category": "AGRICULTURAL_BURNING",
+      "confidence": 0.82,
+      "severity": "LOW"
+    },
+    "skepticAudit": {
+      "isDisproven": false,
+      "action": "CONFIRMED_HAZARD",
+      "passedCheckCount": 5,
+      "totalChecks": 5,
+      "primaryDisproveReason": null
+    },
+    "dispersionPlume": null,
+    "hazmat": null,
+    "testPassed": true
+  },
+  {
+    "benchmarkId": "BENCH-005-SIMILIPAL-WILDFIRE",
+    "name": "Similipal Biosphere Reserve Forest Wildfire (Odisha)",
+    "coordinates": {
+      "lat": 21.65,
+      "lon": 86.35
+    },
+    "pyrometry": {
+      "flameTempK": 870,
+      "flameAreaM2": 154.9,
+      "regime": "Wildfire / Biomass Combustion",
+      "radiantHeatFluxKwM2": 32.5
+    },
+    "classification": {
+      "category": "FOREST_WILDFIRE",
+      "confidence": 0.89,
+      "severity": "CRITICAL"
+    },
+    "skepticAudit": {
+      "isDisproven": false,
+      "action": "CONFIRMED_HAZARD",
+      "passedCheckCount": 5,
+      "totalChecks": 5,
+      "primaryDisproveReason": null
+    },
+    "dispersionPlume": null,
+    "hazmat": null,
+    "testPassed": true
+  },
+  {
+    "benchmarkId": "BENCH-006-MUNDRA-ROOF-GLINT",
+    "name": "Mundra Port Logistics Warehouse Metallic Solar Glint (Gujarat)",
+    "coordinates": {
+      "lat": 22.839,
+      "lon": 69.705
+    },
+    "pyrometry": {
+      "flameTempK": 550,
+      "flameAreaM2": 442.1,
+      "regime": "Smoldering / Agricultural Stubble Residue",
+      "radiantHeatFluxKwM2": 5.2
+    },
+    "classification": {
+      "category": "AGRICULTURAL_BURNING",
+      "confidence": 0.68,
+      "severity": "LOW"
+    },
+    "skepticAudit": {
+      "isDisproven": true,
+      "action": "DISCARD_FALSE_ALARM",
+      "passedCheckCount": 3,
+      "totalChecks": 5,
+      "primaryDisproveReason": "Daytime optical reflection detected (ΔT = 9.5 K, Tf = 550 K); non-combustion solar roof glint profile."
+    },
+    "dispersionPlume": null,
+    "hazmat": null,
+    "testPassed": true
+  }
+]

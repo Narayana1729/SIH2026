@@ -38,7 +38,6 @@ import { openFirmsUploadModal } from './ui/ingestion/firmsUploadModal.js';
 import { openAiSimulationLabModal } from './ui/simulation/aiSimulationLabModal.js';
 import { initAgniVoiceHud, toggleAgniVoiceHud } from './ui/hud/agniVoiceHud.js';
 import { openDispatchModal } from './ui/responders/dispatchModal.js';
-import { ThermalAnomalyListPanel } from './ui/panels/thermalAnomalyListPanel.js';
 import { HistoricalTimelineBar } from './ui/hud/historicalTimelineBar.js';
 import { ZoomSliderBar } from './ui/hud/zoomSliderBar.js';
 import { tacticalAudio } from './core/audio.js';
@@ -108,16 +107,29 @@ async function init() {
         document.body.appendChild(el);
         return el;
       })(),
-      msaaSamples: 4,
+      msaaSamples: 1,
       contextOptions: {
         webgl: {
           preserveDrawingBuffer: true,
+          powerPreference: 'high-performance',
         },
       },
     });
 
+    viewer.resolutionScale = 1.0;
     viewer.targetFrameRate = 60;
     registerDataCredits(viewer);
+
+    // Prevent Cesium from auto-zooming on left click / double-click
+    viewer.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+    viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+    viewer.scene.screenSpaceCameraController.enableInputs = true;
+    // Disable Cesium's auto-track-on-select (prevents any left-click zoom to entity)
+    viewer.trackedEntity = undefined;
+    viewer.selectedEntityChanged.addEventListener(() => {
+      // Never auto-zoom to a selected entity
+      viewer.trackedEntity = undefined;
+    });
 
     viewer.scene.globe.show = false;
     viewer.scene.skyAtmosphere.show = true;
@@ -205,12 +217,14 @@ async function init() {
       }
     });
 
-    // Enable FIRMS Live Satellite Telemetry by default on startup
-    if (!dataManager.isEnabled('local-firms') && !dataManager.isEnabled('local-stored-firms')) {
-      void dataManager.setEnabled('local-firms', true, { origin: 'user' }).catch(() => {});
-      wildfireLayer.show();
+    // Enforce default startup state: ONLY NASA FIRMS Live API telemetry ON, all other layers OFF
+    for (const layer of localDataLayers) {
+      const isLiveApi = (layer.id === 'local-firms');
+      void dataManager.setEnabled(layer.id, isLiveApi, { origin: 'user' }).catch(() => {});
     }
-    if (!dataManager.isEnabled('local-industrial')) industrialLayer.hide();
+    wildfireLayer.show();
+    industrialLayer.hide();
+    dispersionLayer.hide();
 
     // Clear layers button handler
     const clearLayersBtn = document.getElementById('clear-selected-layers');
@@ -227,22 +241,25 @@ async function init() {
     const alertBanner = new AlertBanner('sri-alert-banner-container', viewer);
     const dossierModal = new DossierModal();
     const hazardTooltip = new HazardTooltip(viewer);
-    const segregationFilterBar = new SegregationFilterBar(hazardLayerManager);
+    const segregationFilterBar = new SegregationFilterBar(hazardLayerManager, viewer);
+    // Explicitly show all live satellite anomalies on startup (clean national overview for Act 1)
+    segregationFilterBar.setFilter('ALL', { zoomOut: false, silent: true });
     const threatLegend = new ThreatLegend();
     const historicalTimelineBar = new HistoricalTimelineBar(viewer, dataManager);
     const zoomSliderBar = new ZoomSliderBar(viewer);
 
     // Connect selection events, camera flight, and audio cues
     let lastHandledHazardId = null;
-    const handleHazardFocus = (hazard) => {
+    const handleHazardFocus = (hazard, options = {}) => {
       if (!hazard) return;
       const hId = hazard.id || `${hazard.location?.latitude}_${hazard.location?.longitude}`;
-      if (lastHandledHazardId === hId) return;
+      if (lastHandledHazardId === hId && !options?.force) return;
       lastHandledHazardId = hId;
       setTimeout(() => { lastHandledHazardId = null; }, 500);
 
       tacticalAudio.playAlert();
-      if (hazard?.location?.latitude && hazard?.location?.longitude) {
+      const shouldFly = options?.flyTo === true || hazard?._flyTo === true;
+      if (shouldFly && hazard?.location?.latitude && hazard?.location?.longitude) {
         viewer.camera.flyTo({
           destination: Cesium.Cartesian3.fromDegrees(
             hazard.location.longitude,
@@ -256,11 +273,14 @@ async function init() {
     };
 
     hazardLayerManager.onHazardSelected(handleHazardFocus);
-    eventBus.on(SRI_EVENTS.HAZARD_SELECTED, handleHazardFocus);
+    eventBus.on(SRI_EVENTS.HAZARD_SELECTED, (hazard) => handleHazardFocus(hazard, { flyTo: Boolean(hazard?._flyTo) }));
+
+    // Suppress browser context menu on canvas so right-click is dedicated to tactical fly-to
+    viewer.scene.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
     alertBanner.onSelectHazard = (hazard) => {
-      handleHazardFocus(hazard);
-      hazardLayerManager.notifyHazardSelected(hazard);
+      handleHazardFocus(hazard, { flyTo: true });
+      hazardLayerManager.notifyHazardSelected(hazard, { flyTo: true });
     };
 
     hazardInspector.onGenerateDossier = (hazard) => {
@@ -313,26 +333,9 @@ async function init() {
     syncVisibilitySuspension();
 
     // Setup Interactive Modals & Voice HUD
-    document.getElementById('btn-upload-firms')?.addEventListener('click', () => {
-      tacticalAudio.playClick();
-      openFirmsUploadModal((importedHazards) => {
-        const wildfireLayer = hazardLayerManager.getLayer('hazard-wildfire');
-        if (wildfireLayer) {
-          wildfireLayer.show();
-        }
-      });
-    });
-
-    const thermalListPanel = new ThermalAnomalyListPanel(viewer, hazardLayerManager, hazardInspector);
-
     document.getElementById('btn-sim-lab')?.addEventListener('click', () => {
       tacticalAudio.playClick();
       openAiSimulationLabModal();
-    });
-
-    document.getElementById('btn-thermal-registry')?.addEventListener('click', () => {
-      tacticalAudio.playClick();
-      thermalListPanel.open('ALL');
     });
 
     document.getElementById('btn-voice-hud')?.addEventListener('click', () => {
@@ -404,8 +407,7 @@ async function init() {
           });
         }
 
-        // C) Open the thermal list panel with the corresponding panel category
-        thermalListPanel.open(panelCategory);
+
 
         // D) Fly camera to requested state/region if specified
         const stateFilter = (filters.state || '').toUpperCase().trim();
@@ -496,10 +498,12 @@ async function init() {
         openAiSimulationLabModal();
       }
 
+
       // 7. Tactical Dossier / Incident Action Plan (IAP)
       else if (action === 'OPEN_DOSSIER') {
         if (dossierModal && typeof dossierModal.open === 'function') {
-          dossierModal.open();
+          const targetHazard = window._sriActiveHazard || hazardInspector?.currentHazard;
+          dossierModal.open(targetHazard);
         }
       }
 
@@ -545,7 +549,6 @@ async function init() {
             else btn.classList.remove('active');
           });
         }
-        thermalListPanel.open('ALL');
       }
     });
 
@@ -558,7 +561,6 @@ async function init() {
       hazardInspector,
       alertBanner,
       dossierModal,
-      thermalListPanel,
       historicalTimelineBar,
       segregationFilterBar,
       zoomSliderBar,
@@ -600,7 +602,6 @@ async function init() {
           });
         }
       },
-      openAnomalyListPanel: (cat) => thermalListPanel.open(cat),
       openFirmsUploadModal,
       openAiSimulationLabModal,
       openDispatchModal,

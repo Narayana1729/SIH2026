@@ -395,6 +395,16 @@ export const MASTER_FACILITIES = [
     "longitude": 86.0125
   },
   {
+    "id": "iocl-haldia",
+    "name": "IOCL Haldia Refinery & Petrochemical Terminal",
+    "sector": "Oil Refinery & Petrochemicals",
+    "hazard_rating": "HIGH",
+    "state": "West Bengal",
+    "district": "Purba Medinipur",
+    "latitude": 22.0520,
+    "longitude": 88.1260
+  },
+  {
     "id": "bpcl-mumbai",
     "name": "BPCL Mumbai Refinery (Mahul)",
     "sector": "Oil Refinery",

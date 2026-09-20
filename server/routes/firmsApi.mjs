@@ -159,7 +159,7 @@ export async function handleFirmsApiRoute(req, res, url) {
     // 0. GET /api/firms -> Active Live FIRMS Thermal Anomalies for Map Layer (supports ?date=YYYY-MM-DD)
     if ((pathname === '/api/firms' || pathname === '/api/firms/') && method === 'GET') {
       const bbox = url.searchParams.get('bbox') || '65,5,100,38';
-      const days = url.searchParams.get('days') || '1';
+      const days = url.searchParams.get('days') || '2';
       const source = url.searchParams.get('source') || 'VIIRS_NOAA20_NRT';
       const date = url.searchParams.get('date');
       const mode = url.searchParams.get('mode');

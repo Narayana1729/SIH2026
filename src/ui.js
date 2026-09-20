@@ -12,7 +12,7 @@ import {
   clampBloomIntensity,
   decodeBloomIntensity,
 } from './bloom.js';
-import { LOCATIONS, CITY_POIS, GLOBE_VIEW, flyToGlobeView, flyToPresetLocation, flyToPOI, searchAndFlyTo } from './locations.js';
+import { LOCATIONS, CITY_POIS, GLOBE_VIEW, INDIA_GRID_VIEW, flyToGlobeView, flyToPresetLocation, flyToPOI, searchAndFlyTo } from './locations.js';
 import { locationMiniStatus } from './locationStatus.js';
 import { interruptCameraMotion } from './cameraVerbs.js';
 import {
@@ -9734,11 +9734,12 @@ export class StyleManager {
       clearTimeout(timer);
       this._endWorldJumpTransition();
       const carto = this.viewer.camera.positionCartographic;
+      const targetAlt = INDIA_GRID_VIEW.heightM;
       const result = {
         ok: !cancelled,
         action: 'zoom_to_globe',
         cancelled,
-        heightKm: Math.round(GLOBE_VIEW.heightM / 1000),
+        heightKm: Math.round(targetAlt / 1000),
         centeredOn: {
           latitude: Number(Cesium.Math.toDegrees(carto.latitude).toFixed(2)),
           longitude: Number(Cesium.Math.toDegrees(carto.longitude).toFixed(2)),
@@ -9751,11 +9752,16 @@ export class StyleManager {
     };
     timer = window.setTimeout(() => {
       const height = this.viewer.camera.positionCartographic?.height;
-      finish(!Number.isFinite(height) || Math.abs(height - GLOBE_VIEW.heightM) > 1000);
+      finish(!Number.isFinite(height) || Math.abs(height - INDIA_GRID_VIEW.heightM) > 1000);
     }, 4200);
     this._resetGlobeBtn?.setAttribute('aria-label', 'Resetting to full globe view');
     this._cockpitResetGlobeBtn?.setAttribute('aria-label', 'Resetting cockpit to full globe view');
     const target = flyToGlobeView(this.viewer, {
+      latitude: INDIA_GRID_VIEW.latitude,
+      longitude: INDIA_GRID_VIEW.longitude,
+      heightM: INDIA_GRID_VIEW.heightM,
+      pitchDeg: INDIA_GRID_VIEW.pitchDeg,
+      duration: INDIA_GRID_VIEW.durationS,
       onComplete: () => finish(false),
       onCancel: () => finish(true),
     });

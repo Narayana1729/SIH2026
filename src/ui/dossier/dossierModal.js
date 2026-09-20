@@ -20,18 +20,37 @@ export class DossierModal {
   }
 
   async open(hazardContract) {
-    if (!hazardContract) return;
+    if (!hazardContract) {
+      hazardContract = window._sriActiveHazard || {
+        id: 'INC-ACTIVE',
+        title: 'Thermal Anomaly Target',
+        hazard_type: 'WILDFIRE',
+        severity: 'CRITICAL',
+        location: { latitude: 21.11, longitude: 72.65, locality: 'Gujarat Industrial Corridor' },
+        metrics: [{ label: 'FRP (MW)', value: 85.0 }],
+      };
+    }
     this.isOpen = true;
     this.renderLoading(hazardContract);
 
     try {
+      const lat = Number(hazardContract.location?.latitude ?? hazardContract.latitude ?? hazardContract.lat ?? 21.11);
+      const lon = Number(hazardContract.location?.longitude ?? hazardContract.longitude ?? hazardContract.lon ?? 72.65);
+      const frpVal = Number(hazardContract.frp ?? hazardContract.metrics?.find((m) => m.label?.includes('FRP') || m.label?.includes('Power'))?.value ?? 45);
+      const hazardType = hazardContract.hazard_type || hazardContract.type || 'WILDFIRE';
+      const severity = hazardContract.severity || 'HIGH';
+      const locality = hazardContract.location?.locality || hazardContract.title || hazardContract.locality || `Sector [${lat.toFixed(2)}N, ${lon.toFixed(2)}E]`;
+
       const resp = await sriVisionApi.generateTacticalDossier({
-        lat: hazardContract.location.latitude,
-        lon: hazardContract.location.longitude,
-        incidentType: hazardContract.hazard_type,
-        severity: hazardContract.severity,
-        locality: hazardContract.location.locality || hazardContract.title,
-        frp: hazardContract.metrics?.find((m) => m.label.includes('FRP'))?.value,
+        lat,
+        lon,
+        latitude: lat,
+        longitude: lon,
+        incidentType: hazardType,
+        type: hazardType,
+        severity,
+        locality,
+        frp: frpVal,
       });
 
       const dossier = resp.dossier || resp.data || {};
@@ -51,7 +70,7 @@ export class DossierModal {
       <div class="sri-modal-backdrop">
         <div class="sri-modal-card">
           <div class="sri-modal-header">
-            <h3>📄 GENERATING INCIDENT DOSSIER...</h3>
+            <h3>📋 GENERATING INCIDENT ACTION PLAN (IAP)...</h3>
             <button class="sri-modal-close" id="sri-dossier-close">&times;</button>
           </div>
           <div class="sri-modal-body loading">
@@ -128,15 +147,19 @@ export class DossierModal {
       `;
     }
 
+    const latVal = Number(h.location?.latitude ?? h.latitude ?? h.lat ?? 0);
+    const lonVal = Number(h.location?.longitude ?? h.longitude ?? h.lon ?? 0);
+
     this.container.innerHTML = `
       <div class="sri-modal-backdrop">
         <div class="sri-modal-card">
           <div class="sri-modal-header">
             <div>
-              <h3>📄 TACTICAL INCIDENT BRIEFING DOSSIER</h3>
+              <h3>📋 INCIDENT ACTION PLAN (IAP) · TACTICAL BRIEFING</h3>
               <div class="sri-dossier-sub">${dossier.incident_id || 'INC-001'} · Compiled: ${new Date().toUTCString()}</div>
             </div>
-            <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button class="sri-pdf-download-btn" id="sri-dossier-pdf-btn">📄 DOWNLOAD 6-PAGE PDF</button>
               <button class="sri-print-btn" onclick="window.print()">PRINT 🖨️</button>
               <button class="sri-modal-close" id="sri-dossier-close">&times;</button>
             </div>
@@ -145,7 +168,7 @@ export class DossierModal {
           <div class="sri-modal-body">
             <div class="sri-dossier-sec">
               <div class="sri-dossier-label">EXECUTIVE SUMMARY</div>
-              <p class="sri-dossier-text">${briefing || `Active ${h.hazard_type} emergency at [${h.location.latitude.toFixed(3)}, ${h.location.longitude.toFixed(3)}]. Immediate multi-agency coordination required.`}</p>
+              <p class="sri-dossier-text">${briefing || `Active ${h.hazard_type || h.type || 'Thermal'} emergency at [${latVal.toFixed(3)}°N, ${lonVal.toFixed(3)}°E]. Immediate multi-agency coordination required.`}</p>
             </div>
 
             ${meteoHtml}
@@ -182,6 +205,41 @@ export class DossierModal {
     `;
 
     document.getElementById('sri-dossier-close')?.addEventListener('click', () => this.close());
+
+    document.getElementById('sri-dossier-pdf-btn')?.addEventListener('click', async (e) => {
+      const btn = e.currentTarget;
+      const origText = btn.textContent;
+      btn.textContent = 'GENERATING PDF... ⏳';
+      btn.disabled = true;
+      try {
+        const resp = await fetch('/api/dossier/pdf', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: dossier.incident_id || h.id || `INC-${Date.now()}`,
+            latitude: latVal,
+            longitude: lonVal,
+            lat: latVal,
+            lon: lonVal,
+            title: h.title || `Incident ${latVal.toFixed(2)}N, ${lonVal.toFixed(2)}E`,
+            severity: h.severity || 'CRITICAL',
+            frp: Number(h.frp ?? 85),
+          }),
+        });
+        if (resp.ok) {
+          const blob = await resp.blob();
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = `Incident_Action_Plan_${latVal.toFixed(2)}N_${lonVal.toFixed(2)}E.pdf`;
+          link.click();
+        }
+      } catch (err) {
+        console.error('PDF download error:', err);
+      } finally {
+        btn.textContent = origText;
+        btn.disabled = false;
+      }
+    });
   }
 
   _injectStyles() {
@@ -267,6 +325,29 @@ export class DossierModal {
         background: rgba(0, 212, 255, 0.22);
         border-color: #00d4ff;
         color: #fff;
+      }
+      .sri-pdf-download-btn {
+        background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(0, 150, 255, 0.25));
+        border: 1px solid rgba(0, 229, 255, 0.45);
+        color: #00e5ff;
+        font-family: var(--font-mono, 'JetBrains Mono', monospace);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 150ms ease;
+      }
+      .sri-pdf-download-btn:hover {
+        background: rgba(0, 229, 255, 0.35);
+        border-color: #00e5ff;
+        color: #fff;
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+      }
+      .sri-pdf-download-btn:disabled {
+        opacity: 0.6;
+        cursor: wait;
       }
       .sri-modal-body {
         padding: 18px 20px;

@@ -386,6 +386,8 @@ export function generatePlumeFootprint({
     wind_direction_degrees: windDirectionDeg,
     stability_class: stabilityClass,
     max_downwind_km: maxDistanceKm,
+    maxPlumeDistanceKm: maxDistanceKm,
+    evacuationDistanceMeters: Math.round(maxDistanceKm * 1000 * 0.35),
     max_ground_concentration_ppm: maxGroundConcPpm,
     thresholds,
     centerline_samples: centerlineSamples,

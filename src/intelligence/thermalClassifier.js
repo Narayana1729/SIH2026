@@ -18,6 +18,7 @@
 
 import { findFacilitiesNearby, getAllFacilities } from '../disasters/industrial/industrialFacilities.js';
 import { haversineDistanceKm } from '../core/geospatial.js';
+import { auditThermalAnomaly } from './skepticVerification.js';
 
 export const ThermalCategories = {
   INDUSTRIAL_FLARE: 'INDUSTRIAL_FLARE',           // Controlled hydrocarbon flare stack at refinery / petrochem facility
@@ -64,7 +65,7 @@ export class ThermalAnomalyClassifier {
     // 1. Spatial Cross-Referencing with Industrial Facilities Database
     const nearbyFacilities = findFacilitiesNearby(lat, lon, 15.0); // 15km search radius
     const primaryFacility = nearbyFacilities.length > 0 ? nearbyFacilities[0] : null;
-    const distanceToFacilityKm = primaryFacility ? primaryFacility.distance_km : 999.0;
+    const distanceToFacilityKm = Number.isFinite(anomaly.distKm) ? Number(anomaly.distKm) : (primaryFacility ? primaryFacility.distance_km : 999.0);
 
     let category = ThermalCategories.UNKNOWN_ANOMALY;
     let confidence = 0.50;
@@ -82,10 +83,10 @@ export class ThermalAnomalyClassifier {
     };
 
     const thermalFacility = isThermalFacility(primaryFacility) ? primaryFacility : (nearbyFacilities.find(isThermalFacility) || null);
-    const distThermalKm = thermalFacility ? thermalFacility.distance_km : 999.0;
+    const distThermalKm = Number.isFinite(anomaly.distKm) ? Number(anomaly.distKm) : (thermalFacility ? thermalFacility.distance_km : 999.0);
 
     // ── Case A: Forest Wildfire (Dense canopy / forest land-cover) ──
-    if ((lulc === 'forest' || ndvi >= 0.48) && distThermalKm > 3.0) {
+    if ((lulc === 'forest' || ndvi >= 0.48) && distThermalKm > 5.0) {
       category = ThermalCategories.FOREST_WILDFIRE;
       confidence = 0.89;
       severity = frp > 100 ? 'CRITICAL' : frp > 40 ? 'HIGH' : 'MEDIUM';
@@ -233,6 +234,9 @@ export class ThermalAnomalyClassifier {
     // Determine tactical recommendations
     const tacticalAction = this._generateTacticalAction(category, primaryFacility, frp, severity);
 
+    // Adversarial Skeptic AI Falsification Audit
+    const skepticAudit = auditThermalAnomaly(anomaly, { category });
+
     return {
       category,
       categoryLabel: this._getCategoryLabel(category),
@@ -259,6 +263,7 @@ export class ThermalAnomalyClassifier {
         : null,
       evidence,
       tacticalAction,
+      skepticAudit,
       timestamp: new Date().toISOString(),
     };
   }
@@ -371,7 +376,7 @@ export class ThermalAnomalyClassifier {
       case ThermalCategories.INDUSTRIAL_PROCESS:
         return 'Industrial Power / Process Heat';
       case ThermalCategories.INDUSTRIAL_DISASTER:
-        return 'Industrial Accidental Fire / Explosion';
+        return 'Industrial Thermal Surge';
       case ThermalCategories.FOREST_WILDFIRE:
         return 'Forest Wildfire';
       case ThermalCategories.AGRICULTURAL_BURNING:

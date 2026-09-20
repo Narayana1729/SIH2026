@@ -31,7 +31,12 @@ const testFiles = [
   'tests/satellite-revisit.test.mjs',
   'tests/gap-filling-capabilities.test.mjs',
   'tests/agni-voice-assistant.test.mjs',
+  'tests/skepticVerification.test.mjs',
+  'tests/sihBenchmarkReplay.test.mjs',
+  'tests/worldpopExposure.test.mjs',
+  'tests/alertWebhookDispatch.test.mjs',
   'src/firstRunExperience.test.mjs',
+  'src/hudCategoryIntelligence.test.mjs',
 ];
 
 console.log('[PyroSat Test Runner] Executing test suites across all industrial thermal & intelligence domains...\n');

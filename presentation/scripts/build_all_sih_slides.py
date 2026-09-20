@@ -129,6 +129,7 @@ def build_all_slides():
     tf = tb.text_frame; tf.word_wrap = True; tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
     add_section_header(tf, "Innovation/Uniqueness:")
     add_bullet(tf, "• ", "India's first sub-pixel pyrometry platform", " that solves Planck's radiation law on open satellite data, eliminating the need for expensive commercial satellite tasking.")
+    add_bullet(tf, "• ", "Adversarial Skeptic AI Falsification Gate", " that actively attempts to disprove candidate alarms using physical invariants (solar glint rejection, Planck flame limits, operational baselines).")
     add_bullet(tf, "• ", "Transforms ambiguous thermal pixels into auditable physics metrics", " (radiant heat flux kW/m², flame area, combustion regime) with zero AI hallucination.")
     add_bullet(tf, "• ", "Dual Earth-observation grounding", " fusing ESA WorldCover 10m land-use and Sentinel-2 spectral indices to prevent false alarms in industrial complexes.")
     add_bullet(tf, "• ", "Live Atmospheric Toxic Plume Modeling", " coupling real-time wind vectors and CAMEO-NIOSH chemical registries to project 3-zone civilian evacuation corridors.")
@@ -164,11 +165,12 @@ def build_all_slides():
     tb = slide3.shapes.add_textbox(Inches(4.55), Inches(1.24), Inches(8.35), Inches(5.45))
     tf = tb.text_frame; tf.word_wrap = True; tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
     add_section_header(tf, "Methodology & Implementation Pipeline:")
-    add_bullet(tf, "1. Ingestion & Pre-Flight Validation: ", "Automated multi-sensor stream ingestion with quality filtering, geospatial normalization, and coordinate precision bounding.", suffix="", pt_size=9.5)
-    add_bullet(tf, "2. Dozier Dual-Band Pyrometry Inversion: ", "Solves simultaneous Planck radiation non-linear equations across MWIR (4µm) and LWIR (11µm) bands to decouple sub-pixel flame temperature (Tf) and combustion area (Af).", suffix="", pt_size=9.5)
-    add_bullet(tf, "3. Hierarchical ML Segregation: ", "Stage-1 classifies Industrial vs. Non-Industrial. Stage-2 segregates discrete subclasses (Refinery Flare, Industrial Disaster, Wildfire, Stubble Burn, Coal Seam Fire).", suffix="", pt_size=9.5)
-    add_bullet(tf, "4. Exact Lundberg TreeSHAP Explainability: ", "Computes local Shapley values via exact polynomial dynamic programming, ensuring additive efficiency (sum(phi) + base = f(x)) to guarantee verifiable provenance.", suffix="", pt_size=9.5)
-    add_bullet(tf, "5. Atmospheric Dispersion & Tactical Dispatch: ", "Computes Pasquill-Gifford Gaussian plumes with Briggs buoyancy rise and live wind vectors, auto-generating Incident Action Plans (IAPs) for first responders.", suffix="", pt_size=9.5)
+    add_bullet(tf, "1. Ingestion & Pre-Flight Validation: ", "Automated multi-sensor stream ingestion with quality filtering, geospatial normalization, and coordinate precision bounding.", suffix="", pt_size=9.0, space_after=4)
+    add_bullet(tf, "2. Dozier Dual-Band Pyrometry Inversion: ", "Solves simultaneous Planck radiation non-linear equations across MWIR (4µm) and LWIR (11µm) bands to decouple sub-pixel flame temperature (Tf) and combustion area (Af).", suffix="", pt_size=9.0, space_after=4)
+    add_bullet(tf, "3. Hierarchical ML Segregation: ", "Stage-1 classifies Industrial vs. Non-Industrial. Stage-2 segregates discrete subclasses (Refinery Flare, Industrial Disaster, Wildfire, Stubble Burn, Coal Seam Fire).", suffix="", pt_size=9.0, space_after=4)
+    add_bullet(tf, "4. Adversarial Skeptic AI Falsification: ", "Executes 5 physical invariant gates (solar glint rejection, Planck flame thresholding, canopy fuel divergence, operational baselines, sensor glitches) to actively disprove false positives.", suffix="", pt_size=9.0, space_after=4)
+    add_bullet(tf, "5. Exact Lundberg TreeSHAP Explainability: ", "Computes local Shapley values via exact polynomial dynamic programming, ensuring additive efficiency (sum(phi) + base = f(x)) to guarantee verifiable provenance.", suffix="", pt_size=9.0, space_after=4)
+    add_bullet(tf, "6. Atmospheric Dispersion & Tactical Dispatch: ", "Computes Pasquill-Gifford Gaussian plumes with Briggs buoyancy rise and live wind vectors, auto-generating Incident Action Plans (IAPs) for first responders.", suffix="", pt_size=9.0, space_after=4)
 
     # =========================================================================
     # SLIDE 4: FEASIBILITY AND VIABILITY
@@ -186,7 +188,7 @@ def build_all_slides():
     tf = tb.text_frame; tf.word_wrap = True; tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
     add_section_header(tf, "Feasibility Analysis:")
     add_bullet(tf, "• ", "Open-Data Architecture: ", "Zero dependence on costly commercial tasking; runs entirely on free, open NASA FIRMS, ESA Copernicus, and Open-Meteo feeds.", pt_size=9.5)
-    add_bullet(tf, "• ", "Tested Operational Prototype: ", "Full-stack system already implemented with 130 passing automated tests covering pyrometry, ML inference, and 3D UI rendering.", pt_size=9.5)
+    add_bullet(tf, "• ", "Tested Operational Prototype: ", "Full-stack system already implemented with 185+ passing automated tests, deterministic benchmark replay engine, and SHA-256 integrity checksums across 6 canonical Indian disaster scenarios.", pt_size=9.5)
     add_bullet(tf, "• ", "Low Hardware Footprint: ", "Efficient TreeSHAP DP and Dozier solvers run in sub-second inference on standard edge or cloud servers.", pt_size=9.5)
 
     # Left-Bottom: Challenges

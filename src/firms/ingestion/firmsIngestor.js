@@ -31,9 +31,9 @@ export class FirmsIngestor {
    */
   async fetchDetections(params = {}) {
     const bbox = params.bbox || this.defaultBbox;
-    const days = params.days || '1';
-    const source = params.source || this.defaultSource;
     const date = params.date || null;
+    const days = params.days && params.days !== '1' ? params.days : (date ? '1' : '2');
+    const source = params.source || this.defaultSource;
     const now = Date.now();
 
     const cacheKey = date

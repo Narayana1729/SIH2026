@@ -132,34 +132,60 @@ export const GLOBE_VIEW = Object.freeze({
 });
 
 /**
- * Fly straight out to the full-earth globe view, keeping the current sub-camera
- * point centered so the user's continent stays in front of them.
+ * Standard Indian National Grid overview camera preset.
+ * Centers camera over India at 3,200 km altitude for full subcontinent coverage.
+ */
+export const INDIA_GRID_VIEW = Object.freeze({
+  latitude: 21.5000,
+  longitude: 78.9629,
+  heightM: 3200000,
+  pitchDeg: -88,
+  durationS: 1.8,
+});
+
+/**
+ * Fly camera to globe or India grid view.
  * @param {Cesium.Viewer} viewer
- * @param {{duration?: number, onComplete?: Function, onCancel?: Function}} options
+ * @param {{duration?: number, latitude?: number, longitude?: number, heightM?: number, pitchDeg?: number, onComplete?: Function, onCancel?: Function}} options
  * @returns {{latitude: number, longitude: number, heightM: number}}
  */
 export function flyToGlobeView(viewer, options = {}) {
-  const carto = viewer.camera.positionCartographic;
-  const longitude = Cesium.Math.toDegrees(carto.longitude);
-  const latitude = Cesium.Math.toDegrees(carto.latitude);
+  const carto = viewer.camera?.positionCartographic;
+  const longitude = options.longitude ?? (carto ? Cesium.Math.toDegrees(carto.longitude) : INDIA_GRID_VIEW.longitude);
+  const latitude = options.latitude ?? (carto ? Cesium.Math.toDegrees(carto.latitude) : INDIA_GRID_VIEW.latitude);
+  const heightM = options.heightM ?? GLOBE_VIEW.heightM;
+  const pitchDeg = options.pitchDeg ?? GLOBE_VIEW.pitchDeg;
   viewer.camera.cancelFlight();
   viewer.camera.flyTo({
-    destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, GLOBE_VIEW.heightM),
+    destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, heightM),
     orientation: {
       heading: 0,
-      pitch: Cesium.Math.toRadians(GLOBE_VIEW.pitchDeg),
+      pitch: Cesium.Math.toRadians(pitchDeg),
       roll: 0,
     },
     duration: finitePositive(options.duration) || GLOBE_VIEW.durationS,
     endTransform: Cesium.Matrix4.IDENTITY,
-    // Cesium's Camera.flyTo reads `complete`/`cancel`. `onComplete`/`onCancel`
-    // are this module's OWN option names and are silently ignored by Cesium —
-    // spelling them through to flyTo meant the reset never resolved on the
-    // flight's own events and every caller fell back to its watchdog timeout.
     complete: options.onComplete,
     cancel: options.onCancel,
   });
-  return { latitude, longitude, heightM: GLOBE_VIEW.heightM };
+  return { latitude, longitude, heightM };
+}
+
+/**
+ * Fly camera directly to the canonical Indian National Grid overview.
+ * @param {Cesium.Viewer} viewer
+ * @param {{duration?: number, onComplete?: Function, onCancel?: Function}} options
+ * @returns {{latitude: number, longitude: number, heightM: number}}
+ */
+export function flyToIndiaGridView(viewer, options = {}) {
+  return flyToGlobeView(viewer, {
+    latitude: INDIA_GRID_VIEW.latitude,
+    longitude: INDIA_GRID_VIEW.longitude,
+    heightM: INDIA_GRID_VIEW.heightM,
+    pitchDeg: INDIA_GRID_VIEW.pitchDeg,
+    duration: finitePositive(options.duration) || INDIA_GRID_VIEW.durationS,
+    ...options,
+  });
 }
 
 /**

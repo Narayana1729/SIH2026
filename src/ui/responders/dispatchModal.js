@@ -185,33 +185,66 @@ function populateIncidentData() {
 
   const lat = (currentIncident.lat ?? currentIncident.latitude ?? 22.428).toFixed(4);
   const lon = (currentIncident.lon ?? currentIncident.longitude ?? 70.034).toFixed(4);
-  const frp = (currentIncident.frp ?? 25.4).toFixed(1);
-  const category = currentIncident.category || 'High-Temperature Thermal Hotspot';
-  const flameTemp = currentIncident.flameTempC ? `${currentIncident.flameTempC}°C (${currentIncident.flameTempK}K)` : '1,380°C';
-
-  const landmark = currentIncident.facilityName || currentIncident.facility?.name || currentIncident.landmark || 'Regional Operational Sector';
-  const threatLevel = parseFloat(frp) > 25 ? 'CRITICAL / CODE RED' : (parseFloat(frp) > 10 ? 'HIGH ALERT / ORANGE' : 'ADVISORY / YELLOW');
+  const isResource = currentIncident.isResource === true || currentIncident.responder != null;
+  const responder = currentIncident.responder || {};
 
   const metaCard = modalElement.querySelector('#dispatch-meta-card');
-  metaCard.innerHTML = `
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-      <div><span style="color: #94a3b8;">Incident Type:</span> <strong style="color: #f87171;">${category}</strong></div>
-      <div><span style="color: #94a3b8;">GPS Coordinates:</span> <strong style="color: #38bdf8;">${lat}°N, ${lon}°E</strong></div>
-      <div><span style="color: #94a3b8;">Thermal Power:</span> <strong style="color: #fbbf24;">${frp} MW</strong></div>
-      <div><span style="color: #94a3b8;">True Flame Temp:</span> <strong style="color: #fb923c;">${flameTemp}</strong></div>
-      <div><span style="color: #94a3b8;">Nearest Landmark:</span> <strong style="color: #e2e8f0;">${landmark}</strong></div>
-      <div><span style="color: #94a3b8;">Threat Level:</span> <strong style="color: ${parseFloat(frp) > 25 ? '#ef4444' : '#f59e0b'};">${threatLevel}</strong></div>
-    </div>
-  `;
+  if (isResource) {
+    const unitName = responder.name || currentIncident.facilityName || currentIncident.category || 'First Responder Unit';
+    const tenders = responder.tenders || 14;
+    const foam = responder.foam_capacity_l ? `${Number(responder.foam_capacity_l).toLocaleString()} L` : '35,000 L';
+    const phone = responder.phone || '+91-101';
+    metaCard.innerHTML = `
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+        <div><span style="color: #94a3b8;">Mobilizing Unit:</span> <strong style="color: #34d399;">${unitName}</strong></div>
+        <div><span style="color: #94a3b8;">Station GPS:</span> <strong style="color: #38bdf8;">${lat}°N, ${lon}°E</strong></div>
+        <div><span style="color: #94a3b8;">Active Fleet:</span> <strong style="color: #fbbf24;">${tenders} Heavy Tenders</strong></div>
+        <div><span style="color: #94a3b8;">Foam Reserves:</span> <strong style="color: #a7f3d0;">${foam}</strong></div>
+        <div><span style="color: #94a3b8;">Emergency Phone:</span> <strong style="color: #e2e8f0;">${phone}</strong></div>
+        <div><span style="color: #94a3b8;">Status:</span> <strong style="color: #10b981;">24/7 ACTIVE STANDBY</strong></div>
+      </div>
+    `;
 
-  const msgPreview = modalElement.querySelector('#dispatch-msg-preview');
-  msgPreview.value = `[PYROSAT TACTICAL ALERT - EMERGENCY DISPATCH]
+    const msgPreview = modalElement.querySelector('#dispatch-msg-preview');
+    if (msgPreview) {
+      msgPreview.value = `[PYROSAT FIRST RESPONDER DISPATCH - COMMAND ACTIVATION]
+UNIT: ${unitName.toUpperCase()}
+BASE LOCATION: ${lat} N, ${lon} E (${responder.city || ''}, ${responder.state || ''})
+EQUIPMENT: ${tenders} Heavy Tenders | ${foam} Chemical Foam
+TIME (UTC): ${new Date().toISOString()}
+DIRECTIVE: Mobilize emergency response crews for priority industrial fire suppression and containment grid.
+DISPATCH ID: PYRO-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+    }
+  } else {
+    const frp = (currentIncident.frp ?? 25.4).toFixed(1);
+    const category = currentIncident.category || 'High-Temperature Thermal Hotspot';
+    const flameTemp = currentIncident.flameTempC ? `${currentIncident.flameTempC}°C (${currentIncident.flameTempK}K)` : '1,380°C';
+
+    const landmark = currentIncident.facilityName || currentIncident.facility?.name || currentIncident.landmark || 'Regional Operational Sector';
+    const threatLevel = parseFloat(frp) > 25 ? 'CRITICAL / CODE RED' : (parseFloat(frp) > 10 ? 'HIGH ALERT / ORANGE' : 'ADVISORY / YELLOW');
+
+    metaCard.innerHTML = `
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+        <div><span style="color: #94a3b8;">Incident Type:</span> <strong style="color: #f87171;">${category}</strong></div>
+        <div><span style="color: #94a3b8;">GPS Coordinates:</span> <strong style="color: #38bdf8;">${lat}°N, ${lon}°E</strong></div>
+        <div><span style="color: #94a3b8;">Thermal Power:</span> <strong style="color: #fbbf24;">${frp} MW</strong></div>
+        <div><span style="color: #94a3b8;">True Flame Temp:</span> <strong style="color: #fb923c;">${flameTemp}</strong></div>
+        <div><span style="color: #94a3b8;">Nearest Landmark:</span> <strong style="color: #e2e8f0;">${landmark}</strong></div>
+        <div><span style="color: #94a3b8;">Threat Level:</span> <strong style="color: ${parseFloat(frp) > 25 ? '#ef4444' : '#f59e0b'};">${threatLevel}</strong></div>
+      </div>
+    `;
+
+    const msgPreview = modalElement.querySelector('#dispatch-msg-preview');
+    if (msgPreview) {
+      msgPreview.value = `[PYROSAT TACTICAL ALERT - EMERGENCY DISPATCH]
 INCIDENT: ${category.toUpperCase()} (FRP: ${frp} MW | Flame Temp: ${flameTemp})
 COORDINATES: ${lat} N, ${lon} E
 TIME (UTC): ${new Date().toISOString()}
 GAUSSIAN PLUME BUFFER: 3.5 KM DOWNWIND (HAZMAT RISK)
 ACTION REQUIRED: Deploy immediate thermal containment and establish 2.5km cordon.
 DISPATCH ID: PYRO-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+    }
+  }
 
   // Load persistent phone if previously entered or configured
   const phoneInput = modalElement.querySelector('#dispatch-phone-input');

@@ -20,6 +20,8 @@ export async function handleDossierRoute(req, res, url) {
       let bodyRaw = '';
       for await (const chunk of req) bodyRaw += chunk;
       try { incident = JSON.parse(bodyRaw || '{}'); } catch {}
+      incident.latitude = Number(incident.latitude ?? incident.lat ?? incident.location?.latitude ?? 0);
+      incident.longitude = Number(incident.longitude ?? incident.lon ?? incident.location?.longitude ?? 0);
     } else {
       incident = {
         id: url.searchParams.get('id') || `INC-${Date.now()}`,
@@ -82,9 +84,21 @@ export async function handleDossierRoute(req, res, url) {
       };
     }
 
-    if (incident.latitude === undefined || incident.longitude === undefined || Number.isNaN(Number(incident.latitude)) || Number.isNaN(Number(incident.longitude))) {
+    const rawLat = incident.latitude ?? incident.lat ?? incident.location?.latitude ?? incident.location?.lat ?? (req.method === 'GET' ? url.searchParams.get('lat') || url.searchParams.get('latitude') : undefined);
+    const rawLon = incident.longitude ?? incident.lon ?? incident.location?.longitude ?? incident.location?.lon ?? (req.method === 'GET' ? url.searchParams.get('lon') || url.searchParams.get('longitude') : undefined);
+
+    const lat = Number(rawLat);
+    const lon = Number(rawLon);
+
+    if (rawLat === undefined || rawLon === undefined || rawLat === null || rawLon === null || Number.isNaN(lat) || Number.isNaN(lon)) {
       return sendJson(res, 400, { error: 'Invalid coordinates: latitude and longitude are required' });
     }
+
+    incident.latitude = lat;
+    incident.longitude = lon;
+    incident.type = incident.type || incident.incidentType || incident.hazard_type || 'WILDFIRE';
+    incident.severity = incident.severity || 'HIGH';
+    incident.frp = Number(incident.frp ?? incident.frp_mw ?? 50);
 
     const dossier = generateIncidentDossier(incident);
     return sendJson(res, 200, { success: true, dossier });
