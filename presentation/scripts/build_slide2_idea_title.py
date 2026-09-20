@@ -104,27 +104,27 @@ def build_slide2_idea_title():
         # 3. LEFT COLUMN: 3 High-Impact Cards + Working Prototype Badge
         # ---------------------------------------------------------------------
         left_x = Inches(0.38)
-        left_w = Inches(3.80)
-        card_start_y = Inches(1.28)
+        left_w = Inches(3.68)
+        card_start_y = Inches(1.26)
 
         left_cards_data = [
             {
                 "tag": "Real-World Issue:",
                 "tag_color": AMBER_GOLD,
-                "text": "Coarse 375m satellite thermal pixels cannot distinguish routine industrial flaring from runaway refinery explosions or crop stubble, causing severe operational blindness.",
-                "h": Inches(1.18)
+                "text": "Coarse 375m satellite thermal pixels cannot distinguish routine industrial flaring from runaway chemical explosions or crop stubble, causing severe operational blindness.",
+                "h": Inches(1.16)
             },
             {
                 "tag": "Why Important:",
                 "tag_color": AMBER_GOLD,
-                "text": "India houses 2,000+ hazardous petrochemical and industrial facilities near dense populations. Delayed hazard response risks thousands of lives and ₹10,000+ Cr in critical assets.",
-                "h": Inches(1.18)
+                "text": "India houses 2,000+ Major Accident Hazard (MAH) chemical plants near dense cities. Delayed alerts risk thousands of lives and ₹10,000+ Cr in damages annually.",
+                "h": Inches(1.16)
             },
             {
                 "tag": "Proposed Solution:",
                 "tag_color": CYAN_BLUE,
-                "text": "PyroSat solves sub-pixel flame temperature (Tf > 1100 K) and burning area via Planck pyrometry, eliminates false alarms using 10m ESA ground truth, and projects live 3D evacuation zones.",
-                "h": Inches(1.25)
+                "text": "PyroSat calculates exact sub-pixel flame temperature (Tf > 1100 K) via Planck pyrometry, eliminates false alarms with 10m ESA ground truth, and projects live 3D evacuation zones.",
+                "h": Inches(1.22)
             }
         ]
 
@@ -155,10 +155,10 @@ def build_slide2_idea_title():
             p_b.font.size = Pt(7.8)
             p_b.font.color.rgb = WHITE
 
-            curr_y += c["h"] + Inches(0.12)
+            curr_y += c["h"] + Inches(0.11)
 
         # Working Prototype Callout Card
-        proto_h = Inches(1.50)
+        proto_h = Inches(1.58)
         proto_bg = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left_x, curr_y, left_w, proto_h)
         proto_bg.fill.solid(); proto_bg.fill.fore_color.rgb = RGBColor(240, 249, 255)
         proto_bg.line.color.rgb = RGBColor(186, 230, 253)
@@ -170,7 +170,7 @@ def build_slide2_idea_title():
         tf_proto.margin_left = tf_proto.margin_right = tf_proto.margin_top = tf_proto.margin_bottom = 0
 
         p_ph = tf_proto.paragraphs[0]
-        p_ph.text = "⚡ Working Prototype & Demonstrations:"
+        p_ph.text = "⚡ Working Prototype & Live Links:"
         p_ph.font.name = "Arial"
         p_ph.font.size = Pt(9)
         p_ph.font.bold = True
@@ -196,139 +196,74 @@ def build_slide2_idea_title():
         r_pl2.font.color.rgb = RGBColor(71, 85, 105)
 
         # ---------------------------------------------------------------------
-        # 4. CENTER COLUMN: 4-Layer Orbital-to-Ground Tech Stack
+        # 4. CENTER COLUMN: 3D 4-Layer Orbital-to-Ground Architecture Image
         # ---------------------------------------------------------------------
-        center_x = Inches(4.38)
-        center_w = Inches(4.55)
+        center_x = Inches(4.22)
+        center_w = Inches(4.88)
 
         # Title for center column
-        tb_ctitle = slide2.shapes.add_textbox(center_x, Inches(1.22), center_w, Inches(0.28))
+        tb_ctitle = slide2.shapes.add_textbox(center_x, Inches(1.22), center_w, Inches(0.26))
         tf_ctitle = tb_ctitle.text_frame
         tf_ctitle.margin_left = tf_ctitle.margin_right = tf_ctitle.margin_top = tf_ctitle.margin_bottom = 0
         p_ct = tf_ctitle.paragraphs[0]
-        p_ct.text = "CORE ARCHITECTURE: ORBITAL-TO-GROUND PIPELINE"
+        p_ct.text = "PROPOSED SOLUTION: 4-LAYER ORBITAL-TO-GROUND ARCHITECTURE"
         p_ct.alignment = PP_ALIGN.CENTER
         p_ct.font.name = "Arial"
-        p_ct.font.size = Pt(9)
+        p_ct.font.size = Pt(8.8)
         p_ct.font.bold = True
         p_ct.font.color.rgb = RGBColor(30, 58, 138)
 
-        layers_data = [
-            {
-                "num": "LAYER 1",
-                "title": "Spaceborne Telemetry Ingestion",
-                "badge_color": RGBColor(2, 132, 199),
-                "bg_color": RGBColor(248, 250, 252),
-                "border_color": RGBColor(186, 230, 253),
-                "bullets": [
-                    "NASA VIIRS (375m) & MODIS 1km NRT thermal radiance ingestion.",
-                    "Active LEO blind-window gap fill & continuous pass monitoring."
-                ]
-            },
-            {
-                "num": "LAYER 2",
-                "title": "Sub-Pixel Infrared Planck Pyrometry",
-                "badge_color": RGBColor(79, 70, 229),
-                "bg_color": RGBColor(238, 242, 255),
-                "border_color": RGBColor(199, 210, 254),
-                "bullets": [
-                    "Dual-Band Inversion: Solves flame temp (Tf > 1100 K) & burning area (Af).",
-                    "Eliminates pixel-smearing: extracts pinpoint fires from cold background."
-                ]
-            },
-            {
-                "num": "LAYER 3",
-                "title": "2-Stage Hierarchical ML + 10m Ground Truth",
-                "badge_color": RGBColor(5, 150, 105),
-                "bg_color": RGBColor(236, 253, 245),
-                "border_color": RGBColor(167, 243, 208),
-                "bullets": [
-                    "TreeSHAP-verified AI segregates permitted flaring vs explosions.",
-                    "Sentinel-1/2 10m ESA WorldCover validates Built-up (Class 50) vs crops."
-                ]
-            },
-            {
-                "num": "LAYER 4",
-                "title": "Atmospheric Plume & NDRF Tactical Dispatch",
-                "badge_color": RGBColor(217, 119, 6),
-                "bg_color": RGBColor(255, 251, 235),
-                "border_color": RGBColor(253, 230, 138),
-                "bullets": [
-                    "Briggs buoyant rise + Pasquill-Gifford Gaussian dispersion on live wind.",
-                    "Instant Incident Action Plan (IAP) with automated WhatsApp/SMS dispatch."
-                ]
-            }
-        ]
+        # Insert Hero 3D 4-Layer Diagram
+        hero_img = find_asset("orbital_to_ground_4layers.jpg")
+        img_top = Inches(1.48)
+        img_w = Inches(4.88)
+        img_h = Inches(4.23)  # Aspect ratio ~1.153
 
-        curr_ly_y = Inches(1.52)
-        layer_h = Inches(1.15)
-        for i, ly in enumerate(layers_data):
-            # Layer Card Background
-            l_bg = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, center_x, curr_ly_y, center_w, layer_h)
-            l_bg.fill.solid(); l_bg.fill.fore_color.rgb = ly["bg_color"]
-            l_bg.line.color.rgb = ly["border_color"]
-            l_bg.line.width = Pt(1.2)
+        if os.path.exists(hero_img):
+            slide2.shapes.add_picture(hero_img, center_x, img_top, width=img_w, height=img_h)
 
-            # Left accent tag
-            l_bar = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, center_x + Inches(0.08), curr_ly_y + Inches(0.10), Inches(0.85), Inches(0.26))
-            l_bar.fill.solid(); l_bar.fill.fore_color.rgb = ly["badge_color"]
-            l_bar.line.fill.background()
-            p_bar = l_bar.text_frame.paragraphs[0]
-            p_bar.text = ly["num"]
-            p_bar.alignment = PP_ALIGN.CENTER
-            p_bar.font.name = "Arial"
-            p_bar.font.size = Pt(7.5)
-            p_bar.font.bold = True
-            p_bar.font.color.rgb = WHITE
+        # Caption / Technical Summary strip under image
+        cap_y = img_top + img_h + Inches(0.06)
+        cap_h = Inches(0.96)
+        cap_bg = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, center_x, cap_y, center_w, cap_h)
+        cap_bg.fill.solid(); cap_bg.fill.fore_color.rgb = RGBColor(248, 250, 252)
+        cap_bg.line.color.rgb = RGBColor(203, 213, 225)
+        cap_bg.line.width = Pt(1)
 
-            # Layer Title
-            tb_lt = slide2.shapes.add_textbox(center_x + Inches(1.02), curr_ly_y + Inches(0.08), center_w - Inches(1.12), Inches(0.30))
-            tf_lt = tb_lt.text_frame; tf_lt.margin_left = tf_lt.margin_right = tf_lt.margin_top = tf_lt.margin_bottom = 0
-            p_lt = tf_lt.paragraphs[0]
-            p_lt.text = ly["title"]
-            p_lt.font.name = "Arial"
-            p_lt.font.size = Pt(9)
-            p_lt.font.bold = True
-            p_lt.font.color.rgb = DARK_NAVY
+        tb_cap = slide2.shapes.add_textbox(center_x + Inches(0.12), cap_y + Inches(0.06), center_w - Inches(0.24), cap_h - Inches(0.12))
+        tf_cap = tb_cap.text_frame
+        tf_cap.word_wrap = True
+        tf_cap.margin_left = tf_cap.margin_right = tf_cap.margin_top = tf_cap.margin_bottom = 0
 
-            # Bullets
-            tb_lb = slide2.shapes.add_textbox(center_x + Inches(0.16), curr_ly_y + Inches(0.42), center_w - Inches(0.32), layer_h - Inches(0.48))
-            tf_lb = tb_lb.text_frame
-            tf_lb.word_wrap = True
-            tf_lb.margin_left = tf_lb.margin_right = tf_lb.margin_top = tf_lb.margin_bottom = 0
+        p_cp1 = tf_cap.paragraphs[0]
+        p_cp1.text = "⚡ Full-Stack Orbital Intelligence Pipeline:"
+        p_cp1.font.name = "Arial"
+        p_cp1.font.size = Pt(8.5)
+        p_cp1.font.bold = True
+        p_cp1.font.color.rgb = RGBColor(30, 58, 138)
+        p_cp1.space_after = Pt(2)
 
-            for j, b in enumerate(ly["bullets"]):
-                p_b = tf_lb.paragraphs[0] if j == 0 else tf_lb.add_paragraph()
-                p_b.text = f"• {b}"
-                p_b.font.name = "Arial"
-                p_b.font.size = Pt(7.5)
-                p_b.font.color.rgb = TEXT_CHARCOAL
-                if j == 0:
-                    p_b.space_after = Pt(2)
-
-            # Draw connector arrow to next layer (except last)
-            if i < len(layers_data) - 1:
-                arrow = slide2.shapes.add_shape(MSO_SHAPE.DOWN_ARROW, center_x + center_w / 2 - Inches(0.10), curr_ly_y + layer_h + Inches(0.01), Inches(0.20), Inches(0.13))
-                arrow.fill.solid(); arrow.fill.fore_color.rgb = RGBColor(148, 163, 184)
-                arrow.line.fill.background()
-
-            curr_ly_y += layer_h + Inches(0.15)
+        p_cp2 = tf_cap.add_paragraph()
+        p_cp2.text = "Space Telemetry (VIIRS) ➔ Sub-Pixel Planck Pyrometry (Tf > 1100K) ➔ 10m ESA Land-Cover Ground Truth ➔ 3D Gaussian Plume Evacuation & NDRF Dispatch."
+        p_cp2.font.name = "Arial"
+        p_cp2.font.size = Pt(7.3)
+        p_cp2.font.color.rgb = TEXT_CHARCOAL
 
         # ---------------------------------------------------------------------
         # 5. RIGHT COLUMN: Risk vs Solution Matrix + Tactical Output Callout
         # ---------------------------------------------------------------------
-        right_x = Inches(9.13)
-        right_w = Inches(3.80)
+        right_x = Inches(9.26)
+        right_w = Inches(3.70)
 
         # Title for right column
-        tb_rtitle = slide2.shapes.add_textbox(right_x, Inches(1.22), right_w, Inches(0.28))
+        tb_rtitle = slide2.shapes.add_textbox(right_x, Inches(1.22), right_w, Inches(0.26))
         tf_rtitle = tb_rtitle.text_frame
         tf_rtitle.margin_left = tf_rtitle.margin_right = tf_rtitle.margin_top = tf_rtitle.margin_bottom = 0
         p_rt = tf_rtitle.paragraphs[0]
         p_rt.text = "CRITICAL RISK   vs   PYROSAT SOLUTION"
         p_rt.alignment = PP_ALIGN.CENTER
         p_rt.font.name = "Arial"
-        p_rt.font.size = Pt(9)
+        p_rt.font.size = Pt(8.8)
         p_rt.font.bold = True
         p_rt.font.color.rgb = RGBColor(153, 27, 27)
 
@@ -339,9 +274,9 @@ def build_slide2_idea_title():
             ("Delayed Multi-Agency Dispatch", "1-Click Automated NDRF Action Plan")
         ]
 
-        curr_pair_y = Inches(1.52)
+        curr_pair_y = Inches(1.50)
         pair_h = Inches(0.68)
-        pill_w = (right_w - Inches(0.36)) / 2.0  # ~1.72 in each
+        pill_w = (right_w - Inches(0.32)) / 2.0  # ~1.69 in each
 
         for risk, sol in pairs_data:
             # Red Risk Pill
@@ -361,7 +296,7 @@ def build_slide2_idea_title():
             p_rtxt.font.color.rgb = RED_TEXT
 
             # Connector icon ⇄
-            tb_mid = slide2.shapes.add_textbox(right_x + pill_w, curr_pair_y + Inches(0.16), Inches(0.36), Inches(0.36))
+            tb_mid = slide2.shapes.add_textbox(right_x + pill_w, curr_pair_y + Inches(0.16), Inches(0.32), Inches(0.36))
             tf_mid = tb_mid.text_frame; tf_mid.margin_left = tf_mid.margin_right = tf_mid.margin_top = tf_mid.margin_bottom = 0
             p_mtxt = tf_mid.paragraphs[0]
             p_mtxt.text = "⇄"
@@ -372,7 +307,7 @@ def build_slide2_idea_title():
             p_mtxt.font.color.rgb = TEXT_MUTED
 
             # Green Solution Pill
-            p_green = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, right_x + pill_w + Inches(0.36), curr_pair_y, pill_w, pair_h)
+            p_green = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, right_x + pill_w + Inches(0.32), curr_pair_y, pill_w, pair_h)
             p_green.fill.solid(); p_green.fill.fore_color.rgb = GREEN_BG
             p_green.line.color.rgb = GREEN_BORDER
             p_green.line.width = Pt(1)
@@ -396,8 +331,7 @@ def build_slide2_idea_title():
         # Check if prototype screenshot exists to insert
         plume_img = find_asset("gaussian_plume_hazard_rings.jpg")
         if os.path.exists(plume_img):
-            # Insert real graphic thumbnail
-            img_w = Inches(1.70)
+            img_w = Inches(1.68)
             img_h = Inches(1.85)
             slide2.shapes.add_picture(plume_img, right_x, callout_y, width=img_w, height=img_h)
 
@@ -422,7 +356,7 @@ def build_slide2_idea_title():
             p_vc2.font.color.rgb = TEXT_CHARCOAL
 
         prs.save(ppt_path)
-        print(f"Successfully updated Slide 2 in {ppt_path} with clean, ATS-friendly 3-column architecture!")
+        print(f"Successfully updated Slide 2 in {ppt_path} with 3D 4-Layer Hero Image!")
 
 if __name__ == '__main__':
     build_slide2_idea_title()
