@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: pyrosat-intelligence
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: HOST
+        value: 0.0.0.0
+      - key: NOTIFICATION_MODE
+        value: live
+      - key: DEFAULT_DISPATCH_PHONE
+        value: "9849215682"
+      - key: EMERGENCY_RESPONSE_ENABLED
+        value: "true"
+      - key: RICHAUTOMATE_ENABLED
+        value: "true"
+      - key: CESIUM_ION_TOKEN
+        sync: false
+      - key: FIRMS_MAP_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: FAST2SMS_API_KEY
+        sync: false
+      - key: RICHAUTOMATE_API_KEY
+        sync: false
