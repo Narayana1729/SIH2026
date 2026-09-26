@@ -9,12 +9,18 @@ Welcome to the complete documentation and artifact dossier for **PyroSat** — t
 
 ```
 sih_docs/
-├── README.md                      # This master index
-├── ABSTRACT.md                    # Section 3: Official ~10,000 character Executive Abstract
-├── CHALLENGES_AND_MITIGATIONS.md  # Feasibility, Viability & 8 Challenges & Engineering Mitigations
-├── BUSINESS_MODEL_CANVAS.md       # Lean Business Model Canvas, TAM, Unit Economics & ROI
-├── ADDITIONAL_DOCS.md             # Section 4: Docs 1 to 5 (Research Paper, Market, Tech, Evidence, Impact)
-└── pyrosat_architecture_diagram.jpg # High-resolution 5-tier system architecture diagram
+├── 📄 ABSTRACT.docx                              # Official ~10,000 char Abstract (Word)
+├── 📄 CHALLENGES_AND_MITIGATIONS.docx            # Feasibility, Viability & Mitigations (Word)
+├── 📄 BUSINESS_MODEL_CANVAS.docx                 # Lean Canvas, TAM & Financial Model (Word)
+├── 📄 ADDITIONAL_DOCS.docx                       # Docs 1-5 + Embedded Architecture (Word)
+├── 📘 PyroSat_SIH2026_Complete_Submission_Dossier.docx # Complete All-in-One Submission Dossier (Word)
+├── ─────────────────────────────────────────────
+├── 📝 ABSTRACT.md                                # Markdown source
+├── 📝 CHALLENGES_AND_MITIGATIONS.md              # Markdown source
+├── 📝 BUSINESS_MODEL_CANVAS.md                   # Markdown source
+├── 📝 ADDITIONAL_DOCS.md                         # Markdown source
+├── 📖 README.md                                  # This directory index
+└── 🖼️ pyrosat_architecture_diagram.jpg          # System architecture visual
 ```
 
 ---
