@@ -9,18 +9,13 @@ Welcome to the complete documentation and artifact dossier for **PyroSat** — t
 
 ```
 sih_docs/
-├── 📄 ABSTRACT.docx                              # Official ~10,000 char Abstract (Word)
-├── 📄 CHALLENGES_AND_MITIGATIONS.docx            # Feasibility, Viability & Mitigations (Word)
-├── 📄 BUSINESS_MODEL_CANVAS.docx                 # Lean Canvas, TAM & Financial Model (Word)
-├── 📄 ADDITIONAL_DOCS.docx                       # Docs 1-5 + Embedded Architecture (Word)
-├── 📘 PyroSat_SIH2026_Complete_Submission_Dossier.docx # Complete All-in-One Submission Dossier (Word)
-├── ─────────────────────────────────────────────
-├── 📝 ABSTRACT.md                                # Markdown source
-├── 📝 CHALLENGES_AND_MITIGATIONS.md              # Markdown source
-├── 📝 BUSINESS_MODEL_CANVAS.md                   # Markdown source
-├── 📝 ADDITIONAL_DOCS.md                         # Markdown source
-├── 📖 README.md                                  # This directory index
-└── 🖼️ pyrosat_architecture_diagram.jpg          # System architecture visual
+├── README.md                      # This master index
+├── ABSTRACT.md                    # Section 3: Official ~10,000 character Executive Abstract
+├── GROUND_TRUTH_DEFENSE.md        # Scientific Ground-Truth & Anti-Circularity Manifesto
+├── CHALLENGES_AND_MITIGATIONS.md  # Feasibility, Viability & 8 Challenges & Engineering Mitigations
+├── BUSINESS_MODEL_CANVAS.md       # Lean Business Model Canvas, TAM, Unit Economics & ROI
+├── ADDITIONAL_DOCS.md             # Section 4: Docs 1 to 5 (Research Paper, Market, Tech, Evidence, Impact)
+└── pyrosat_architecture_diagram.jpg # High-resolution 5-tier system architecture diagram
 ```
 
 ---
@@ -31,7 +26,12 @@ sih_docs/
    - The one-glance vision statement for evaluators.
    - Covers: Problem context, the Circular Ground-Truth Crisis, PyroSat's 4-pillar technical approach (Dozier pyrometry, 26-D feature engineering, exact TreeSHAP XAI, 5-gate skeptic falsification), emergency response generation, and prototype readiness.
 
-2. **[CHALLENGES_AND_MITIGATIONS.md](file:///Users/srimannarayanadeevi/Vision/Firms/sih_docs/CHALLENGES_AND_MITIGATIONS.md)**
+2. **[GROUND_TRUTH_DEFENSE.md](file:///Users/srimannarayanadeevi/Vision/Firms/sih_docs/GROUND_TRUTH_DEFENSE.md)**
+   - **The Scientific Ground-Truth & Anti-Circularity Manifesto**.
+   - Details the Rule-Recovery / Circular Ground-Truth scandal undermining typical submissions.
+   - Explains PyroSat's 4-Tier Grounding Pyramid (Planck/Dozier pyrometry, ESA WorldCover 10m LULC, Sentinel-2 L2A BOA reflectance, World Bank GGFR/GEM registries, and 5-Gate Skeptic AI).
+
+3. **[CHALLENGES_AND_MITIGATIONS.md](file:///Users/srimannarayanadeevi/Vision/Firms/sih_docs/CHALLENGES_AND_MITIGATIONS.md)**
    - Direct response to evaluators' feasibility, viability, and risk inquiries.
    - **Feasibility:** Technical (5/5), Financial (5/5), Market (5/5), Operational (5/5).
    - **Viability:** Long-term sustainability, horizontal scalability, regulatory policy alignment, technology longevity.
