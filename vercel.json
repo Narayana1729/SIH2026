@@ -3,6 +3,20 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/serverless"
+    },
+    {
+      "source": "/healthz",
+      "destination": "/api/serverless"
+    },
+    {
+      "source": "/readyz",
+      "destination": "/api/serverless"
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",

@@ -1,0 +1,15 @@
+# Ignore large raw dataset archives from Vercel Serverless bundle
+data/
+data/**
+presentation/
+presentation/**
+Demos/
+Demos/**
+cv/
+cv/**
+tests/
+tests/**
+scratch_inspect/
+*.pptx
+*.zip
+*.tar.gz
